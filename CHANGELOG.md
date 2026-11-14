@@ -12,5 +12,5 @@ Primera versión: base técnica organizada y ejecutable en navegador. Sin mecán
 - Sistema de regiones con fondo de capas, paralaje, iluminación y perspectiva atmosférica; región de prueba.
 - Guardado local versionado con migraciones y tolerancia a datos corruptos.
 - Audio base (buses, volúmenes, desbloqueo tras el primer gesto), sin sonidos todavía.
-- Herramientas: servidor local (`npm start`) y verificador (`npm run check`).
+- Herramientas: servidor local (`npm start`), verificador (`npm run check`) y generador de versión de un solo archivo (`npm run build:single`, salida en `dist/index.html`) para probar con GitHub Pages sin servidor.
 - Documentación inicial y preparación para Capacitor/Android.

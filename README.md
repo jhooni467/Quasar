@@ -39,8 +39,21 @@ Otras opciones:
 | `PORT=3000 npm start` | Usa otro puerto |
 | `HOST=0.0.0.0 npm start` | Lo hace accesible desde tu red: abre en el móvil la dirección «Red» que imprime la consola |
 | `npm run check` | Verifica sintaxis, imports y referencias de todos los archivos |
+| `npm run build:single` | Genera `dist/index.html`, la versión de un solo archivo |
 
 > Los módulos ES no se cargan al abrir `index.html` con doble clic (`file://`); hace falta el servidor local. Cualquier otro servidor estático que sirva la carpeta `www/` también funciona.
+
+### Probar sin instalar nada (GitHub Pages)
+
+`dist/index.html` es una versión de **un solo archivo** con todo el juego dentro (HTML, CSS y JavaScript). No necesita servidor ni carpetas.
+
+1. Sube `dist/index.html` a la **raíz** de tu repositorio de GitHub, con el nombre exacto `index.html`.
+2. En el repositorio: **Settings → Pages → Build and deployment**. En *Source* elige **Deploy from a branch**, rama **main** y carpeta **/ (root)**. Pulsa **Save**.
+3. Espera 1–2 minutos y abre `https://TU_USUARIO.github.io/TU_REPO/` desde el navegador del móvil o la tablet.
+
+GitHub Pages es gratis para repositorios públicos; en uno privado requiere un plan de pago.
+
+También puedes abrir `dist/index.html` directamente en un navegador. Si cambias algo en `www/`, regenera el archivo con `npm run build:single`.
 
 **Para probar en pantalla de móvil sin móvil:** en Chrome, `F12` → icono de dispositivo → elige un teléfono y ponlo en horizontal. Con el botón **Diagnóstico** de la pantalla de título verás FPS, tamaño y escala.
 
@@ -81,7 +94,8 @@ quasar/
 │       ├── ui/                   Interfaz: gestor, pantallas, componentes, diagnóstico
 │       ├── audio/                Audio (Web Audio): buses, volúmenes, desbloqueo
 │       └── save/                 Guardado versionado con migraciones
-├── tools/                        serve.mjs (servidor local), check.mjs (verificador)
+├── dist/                         index.html: versión de un solo archivo (generada)
+├── tools/                        serve.mjs (servidor local), check.mjs (verificador), build-single.mjs
 ├── docs/                         ARCHITECTURE.md, ANDROID.md
 ├── capacitor.config.json         Preparado para la conversión a Android
 ├── package.json
