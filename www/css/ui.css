@@ -1,0 +1,176 @@
+/*
+ * Estilos de la interfaz. Las medidas se expresan en unidades lógicas (1280×720)
+ * multiplicadas por --u, con mínimos para que el texto y los botones táctiles
+ * sigan siendo cómodos en teléfonos pequeños.
+ */
+#ui {
+  --btn-h: max(44px, calc(56px * var(--u)));
+  --fs-xs: max(11px, calc(16px * var(--u)));
+  --fs-sm: max(12px, calc(20px * var(--u)));
+  --fs-md: max(14px, calc(24px * var(--u)));
+  --pad: calc(40px * var(--u));
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.title-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(56px * var(--u)) var(--pad) calc(28px * var(--u));
+}
+
+.title-block {
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.45em;
+  text-indent: 0.45em;
+  text-transform: uppercase;
+  color: #ffd9ec;
+  opacity: 0.9;
+}
+
+.logo {
+  margin: calc(8px * var(--u)) 0 0;
+  font-size: max(40px, calc(132px * var(--u)));
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+  background: linear-gradient(180deg, #ffffff 15%, #ffd08a 55%, #ff7fb0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 calc(6px * var(--u)) calc(24px * var(--u)) rgba(255, 127, 176, 0.45));
+}
+
+.subtitle {
+  margin: calc(10px * var(--u)) 0 0;
+  font-size: var(--fs-md);
+  letter-spacing: 0.08em;
+  color: #e8dcff;
+  opacity: 0.85;
+}
+
+.note {
+  margin: calc(22px * var(--u)) 0 0;
+  font-size: var(--fs-sm);
+  color: #f3ecff;
+  opacity: 0.7;
+  text-align: center;
+  text-shadow: 0 1px 6px rgba(11, 8, 32, 0.8);
+}
+
+.bottom-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+}
+
+.chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  background: rgba(11, 8, 32, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e8dcff;
+  white-space: nowrap;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.control-label {
+  font-size: var(--fs-xs);
+  color: #e8dcff;
+  opacity: 0.8;
+}
+
+.segmented {
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(11, 8, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.seg-btn {
+  min-height: var(--btn-h);
+  min-width: var(--btn-h);
+  padding: 0 calc(20px * var(--u));
+  padding-inline: max(12px, calc(20px * var(--u)));
+  border: 0;
+  background: transparent;
+  color: #e8dcff;
+  font: inherit;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.15s;
+}
+
+.seg-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.seg-btn[aria-pressed='true'] {
+  background: linear-gradient(180deg, #ffd08a, #ff7fb0);
+  color: #2a1450;
+  font-weight: 700;
+}
+
+.seg-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -3px;
+}
+
+.seg-btn.solo {
+  border-radius: 999px;
+  background: rgba(11, 8, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.seg-btn.solo[aria-pressed='true'] {
+  background: linear-gradient(180deg, #ffd08a, #ff7fb0);
+  border-color: transparent;
+}
+
+.debug-overlay {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #bfffd4;
+  background: rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  white-space: pre;
+}
+
+.debug-overlay[hidden] {
+  display: none;
+}
