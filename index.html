@@ -1,0 +1,2285 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0b0820" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>QUASAR</title>
+    <link rel="icon" href="data:," />
+    <style>
+:root {
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #0b0820;
+  color: #f3ecff;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* La app ocupa toda la ventana; --u (píxeles por unidad lógica) lo fija Viewport.js */
+#app {
+  position: fixed;
+  inset: 0;
+  --u: 1;
+}
+
+#game-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Capa de interfaz: Viewport.js la coloca y dimensiona sobre el área segura (720 u de ancho, vertical) */
+#ui {
+  position: absolute;
+  pointer-events: none;
+}
+
+</style>
+    <style>
+/*
+ * Estilos de la interfaz (composición VERTICAL). Las medidas se expresan en
+ * unidades lógicas (área segura de 720 u de ancho) multiplicadas por --u, con
+ * mínimos para que el texto y los botones táctiles sigan siendo cómodos en
+ * teléfonos pequeños.
+ */
+#ui {
+  --btn-h: max(44px, calc(72px * var(--u)));
+  --fs-xs: max(12px, calc(22px * var(--u)));
+  --fs-sm: max(14px, calc(28px * var(--u)));
+  --fs-md: max(15px, calc(32px * var(--u)));
+  --pad: calc(40px * var(--u));
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.title-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(170px * var(--u)) var(--pad) calc(64px * var(--u));
+}
+
+.title-block {
+  width: 100%;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.45em;
+  text-indent: 0.45em;
+  text-transform: uppercase;
+  color: #ffd9ec;
+  opacity: 0.9;
+}
+
+.logo {
+  margin: calc(8px * var(--u)) 0 0;
+  /* Sin mínimo en px: el logo siempre escala con la columna y nunca se corta. */
+  font-size: calc(124px * var(--u));
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-indent: 0.12em;
+  background: linear-gradient(180deg, #ffffff 15%, #ffd08a 55%, #ff7fb0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 calc(6px * var(--u)) calc(24px * var(--u)) rgba(255, 127, 176, 0.45));
+}
+
+.subtitle {
+  margin: calc(10px * var(--u)) 0 0;
+  font-size: var(--fs-md);
+  letter-spacing: 0.08em;
+  color: #e8dcff;
+  opacity: 0.85;
+}
+
+.note {
+  margin: calc(28px * var(--u)) auto 0;
+  max-width: calc(520px * var(--u));
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: #f3ecff;
+  opacity: 0.75;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 1px 6px rgba(11, 8, 32, 0.8);
+}
+
+.bottom-bar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(28px * var(--u));
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  background: rgba(11, 8, 32, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #e8dcff;
+  white-space: nowrap;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  gap: calc(20px * var(--u));
+  pointer-events: auto;
+}
+
+.control-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+}
+
+.control-label {
+  font-size: var(--fs-xs);
+  color: #e8dcff;
+  opacity: 0.8;
+}
+
+.segmented {
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(11, 8, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.seg-btn {
+  min-height: var(--btn-h);
+  min-width: var(--btn-h);
+  padding: 0 calc(20px * var(--u));
+  padding-inline: max(12px, calc(20px * var(--u)));
+  border: 0;
+  background: transparent;
+  color: #e8dcff;
+  font: inherit;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.15s;
+}
+
+.seg-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.seg-btn[aria-pressed='true'] {
+  background: linear-gradient(180deg, #ffd08a, #ff7fb0);
+  color: #2a1450;
+  font-weight: 700;
+}
+
+.seg-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -3px;
+}
+
+.seg-btn.solo {
+  border-radius: 999px;
+  background: rgba(11, 8, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.seg-btn.solo[aria-pressed='true'] {
+  background: linear-gradient(180deg, #ffd08a, #ff7fb0);
+  border-color: transparent;
+}
+
+.debug-overlay {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #bfffd4;
+  background: rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  white-space: pre;
+}
+
+.debug-overlay[hidden] {
+  display: none;
+}
+
+/*
+ * Respaldo para ventanas apaisadas muy bajas (p. ej. un teléfono girado en un
+ * navegador que no puede bloquear la orientación): la columna vertical queda
+ * muy pequeña, así que se omite el texto decorativo para que nada se solape.
+ */
+@media (orientation: landscape) and (max-height: 520px) {
+  .note {
+    display: none;
+  }
+}
+
+</style>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+      <div id="ui"></div>
+    </div>
+
+    <noscript>Este juego necesita JavaScript activado.</noscript>
+    <script>
+(function () {
+'use strict';
+const __m = {};
+__m["src/config/game.config.js"] = (function () {
+'use strict';
+/**
+ * Configuración global del juego.
+ *
+ * ÚNICO lugar donde vive el nombre visible del juego. QUASAR es provisional:
+ * para renombrarlo basta cambiar `name` (y, más adelante, `appName` en
+ * capacitor.config.json). `id` es la clave técnica usada en el guardado local;
+ * cámbiala solo si no te importa perder los datos guardados en tu navegador.
+ */
+const GAME = Object.freeze({
+  id: 'quasar',
+  name: 'QUASAR',
+  tagline: 'Runner 2.5D',
+  version: '0.1.1',
+  stage: 'Etapa 00 · Corrección 00.1',
+});
+
+/**
+ * Composición de diseño: VERTICAL (Portrait) exclusivamente.
+ *
+ * Todo el juego se dibuja en "unidades lógicas". El área segura mide siempre
+ * 720 unidades de ancho (9:16) y entre 1280 y `maxHeight` de alto, y se escala
+ * de forma uniforme (sin deformar) a cualquier pantalla:
+ *  - Teléfonos alargados (9:19.5, 9:20…): el área segura crece en vertical
+ *    hasta `maxHeight` para aprovechar la pantalla.
+ *  - Tablets (3:4, 4:3…) y ventanas horizontales: el área segura se centra y
+ *    el fondo se extiende a los lados, sin barras negras.
+ * Lo importante (interfaz, personaje, gameplay futuro) vive dentro del área
+ * segura y nunca se corta.
+ */
+const VIEW = Object.freeze({
+  designWidth: 720,
+  designHeight: 1280,
+  maxHeight: 1700,
+});
+
+/** Parámetros del bucle principal (paso fijo para física/lógica futura). */
+const LOOP = Object.freeze({
+  fixedStep: 1 / 60,
+  maxFrameDelta: 0.1,
+  maxSubSteps: 5,
+});
+
+return { GAME, VIEW, LOOP };
+})();
+__m["src/config/quality.config.js"] = (function () {
+'use strict';
+/**
+ * Perfiles de calidad gráfica.
+ *
+ * Cada perfil agrupa los parámetros que afectan al coste de render. Los
+ * sistemas gráficos leen el perfil activo (`game.quality`) en lugar de tener
+ * números "mágicos" propios; así, añadir opciones de optimización en el futuro
+ * (por ejemplo detección automática según el dispositivo) solo requiere
+ * tocar este archivo y los consumidores.
+ */
+const QUALITY_PROFILES = Object.freeze({
+  low: Object.freeze({
+    id: 'low',
+    label: 'Baja',
+    maxDpr: 1, // densidad de píxeles máxima del canvas
+    targetFps: 30, // tope de fotogramas dibujados por segundo
+    ridgeStep: 40, // separación (unidades lógicas) entre puntos de las siluetas
+    starDensity: 0.4, // fracción de estrellas respecto al diseño de la región
+    twinkle: false, // parpadeo de estrellas
+    rim: false, // borde de luz en las siluetas
+  }),
+  medium: Object.freeze({
+    id: 'medium',
+    label: 'Media',
+    maxDpr: 1.5,
+    targetFps: 60,
+    ridgeStep: 24,
+    starDensity: 0.8,
+    twinkle: true,
+    rim: true,
+  }),
+  high: Object.freeze({
+    id: 'high',
+    label: 'Alta',
+    maxDpr: 2,
+    targetFps: 60,
+    ridgeStep: 12,
+    starDensity: 1,
+    twinkle: true,
+    rim: true,
+  }),
+});
+
+const QUALITY_ORDER = Object.freeze(['low', 'medium', 'high']);
+const DEFAULT_QUALITY = 'medium';
+
+return { QUALITY_PROFILES, QUALITY_ORDER, DEFAULT_QUALITY };
+})();
+__m["src/core/EventBus.js"] = (function () {
+'use strict';
+/** Bus de eventos mínimo para comunicar módulos sin acoplarlos entre sí. */
+class EventBus {
+  constructor() {
+    this._handlers = new Map();
+  }
+
+  /** Suscribe `fn` a `event`. Devuelve una función para cancelar la suscripción. */
+  on(event, fn) {
+    let set = this._handlers.get(event);
+    if (!set) {
+      set = new Set();
+      this._handlers.set(event, set);
+    }
+    set.add(fn);
+    return () => this.off(event, fn);
+  }
+
+  off(event, fn) {
+    const set = this._handlers.get(event);
+    if (set) set.delete(fn);
+  }
+
+  emit(event, ...args) {
+    const set = this._handlers.get(event);
+    if (!set) return;
+    // Copia para tolerar altas/bajas de suscriptores durante la emisión.
+    for (const fn of Array.from(set)) fn(...args);
+  }
+}
+
+return { EventBus };
+})();
+__m["src/core/Loop.js"] = (function () {
+'use strict';
+/**
+ * Bucle principal con paso fijo para la lógica y render interpolable.
+ *
+ * - `update(dt)` se llama a intervalos fijos (determinista: ideal para la
+ *   física y la generación procedural futuras).
+ * - `render(alpha, dt)` se llama una vez por fotograma dibujado; `alpha`
+ *   (0..1) indica cuánto del siguiente paso fijo ha transcurrido.
+ * - `setTargetFps()` limita los fotogramas dibujados (perfil de calidad).
+ */
+class Loop {
+  constructor({ update, render, fixedStep, maxFrameDelta, maxSubSteps }) {
+    this._update = update;
+    this._render = render;
+    this.fixedStep = fixedStep;
+    this.maxFrameDelta = maxFrameDelta;
+    this.maxSubSteps = maxSubSteps;
+    this.targetFps = 60;
+    this.fps = 0;
+    this.running = false;
+
+    this._raf = 0;
+    this._last = 0;
+    this._lastRender = 0;
+    this._acc = 0;
+    this._fpsFrames = 0;
+    this._fpsStart = 0;
+    this._frame = this._frame.bind(this);
+  }
+
+  setTargetFps(fps) {
+    this.targetFps = fps;
+  }
+
+  start() {
+    if (this.running) return;
+    this.running = true;
+    const now = performance.now();
+    this._last = now;
+    this._lastRender = now;
+    this._fpsStart = now;
+    this._fpsFrames = 0;
+    this._acc = 0;
+    this._raf = requestAnimationFrame(this._frame);
+  }
+
+  stop() {
+    this.running = false;
+    cancelAnimationFrame(this._raf);
+  }
+
+  _frame(now) {
+    if (!this.running) return;
+    this._raf = requestAnimationFrame(this._frame);
+
+    // Tope de FPS: si aún no toca, saltamos el fotograma sin consumir tiempo
+    // (el tiempo se acumula en el siguiente). 2 ms de tolerancia para pantallas
+    // cuyo refresco no es múltiplo exacto del objetivo.
+    const minInterval = 1000 / this.targetFps - 2;
+    if (now - this._lastRender < minInterval) return;
+
+    let dt = (now - this._last) / 1000;
+    this._last = now;
+    this._lastRender = now;
+    if (dt > this.maxFrameDelta) dt = this.maxFrameDelta;
+
+    this._acc += dt;
+    let steps = 0;
+    while (this._acc >= this.fixedStep && steps < this.maxSubSteps) {
+      this._update(this.fixedStep);
+      this._acc -= this.fixedStep;
+      steps++;
+    }
+    if (steps === this.maxSubSteps) this._acc = 0; // dispositivo lento: descartar atraso
+
+    this._render(this._acc / this.fixedStep, dt);
+
+    this._fpsFrames++;
+    const elapsed = now - this._fpsStart;
+    if (elapsed >= 500) {
+      this.fps = (this._fpsFrames * 1000) / elapsed;
+      this._fpsFrames = 0;
+      this._fpsStart = now;
+    }
+  }
+}
+
+return { Loop };
+})();
+__m["src/core/Viewport.js"] = (function () {
+'use strict';
+const { VIEW } = __m["src/config/game.config.js"];
+
+/**
+ * Gestiona el tamaño del canvas y la conversión entre píxeles de pantalla y
+ * "unidades lógicas" del juego. La composición es VERTICAL (Portrait).
+ *
+ * Reglas:
+ *  - El canvas ocupa toda la ventana (sin barras negras).
+ *  - La escala es uniforme: nunca se deforma nada. Se calcula para que el área
+ *    mínima de diseño (720×1280, 9:16) quepa siempre entera.
+ *  - Área segura: 720 unidades de ancho, centrada. Su alto es el de la pantalla
+ *    (descontando muescas/barras del sistema) con un mínimo de 1280 y un
+ *    máximo de `VIEW.maxHeight`: en teléfonos alargados aprovecha la altura y
+ *    en tablets u ventanas anchas queda centrada con el fondo a los lados.
+ *  - El fondo puede dibujarse en todo `width × height` (unidades lógicas).
+ */
+class Viewport {
+  constructor({ canvas, appEl, uiEl, bus, maxDpr }) {
+    this.canvas = canvas;
+    this.appEl = appEl;
+    this.uiEl = uiEl;
+    this.bus = bus;
+    this.maxDpr = maxDpr;
+
+    /** Píxeles CSS por unidad lógica. */
+    this.scale = 1;
+    /** Tamaño total del canvas en unidades lógicas. */
+    this.width = VIEW.designWidth;
+    this.height = VIEW.designHeight;
+    /** Área segura en unidades lógicas. */
+    this.safe = { x: 0, y: 0, w: VIEW.designWidth, h: VIEW.designHeight };
+    /** Píxeles de canvas por unidad lógica (escala × densidad). */
+    this.pixelRatio = 1;
+    this.dpr = 1;
+
+    this._pending = false;
+    this._probe = null;
+    this._onResize = this._schedule.bind(this);
+  }
+
+  init() {
+    this._probe = document.createElement('div');
+    this._probe.style.cssText =
+      'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;' +
+      'padding:env(safe-area-inset-top) env(safe-area-inset-right) ' +
+      'env(safe-area-inset-bottom) env(safe-area-inset-left);';
+    document.body.appendChild(this._probe);
+
+    window.addEventListener('resize', this._onResize);
+    window.addEventListener('orientationchange', this._onResize);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', this._onResize);
+    this._lockPortrait();
+    this.refresh();
+  }
+
+  /**
+   * Pide al sistema bloquear la orientación en vertical. Los navegadores solo
+   * lo permiten en pantalla completa o como app instalada (y el APK lo fijará
+   * en el manifiesto de Android), así que es de mejor esfuerzo: si se rechaza,
+   * el diseño vertical sigue funcionando centrado en cualquier orientación.
+   */
+  _lockPortrait() {
+    try {
+      const lock = window.screen && window.screen.orientation && window.screen.orientation.lock;
+      if (lock) {
+        const result = window.screen.orientation.lock('portrait');
+        if (result && typeof result.catch === 'function') result.catch(() => {});
+      }
+    } catch (_) {
+      /* sin soporte: se ignora */
+    }
+  }
+
+  setMaxDpr(value) {
+    this.maxDpr = value;
+    this.refresh();
+  }
+
+  /** Agrupa varios eventos de resize en un solo recálculo por fotograma. */
+  _schedule() {
+    if (this._pending) return;
+    this._pending = true;
+    requestAnimationFrame(() => {
+      this._pending = false;
+      this.refresh();
+    });
+  }
+
+  _readInsets() {
+    const cs = getComputedStyle(this._probe);
+    return {
+      top: parseFloat(cs.paddingTop) || 0,
+      right: parseFloat(cs.paddingRight) || 0,
+      bottom: parseFloat(cs.paddingBottom) || 0,
+      left: parseFloat(cs.paddingLeft) || 0,
+    };
+  }
+
+  refresh() {
+    const w = Math.max(1, window.innerWidth);
+    const h = Math.max(1, window.innerHeight);
+    const inset = this._readInsets();
+    const availW = Math.max(1, w - inset.left - inset.right);
+    const availH = Math.max(1, h - inset.top - inset.bottom);
+
+    // Escala uniforme: el área mínima de diseño (720×1280) cabe siempre entera.
+    const scale = Math.min(availW / VIEW.designWidth, availH / VIEW.designHeight);
+    const dpr = Math.min(window.devicePixelRatio || 1, this.maxDpr);
+
+    const bw = Math.round(w * dpr);
+    const bh = Math.round(h * dpr);
+    if (this.canvas.width !== bw) this.canvas.width = bw;
+    if (this.canvas.height !== bh) this.canvas.height = bh;
+
+    this.scale = scale;
+    this.dpr = dpr;
+    this.pixelRatio = dpr * scale;
+    this.width = w / scale;
+    this.height = h / scale;
+
+    // Alto del área segura: toda la altura disponible, entre el mínimo de
+    // diseño y el máximo permitido. El ancho es fijo.
+    const safeH = Math.min(Math.max(availH / scale, VIEW.designHeight), VIEW.maxHeight);
+    const safePxX = inset.left + (availW - VIEW.designWidth * scale) / 2;
+    const safePxY = inset.top + (availH - safeH * scale) / 2;
+    this.safe = {
+      x: safePxX / scale,
+      y: safePxY / scale,
+      w: VIEW.designWidth,
+      h: safeH,
+    };
+
+    // La capa de interfaz (DOM) usa el mismo área segura y la misma escala.
+    this.appEl.style.setProperty('--u', String(scale));
+    const s = this.uiEl.style;
+    s.left = `${safePxX}px`;
+    s.top = `${safePxY}px`;
+    s.width = `${VIEW.designWidth * scale}px`;
+    s.height = `${safeH * scale}px`;
+
+    this.bus.emit('resize', this);
+  }
+
+  /** Deja el contexto en coordenadas lógicas. Llamar al inicio de cada fotograma. */
+  applyTransform(ctx) {
+    ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+  }
+}
+
+return { Viewport };
+})();
+__m["src/core/Input.js"] = (function () {
+'use strict';
+/**
+ * Entrada básica: posición del puntero (en unidades lógicas) y estado del
+ * teclado. Emite eventos en el bus. NO interpreta gestos todavía: el
+ * movimiento por carriles, saltos y deslizamientos (deslizar/tocar) se
+ * construirán sobre esta capa en una etapa futura.
+ */
+class Input {
+  constructor({ target, viewport, bus }) {
+    this.target = target;
+    this.viewport = viewport;
+    this.bus = bus;
+    this.pointer = { x: 0, y: 0, down: false };
+    this.keys = new Set();
+
+    this._onDown = (e) => this._pointer('input:pointerdown', e, true);
+    this._onMove = (e) => this._pointer('input:pointermove', e, null);
+    this._onUp = (e) => this._pointer('input:pointerup', e, false);
+    this._onKeyDown = (e) => {
+      this.keys.add(e.code);
+      this.bus.emit('input:keydown', e.code, e);
+    };
+    this._onKeyUp = (e) => {
+      this.keys.delete(e.code);
+      this.bus.emit('input:keyup', e.code, e);
+    };
+    this._onBlur = () => {
+      this.keys.clear();
+      this.pointer.down = false;
+    };
+  }
+
+  attach() {
+    this.target.addEventListener('pointerdown', this._onDown);
+    window.addEventListener('pointermove', this._onMove);
+    window.addEventListener('pointerup', this._onUp);
+    window.addEventListener('pointercancel', this._onUp);
+    window.addEventListener('keydown', this._onKeyDown);
+    window.addEventListener('keyup', this._onKeyUp);
+    window.addEventListener('blur', this._onBlur);
+  }
+
+  detach() {
+    this.target.removeEventListener('pointerdown', this._onDown);
+    window.removeEventListener('pointermove', this._onMove);
+    window.removeEventListener('pointerup', this._onUp);
+    window.removeEventListener('pointercancel', this._onUp);
+    window.removeEventListener('keydown', this._onKeyDown);
+    window.removeEventListener('keyup', this._onKeyUp);
+    window.removeEventListener('blur', this._onBlur);
+  }
+
+  isKeyDown(code) {
+    return this.keys.has(code);
+  }
+
+  _pointer(type, e, down) {
+    const s = this.viewport.scale;
+    this.pointer.x = e.clientX / s;
+    this.pointer.y = e.clientY / s;
+    if (down !== null) this.pointer.down = down;
+    this.bus.emit(type, this.pointer, e);
+  }
+}
+
+return { Input };
+})();
+__m["src/core/SceneManager.js"] = (function () {
+'use strict';
+/** Registra escenas por nombre y gestiona la escena activa. */
+class SceneManager {
+  constructor(game) {
+    this.game = game;
+    this._registry = new Map();
+    this.current = null;
+    this.currentName = null;
+  }
+
+  register(name, SceneClass) {
+    this._registry.set(name, SceneClass);
+  }
+
+  switchTo(name, params) {
+    const SceneClass = this._registry.get(name);
+    if (!SceneClass) throw new Error(`Escena no registrada: "${name}"`);
+    if (this.current) this.current.exit();
+    this.current = new SceneClass(this.game);
+    this.currentName = name;
+    this.current.enter(params);
+    this.current.resize(this.game.viewport);
+    this.game.bus.emit('scene:changed', name);
+  }
+
+  update(dt) {
+    if (this.current) this.current.update(dt);
+  }
+
+  render(ctx, viewport, alpha) {
+    if (this.current) this.current.render(ctx, viewport, alpha);
+  }
+
+  resize(viewport) {
+    if (this.current) this.current.resize(viewport);
+  }
+}
+
+return { SceneManager };
+})();
+__m["src/core/AssetLoader.js"] = (function () {
+'use strict';
+/**
+ * Carga de recursos a partir de un manifiesto (ver assets/manifest.js).
+ * Soporta imágenes, JSON y audio. Las rutas son relativas a index.html.
+ */
+class AssetLoader {
+  constructor({ audio }) {
+    this.audio = audio;
+    this.images = new Map();
+    this.json = new Map();
+  }
+
+  /**
+   * @param {{images?: Record<string,string>, json?: Record<string,string>, audio?: Record<string,string>}} manifest
+   * @param {(progress: number) => void} [onProgress]  valor 0..1
+   */
+  async load(manifest, onProgress = () => {}) {
+    const { images = {}, json = {}, audio = {} } = manifest;
+    const jobs = [];
+    for (const [key, url] of Object.entries(images)) jobs.push(() => this._loadImage(key, url));
+    for (const [key, url] of Object.entries(json)) jobs.push(() => this._loadJson(key, url));
+    for (const [key, url] of Object.entries(audio)) jobs.push(() => this._loadAudio(key, url));
+
+    if (jobs.length === 0) {
+      onProgress(1);
+      return;
+    }
+    let done = 0;
+    await Promise.all(
+      jobs.map(async (job) => {
+        await job();
+        done++;
+        onProgress(done / jobs.length);
+      })
+    );
+  }
+
+  getImage(key) {
+    return this.images.get(key) || null;
+  }
+
+  getJson(key) {
+    return this.json.get(key) || null;
+  }
+
+  _loadImage(key, url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        this.images.set(key, img);
+        resolve();
+      };
+      img.onerror = () => reject(new Error(`No se pudo cargar la imagen: ${url}`));
+      img.src = url;
+    });
+  }
+
+  async _loadJson(key, url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`No se pudo cargar el JSON: ${url} (${res.status})`);
+    this.json.set(key, await res.json());
+  }
+
+  async _loadAudio(key, url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`No se pudo cargar el audio: ${url} (${res.status})`);
+    const buffer = await this.audio.decode(await res.arrayBuffer());
+    this.audio.register(key, buffer);
+  }
+}
+
+return { AssetLoader };
+})();
+__m["src/save/defaultSave.js"] = (function () {
+'use strict';
+const { DEFAULT_QUALITY } = __m["src/config/quality.config.js"];
+
+/** Versión del esquema de guardado. Súbela al cambiar la estructura y añade una migración. */
+const SAVE_VERSION = 1;
+
+function createDefaultSave() {
+  return {
+    version: SAVE_VERSION,
+    settings: {
+      quality: DEFAULT_QUALITY,
+      debug: false,
+      volumes: { master: 1, music: 0.8, sfx: 1 },
+    },
+    profile: {
+      selectedCharacter: 'placeholder',
+    },
+    // Reservado para etapas futuras (misiones, coleccionables, desbloqueos…).
+    progress: {},
+  };
+}
+
+return { SAVE_VERSION, createDefaultSave };
+})();
+__m["src/save/migrations.js"] = (function () {
+'use strict';
+/**
+ * Migraciones del guardado. La clave es la versión de origen; la función
+ * recibe los datos de esa versión y devuelve los de la siguiente
+ * (incluido `version`). Ejemplo para cuando exista la v2:
+ *
+ *   1: (data) => ({ ...data, version: 2, progress: { ...data.progress, quests: {} } }),
+ */
+const MIGRATIONS = {};
+
+return { MIGRATIONS };
+})();
+__m["src/save/adapters/LocalStorageAdapter.js"] = (function () {
+'use strict';
+/**
+ * Almacenamiento por defecto (navegador y WebView de Capacitor).
+ * Si localStorage no está disponible (modo privado, permisos), cae a memoria
+ * para que el juego siga funcionando sin guardar.
+ *
+ * Interfaz del adaptador: getItem(key) / setItem(key, value) / removeItem(key).
+ * En el futuro se puede sustituir por uno basado en Capacitor Preferences.
+ */
+class LocalStorageAdapter {
+  constructor() {
+    this._memory = new Map();
+    this._usable = this._probe();
+  }
+
+  _probe() {
+    try {
+      const k = '__quasar_probe__';
+      window.localStorage.setItem(k, '1');
+      window.localStorage.removeItem(k);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  getItem(key) {
+    if (!this._usable) return this._memory.has(key) ? this._memory.get(key) : null;
+    try {
+      return window.localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  setItem(key, value) {
+    if (!this._usable) {
+      this._memory.set(key, value);
+      return;
+    }
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (e) {
+      this._memory.set(key, value);
+    }
+  }
+
+  removeItem(key) {
+    this._memory.delete(key);
+    if (!this._usable) return;
+    try {
+      window.localStorage.removeItem(key);
+    } catch (e) {
+      /* sin acción */
+    }
+  }
+}
+
+return { LocalStorageAdapter };
+})();
+__m["src/save/SaveManager.js"] = (function () {
+'use strict';
+const { createDefaultSave, SAVE_VERSION } = __m["src/save/defaultSave.js"];
+const { MIGRATIONS } = __m["src/save/migrations.js"];
+const { LocalStorageAdapter } = __m["src/save/adapters/LocalStorageAdapter.js"];
+
+const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+
+/** Copia en `base` los valores de `src` que existen y tienen el mismo tipo. */
+function mergeInto(base, src) {
+  if (!isObject(src)) return base;
+  for (const key of Object.keys(src)) {
+    if (isObject(base[key]) && isObject(src[key])) {
+      mergeInto(base[key], src[key]);
+    } else if (!(key in base) || typeof base[key] === typeof src[key]) {
+      base[key] = src[key];
+    }
+  }
+  return base;
+}
+
+/**
+ * Guardado local versionado y tolerante a datos corruptos.
+ * Uso: modificar `save.data` y llamar a `save.commit()` (se escribe con un
+ * pequeño retardo para agrupar cambios; `flush()` fuerza la escritura).
+ */
+class SaveManager {
+  constructor({ key, adapter = new LocalStorageAdapter() }) {
+    this.key = key;
+    this.adapter = adapter;
+    this.data = createDefaultSave();
+    this._timer = 0;
+  }
+
+  load() {
+    const fresh = createDefaultSave();
+    try {
+      const raw = this.adapter.getItem(this.key);
+      if (raw) {
+        let parsed = JSON.parse(raw);
+        parsed = this._migrate(parsed);
+        if (parsed) {
+          this.data = mergeInto(fresh, parsed);
+          this.data.version = SAVE_VERSION;
+          return this.data;
+        }
+      }
+    } catch (e) {
+      console.warn('[save] Datos ilegibles; se usan valores por defecto.', e);
+    }
+    this.data = fresh;
+    return this.data;
+  }
+
+  _migrate(data) {
+    if (!isObject(data) || typeof data.version !== 'number') return null;
+    let current = data;
+    while (current.version < SAVE_VERSION) {
+      const step = MIGRATIONS[current.version];
+      if (!step) return null; // no hay camino de migración: empezar de cero
+      current = step(current);
+    }
+    return current.version === SAVE_VERSION ? current : null;
+  }
+
+  /** Programa la escritura de `data` (agrupa cambios seguidos). */
+  commit() {
+    clearTimeout(this._timer);
+    this._timer = setTimeout(() => this.flush(), 250);
+  }
+
+  flush() {
+    clearTimeout(this._timer);
+    try {
+      this.adapter.setItem(this.key, JSON.stringify(this.data));
+    } catch (e) {
+      console.warn('[save] No se pudo guardar.', e);
+    }
+  }
+
+  reset() {
+    this.data = createDefaultSave();
+    this.adapter.removeItem(this.key);
+  }
+}
+
+return { SaveManager };
+})();
+__m["src/audio/AudioManager.js"] = (function () {
+'use strict';
+/**
+ * Sistema de audio sobre Web Audio API.
+ *
+ * Estructura de buses:   fuente → bus (music | sfx) → master → salida
+ *
+ * Etapa 00: aún no hay sonidos ni música. Esta capa solo aporta lo que no se
+ * puede improvisar después: desbloqueo del audio tras el primer gesto del
+ * usuario (obligatorio en navegadores y WebView), volúmenes por bus y
+ * registro/reproducción de buffers. La música y los efectos ambientales se
+ * construirán encima en etapas futuras.
+ */
+class AudioManager {
+  constructor({ bus }) {
+    this.bus = bus;
+    this.ctx = null;
+    this.buses = null;
+    this._volumes = { master: 1, music: 1, sfx: 1 };
+    this._buffers = new Map();
+  }
+
+  _ensureContext() {
+    if (this.ctx) return this.ctx;
+    const Ctor = window.AudioContext || window.webkitAudioContext;
+    if (!Ctor) return null;
+    this.ctx = new Ctor();
+    const master = this.ctx.createGain();
+    const music = this.ctx.createGain();
+    const sfx = this.ctx.createGain();
+    music.connect(master);
+    sfx.connect(master);
+    master.connect(this.ctx.destination);
+    this.buses = { master, music, sfx };
+    for (const name of Object.keys(this._volumes)) this._applyVolume(name);
+    return this.ctx;
+  }
+
+  /** Registra el desbloqueo automático en el primer gesto del usuario. */
+  attachAutoUnlock(target) {
+    const unlock = () => {
+      this.unlock();
+      target.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+    target.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
+  }
+
+  unlock() {
+    const ctx = this._ensureContext();
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+  }
+
+  suspend() {
+    if (this.ctx && this.ctx.state === 'running') this.ctx.suspend();
+  }
+
+  resume() {
+    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+  }
+
+  setVolume(busName, value) {
+    if (!(busName in this._volumes)) return;
+    this._volumes[busName] = Math.min(1, Math.max(0, value));
+    this._applyVolume(busName);
+  }
+
+  getVolume(busName) {
+    return this._volumes[busName];
+  }
+
+  _applyVolume(busName) {
+    if (this.buses) this.buses[busName].gain.value = this._volumes[busName];
+  }
+
+  decode(arrayBuffer) {
+    const ctx = this._ensureContext();
+    if (!ctx) return Promise.reject(new Error('Web Audio no disponible'));
+    return ctx.decodeAudioData(arrayBuffer);
+  }
+
+  register(id, buffer) {
+    this._buffers.set(id, buffer);
+  }
+
+  /** Reproduce un efecto ya registrado. Devuelve la fuente, o null si no se pudo. */
+  playSfx(id, { volume = 1, rate = 1 } = {}) {
+    const buffer = this._buffers.get(id);
+    if (!buffer || !this.ctx || this.ctx.state !== 'running') return null;
+    const src = this.ctx.createBufferSource();
+    src.buffer = buffer;
+    src.playbackRate.value = rate;
+    const gain = this.ctx.createGain();
+    gain.gain.value = volume;
+    src.connect(gain);
+    gain.connect(this.buses.sfx);
+    src.start();
+    return src;
+  }
+}
+
+return { AudioManager };
+})();
+__m["src/ui/components/dom.js"] = (function () {
+'use strict';
+/**
+ * Creador de elementos DOM mínimo.
+ *   h('button', { class: 'btn', onclick: fn }, 'Texto', otroElemento)
+ */
+function h(tag, props = {}, ...children) {
+  const el = document.createElement(tag);
+  for (const [key, value] of Object.entries(props)) {
+    if (value === undefined || value === null || value === false) continue;
+    if (key.startsWith('on') && typeof value === 'function') {
+      el.addEventListener(key.slice(2), value);
+    } else if (key === 'class') {
+      el.className = value;
+    } else {
+      el.setAttribute(key, value === true ? '' : String(value));
+    }
+  }
+  for (const child of children) {
+    if (child === undefined || child === null || child === false) continue;
+    el.append(child instanceof Node ? child : document.createTextNode(String(child)));
+  }
+  return el;
+}
+
+return { h };
+})();
+__m["src/ui/DebugOverlay.js"] = (function () {
+'use strict';
+const { h } = __m["src/ui/components/dom.js"];
+
+/**
+ * Panel de diagnóstico (FPS, tamaño de pantalla, escala, densidad, calidad).
+ * Útil para probar en dispositivos reales. Se activa desde la pantalla de
+ * título y su estado se guarda en los ajustes.
+ */
+class DebugOverlay {
+  constructor({ game }) {
+    this.game = game;
+    this.el = h('pre', { class: 'debug-overlay', 'aria-hidden': 'true', hidden: true });
+    this._timer = 0;
+  }
+
+  /** Aplica el ajuste guardado. Se llama desde Game.start(), cuando ya existen todos los servicios. */
+  init() {
+    this.setEnabled(Boolean(this.game.save.data.settings.debug));
+  }
+
+  get enabled() {
+    return !this.el.hidden;
+  }
+
+  setEnabled(enabled) {
+    this.el.hidden = !enabled;
+    clearInterval(this._timer);
+    if (enabled) {
+      this._refresh();
+      this._timer = setInterval(() => this._refresh(), 500);
+    }
+  }
+
+  _refresh() {
+    const g = this.game;
+    const vp = g.viewport;
+    this.el.textContent = [
+      `FPS      ${g.loop.fps.toFixed(0)} (tope ${g.quality.targetFps}) · ${g.quality.label}`,
+      `Pantalla ${window.innerWidth}×${window.innerHeight} px`,
+      `Lógica   ${vp.width.toFixed(0)}×${vp.height.toFixed(0)} u · segura ${vp.safe.w.toFixed(0)}×${vp.safe.h.toFixed(0)}`,
+      `Escala   ${vp.scale.toFixed(3)} · DPR ${vp.dpr.toFixed(2)} · ${g.scenes.currentName}`,
+    ].join('\n');
+  }
+}
+
+return { DebugOverlay };
+})();
+__m["src/ui/components/SegmentedControl.js"] = (function () {
+'use strict';
+const { h } = __m["src/ui/components/dom.js"];
+
+/**
+ * Selector de una opción entre varias (botones contiguos).
+ * @param {{options: Array<{value:string,label:string}>, value:string, label:string, onChange:(v:string)=>void}} cfg
+ */
+function SegmentedControl({ options, value, label, onChange }) {
+  const buttons = new Map();
+  const group = h('div', { class: 'segmented', role: 'group', 'aria-label': label });
+
+  const select = (v) => {
+    for (const [optValue, btn] of buttons) {
+      btn.setAttribute('aria-pressed', String(optValue === v));
+    }
+  };
+
+  for (const opt of options) {
+    const btn = h(
+      'button',
+      {
+        class: 'seg-btn',
+        type: 'button',
+        onclick: () => {
+          select(opt.value);
+          onChange(opt.value);
+        },
+      },
+      opt.label
+    );
+    buttons.set(opt.value, btn);
+    group.append(btn);
+  }
+  select(value);
+  return group;
+}
+
+return { SegmentedControl };
+})();
+__m["src/ui/screens/TitleScreen.js"] = (function () {
+'use strict';
+const { h } = __m["src/ui/components/dom.js"];
+const { SegmentedControl } = __m["src/ui/components/SegmentedControl.js"];
+const { QUALITY_ORDER, QUALITY_PROFILES } = __m["src/config/quality.config.js"];
+
+/**
+ * Pantalla de título de la Etapa 00. Muestra la identidad del proyecto y los
+ * ajustes técnicos disponibles hoy (calidad gráfica y diagnóstico).
+ * No hay botón de jugar: todavía no existen mecánicas.
+ */
+class TitleScreen {
+  constructor(game, ui) {
+    this.game = game;
+    this.ui = ui;
+  }
+
+  mount(container) {
+    const { config } = this.game;
+    const debugOn = this.ui.debug.enabled;
+
+    const quality = SegmentedControl({
+      label: 'Calidad gráfica',
+      value: this.game.qualityId,
+      options: QUALITY_ORDER.map((id) => ({ value: id, label: QUALITY_PROFILES[id].label })),
+      onChange: (id) => this.game.setQuality(id),
+    });
+
+    this.debugBtn = h(
+      'button',
+      {
+        class: 'seg-btn solo',
+        type: 'button',
+        'aria-pressed': String(debugOn),
+        onclick: () => {
+          const next = !this.ui.debug.enabled;
+          this.ui.debug.setEnabled(next);
+          this.debugBtn.setAttribute('aria-pressed', String(next));
+          this.game.save.data.settings.debug = next;
+          this.game.save.commit();
+        },
+      },
+      'Diagnóstico'
+    );
+
+    this.root = h(
+      'div',
+      { class: 'title-screen' },
+      h(
+        'header',
+        { class: 'title-block' },
+        h('p', { class: 'eyebrow' }, config.tagline),
+        h('h1', { class: 'logo' }, config.name),
+        h('p', { class: 'subtitle' }, config.stage),
+        h('p', { class: 'note' }, 'Base técnica lista · las mecánicas llegan en próximas etapas')
+      ),
+      h(
+        'footer',
+        { class: 'bottom-bar' },
+        h(
+          'div',
+          { class: 'controls' },
+          h('div', { class: 'control-row' }, h('span', { class: 'control-label' }, 'Calidad'), quality),
+          this.debugBtn
+        ),
+        h('div', { class: 'chips' }, h('span', { class: 'chip' }, `v${config.version}`), h('span', { class: 'chip' }, 'Web · Canvas 2D'))
+      )
+    );
+    container.append(this.root);
+  }
+
+  unmount() {
+    if (this.root) this.root.remove();
+  }
+}
+
+return { TitleScreen };
+})();
+__m["src/ui/UIManager.js"] = (function () {
+'use strict';
+const { h } = __m["src/ui/components/dom.js"];
+const { DebugOverlay } = __m["src/ui/DebugOverlay.js"];
+const { TitleScreen } = __m["src/ui/screens/TitleScreen.js"];
+
+/**
+ * Capa de interfaz en DOM encima del canvas, alineada con el área segura.
+ * Ventajas: texto nítido en cualquier densidad, accesibilidad y botones
+ * táctiles reales. Cada pantalla de UI es una clase con mount()/unmount().
+ */
+class UIManager {
+  constructor({ root, game }) {
+    this.root = root;
+    this.game = game;
+    this._screens = new Map();
+    this._current = null;
+    this._container = null;
+
+    this.debug = new DebugOverlay({ game });
+    this.root.append(this.debug.el);
+
+    this.register('title', TitleScreen);
+  }
+
+  register(name, ScreenClass) {
+    this._screens.set(name, ScreenClass);
+  }
+
+  show(name) {
+    this.hide();
+    const ScreenClass = this._screens.get(name);
+    if (!ScreenClass) throw new Error(`Pantalla de UI no registrada: "${name}"`);
+    this._container = h('div', { class: 'screen' });
+    this.root.append(this._container);
+    this._current = new ScreenClass(this.game, this);
+    this._current.mount(this._container);
+  }
+
+  hide() {
+    if (this._current) this._current.unmount();
+    if (this._container) this._container.remove();
+    this._current = null;
+    this._container = null;
+  }
+}
+
+return { UIManager };
+})();
+__m["src/core/Registry.js"] = (function () {
+'use strict';
+/**
+ * Registro genérico de definiciones (personajes, regiones, y lo que venga).
+ * Valida cada definición al registrarla para fallar pronto y con mensajes claros.
+ */
+class Registry {
+  /**
+   * @param {string} kind  nombre legible del tipo ("personaje", "región"…)
+   * @param {(def: any) => string[]} validate  devuelve la lista de errores
+   */
+  constructor(kind, validate) {
+    this.kind = kind;
+    this._validate = validate;
+    this._items = new Map();
+  }
+
+  register(def) {
+    const errors = this._validate(def);
+    if (errors.length) {
+      const id = def && def.id ? ` "${def.id}"` : '';
+      throw new Error(`Definición de ${this.kind}${id} inválida: ${errors.join('; ')}`);
+    }
+    if (this._items.has(def.id)) {
+      throw new Error(`Ya existe un/a ${this.kind} con id "${def.id}"`);
+    }
+    this._items.set(def.id, def);
+    return def;
+  }
+
+  has(id) {
+    return this._items.has(id);
+  }
+
+  get(id) {
+    return this._items.get(id) || null;
+  }
+
+  list() {
+    return Array.from(this._items.values());
+  }
+}
+
+return { Registry };
+})();
+__m["src/characters/CharacterDefinition.js"] = (function () {
+'use strict';
+/**
+ * Definición de personaje: datos puros, separados de cómo se dibuja.
+ * Cambiar el aspecto de un personaje (de provisional a sprites reales) solo
+ * exige cambiar `render.type` y sus parámetros; nada más del juego depende
+ * de cómo se vea.
+ *
+ * @typedef {Object} CharacterDefinition
+ * @property {string} id
+ * @property {string} name
+ * @property {{type:string, params?:object}} render
+ *           tipo de renderer registrado (ver CharacterRendererRegistry). Hoy: 'placeholder'.
+ * @property {Array<{id:string, name:string, palette:Record<string,string>}>} skins
+ *           apariencias alternativas (la primera es la de por defecto)
+ * @property {Record<string, {loop:boolean}>} animations   debe incluir 'idle'
+ * @property {string[]} accessories   ids de accesorios compatibles (futuro)
+ * @property {string[]} abilities     ids de habilidades individuales (futuro)
+ */
+
+const isStr = (v) => typeof v === 'string' && v.length > 0;
+
+/** Devuelve la lista de errores de una definición de personaje (vacía si es válida). */
+function validateCharacterDefinition(def) {
+  const errors = [];
+  if (!def || typeof def !== 'object') return ['la definición no es un objeto'];
+  if (!isStr(def.id)) errors.push('falta "id"');
+  if (!isStr(def.name)) errors.push('falta "name"');
+  if (!def.render || !isStr(def.render.type)) errors.push('falta "render.type"');
+
+  if (!Array.isArray(def.skins) || def.skins.length === 0) {
+    errors.push('"skins" debe tener al menos una apariencia');
+  } else if (!def.skins.every((s) => s && isStr(s.id) && s.palette && typeof s.palette === 'object')) {
+    errors.push('cada skin necesita "id" y "palette"');
+  }
+
+  if (!def.animations || typeof def.animations !== 'object' || !def.animations.idle) {
+    errors.push('"animations" debe incluir "idle"');
+  }
+  if (!Array.isArray(def.accessories)) errors.push('"accessories" debe ser una lista');
+  if (!Array.isArray(def.abilities)) errors.push('"abilities" debe ser una lista');
+  return errors;
+}
+
+return { validateCharacterDefinition };
+})();
+__m["src/characters/CharacterRegistry.js"] = (function () {
+'use strict';
+const { Registry } = __m["src/core/Registry.js"];
+const { validateCharacterDefinition } = __m["src/characters/CharacterDefinition.js"];
+
+/** Registro de personajes jugables (y desbloqueables en el futuro). */
+class CharacterRegistry extends Registry {
+  constructor() {
+    super('personaje', validateCharacterDefinition);
+  }
+}
+
+return { CharacterRegistry };
+})();
+__m["src/characters/CharacterRendererRegistry.js"] = (function () {
+'use strict';
+/**
+ * Registro de "renderers" de personaje. Un renderer sabe dibujar un personaje
+ * de cierto tipo; la lógica del juego nunca dibuja directamente.
+ *
+ * Interfaz de un renderer:
+ *   { draw(ctx, character, x, y, size) }
+ *     - (x, y): centro del personaje en unidades lógicas
+ *     - size: alto aproximado del personaje en unidades lógicas
+ *
+ * Hoy existe 'placeholder'. En una etapa futura se registrará, por ejemplo,
+ * un renderer 'sprite' (hojas de sprites + animaciones) sin tocar el resto.
+ */
+const renderers = new Map();
+
+function registerCharacterRenderer(type, renderer) {
+  if (!renderer || typeof renderer.draw !== 'function') {
+    throw new Error(`El renderer "${type}" debe implementar draw()`);
+  }
+  renderers.set(type, renderer);
+}
+
+function getCharacterRenderer(type) {
+  const renderer = renderers.get(type);
+  if (!renderer) throw new Error(`No hay renderer de personaje registrado para "${type}"`);
+  return renderer;
+}
+
+return { registerCharacterRenderer, getCharacterRenderer };
+})();
+__m["src/graphics/color.js"] = (function () {
+'use strict';
+/** Utilidades de color mínimas (hex #rrggbb). */
+
+function parseHex(hex) {
+  const h = hex.replace('#', '');
+  const n = parseInt(h.length === 3 ? h.replace(/(.)/g, '$1$1') : h, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function toHex(r, g, b) {
+  const c = (v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0');
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+
+/** Mezcla `a` hacia `b` con factor t (0 = a, 1 = b). */
+function mixHex(a, b, t) {
+  const [ar, ag, ab] = parseHex(a);
+  const [br, bg, bb] = parseHex(b);
+  return toHex(ar + (br - ar) * t, ag + (bg - ag) * t, ab + (bb - ab) * t);
+}
+
+function rgba(hex, alpha) {
+  const [r, g, b] = parseHex(hex);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+return { parseHex, mixHex, rgba };
+})();
+__m["src/characters/renderers/placeholderRenderer.js"] = (function () {
+'use strict';
+const { mixHex } = __m["src/graphics/color.js"];
+
+/**
+ * Renderer del personaje PROVISIONAL: una silueta neutra y sin rostro con
+ * sombra, solo para ocupar el lugar del protagonista mientras no exista su
+ * diseño. No define estilo ni anatomía; se sustituye registrando otro renderer.
+ */
+function capsule(ctx, cx, cy, w, h) {
+  const r = Math.min(w, h) / 2;
+  const x = cx - w / 2;
+  const y = cy - h / 2;
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arc(x + w - r, y + r, r, -Math.PI / 2, 0);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arc(x + w - r, y + h - r, r, 0, Math.PI / 2);
+  ctx.lineTo(x + r, y + h);
+  ctx.arc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+  ctx.lineTo(x, y + r);
+  ctx.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+  ctx.closePath();
+}
+
+const placeholderRenderer = {
+  draw(ctx, character, x, y, size) {
+    const body = character.skin.palette.body || '#ffc6e5';
+    const t = character.time;
+    const wave = Math.sin(t * 2);
+    const bob = wave * size * 0.03;
+    const squash = 1 + wave * 0.02;
+
+    // Sombra en el suelo: se contrae un poco cuando el personaje sube.
+    const shadowScale = 1 - wave * 0.06;
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.beginPath();
+    ctx.ellipse(x, y + size * 0.62, size * 0.36 * shadowScale, size * 0.07 * shadowScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cuerpo con degradado (luz desde arriba).
+    const w = size * 0.7 * (2 - squash);
+    const h = size * squash;
+    const cy = y + bob;
+    const grad = ctx.createLinearGradient(0, cy - h / 2, 0, cy + h / 2);
+    grad.addColorStop(0, mixHex(body, '#ffffff', 0.35));
+    grad.addColorStop(1, mixHex(body, '#3a1d70', 0.25));
+    ctx.fillStyle = grad;
+    capsule(ctx, x, cy, w, h);
+    ctx.fill();
+
+    // Brillo suave.
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(x - w * 0.18, cy - h * 0.28, w * 0.1, h * 0.14, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+  },
+};
+
+return { placeholderRenderer };
+})();
+__m["src/characters/definitions/placeholder.js"] = (function () {
+'use strict';
+/**
+ * Personaje PROVISIONAL. Existe solo para que el sistema tenga un protagonista
+ * con el que probarse. Se reemplazará (o se añadirán más) sin cambiar el resto
+ * del proyecto: basta con una nueva definición y, si usa sprites, su renderer.
+ */
+const __default = {
+  id: 'placeholder',
+  name: 'Personaje provisional',
+  render: { type: 'placeholder' },
+  skins: [{ id: 'default', name: 'Base', palette: { body: '#ffc6e5' } }],
+  animations: { idle: { loop: true } },
+  accessories: [],
+  abilities: [],
+};
+
+return { default: __default };
+})();
+__m["src/characters/definitions/index.js"] = (function () {
+'use strict';
+const placeholder = __m["src/characters/definitions/placeholder.js"].default;
+
+/** Todos los personajes disponibles. Añade aquí las nuevas definiciones. */
+const CHARACTER_DEFINITIONS = [placeholder];
+
+return { CHARACTER_DEFINITIONS };
+})();
+__m["src/regions/RegionDefinition.js"] = (function () {
+'use strict';
+/**
+ * Definición de región: datos puros, sin lógica. Una región describe cómo se
+ * ve y (en el futuro) cómo se comporta un lugar del universo QUASAR.
+ *
+ * @typedef {Object} RegionDefinition
+ * @property {string} id
+ * @property {string} name
+ * @property {'preview'|'final'} status           'preview' = solo para pruebas técnicas
+ * @property {{skyTop:string, skyMid:string, skyBottom:string}} palette
+ * @property {{x:number, y:number, radius:number, color:string}} light   posición relativa (0..1)
+ * @property {{count:number, seed:number}} stars
+ * @property {Array<{id:string, parallax:number, base:number, amplitude:number,
+ *                   harmonics:Array<[number,number]>, seed:number, color:string, fade:number}>} layers
+ *           capas de siluetas de lejos a cerca (`parallax` mayor = más cercana y rápida)
+ *
+ * Campos futuros previstos (se añadirán en sus etapas): obstáculos y
+ * coleccionables propios, reglas de generación procedural, música y efectos
+ * ambientales, criaturas.
+ */
+
+const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+const isStr = (v) => typeof v === 'string' && v.length > 0;
+
+/** Devuelve la lista de errores de una definición de región (vacía si es válida). */
+function validateRegionDefinition(def) {
+  const errors = [];
+  if (!def || typeof def !== 'object') return ['la definición no es un objeto'];
+  if (!isStr(def.id)) errors.push('falta "id"');
+  if (!isStr(def.name)) errors.push('falta "name"');
+
+  const p = def.palette;
+  if (!p || !isStr(p.skyTop) || !isStr(p.skyMid) || !isStr(p.skyBottom)) {
+    errors.push('"palette" necesita skyTop, skyMid y skyBottom');
+  }
+
+  const l = def.light;
+  if (!l || !isNum(l.x) || !isNum(l.y) || !isNum(l.radius) || !isStr(l.color)) {
+    errors.push('"light" necesita x, y, radius y color');
+  }
+
+  if (!def.stars || !isNum(def.stars.count) || !isNum(def.stars.seed)) {
+    errors.push('"stars" necesita count y seed');
+  }
+
+  if (!Array.isArray(def.layers) || def.layers.length === 0) {
+    errors.push('"layers" debe ser una lista con al menos una capa');
+  } else {
+    def.layers.forEach((layer, i) => {
+      const ok =
+        layer &&
+        isStr(layer.id) &&
+        isNum(layer.parallax) &&
+        isNum(layer.base) &&
+        isNum(layer.amplitude) &&
+        isNum(layer.seed) &&
+        isNum(layer.fade) &&
+        isStr(layer.color) &&
+        Array.isArray(layer.harmonics) &&
+        layer.harmonics.length > 0 &&
+        layer.harmonics.every((h) => Array.isArray(h) && Number.isInteger(h[0]) && isNum(h[1]));
+      if (!ok) errors.push(`la capa #${i} está incompleta (armónicos: [[entero, peso], …])`);
+    });
+  }
+  return errors;
+}
+
+return { validateRegionDefinition };
+})();
+__m["src/regions/RegionRegistry.js"] = (function () {
+'use strict';
+const { Registry } = __m["src/core/Registry.js"];
+const { validateRegionDefinition } = __m["src/regions/RegionDefinition.js"];
+
+/** Registro de regiones del universo QUASAR. */
+class RegionRegistry extends Registry {
+  constructor() {
+    super('región', validateRegionDefinition);
+  }
+}
+
+return { RegionRegistry };
+})();
+__m["src/regions/definitions/previewNebula.js"] = (function () {
+'use strict';
+/**
+ * Región de PRUEBA TÉCNICA (status: 'preview'). Sirve para demostrar capas,
+ * profundidad e iluminación en la pantalla de título. No es contenido final
+ * del juego: las regiones reales se diseñarán en etapas futuras.
+ */
+const __default = {
+  id: 'preview-nebula',
+  name: 'Nebulosa de prueba',
+  status: 'preview',
+  palette: {
+    skyTop: '#0f0838',
+    skyMid: '#47207f',
+    skyBottom: '#ff7fb0',
+  },
+  light: { x: 0.7, y: 0.5, radius: 0.55, color: '#ffd08a' },
+  stars: { count: 110, seed: 7 },
+  layers: [
+    { id: 'lejos', parallax: 0.12, base: 0.66, amplitude: 0.1, harmonics: [[2, 1], [5, 0.5], [9, 0.25]], seed: 11, color: '#7b46b8', fade: 0.55 },
+    { id: 'media', parallax: 0.3, base: 0.74, amplitude: 0.11, harmonics: [[3, 1], [7, 0.45], [13, 0.2]], seed: 23, color: '#5a2f9a', fade: 0.32 },
+    { id: 'cerca', parallax: 0.6, base: 0.84, amplitude: 0.1, harmonics: [[4, 1], [9, 0.4], [17, 0.18]], seed: 37, color: '#3a1d70', fade: 0.12 },
+    { id: 'frente', parallax: 1, base: 0.94, amplitude: 0.06, harmonics: [[6, 1], [11, 0.5], [23, 0.2]], seed: 51, color: '#1d0e4a', fade: 0 },
+  ],
+};
+
+return { default: __default };
+})();
+__m["src/regions/definitions/index.js"] = (function () {
+'use strict';
+const previewNebula = __m["src/regions/definitions/previewNebula.js"].default;
+
+/** Todas las regiones disponibles. Añade aquí las nuevas definiciones. */
+const REGION_DEFINITIONS = [previewNebula];
+
+return { REGION_DEFINITIONS };
+})();
+__m["src/core/Scene.js"] = (function () {
+'use strict';
+/**
+ * Clase base de las escenas. Cada escena es independiente: recibe el `game`
+ * (acceso a los servicios) y solo implementa los ganchos que necesite.
+ */
+class Scene {
+  constructor(game) {
+    this.game = game;
+  }
+
+  /** Se llama al activar la escena. `params` viene de `scenes.switchTo()`. */
+  enter(params) {}
+
+  /** Se llama al abandonar la escena: liberar suscripciones y elementos de UI. */
+  exit() {}
+
+  /** Lógica con paso fijo (`dt` en segundos). */
+  update(dt) {}
+
+  /** Dibujo. El contexto ya está en coordenadas lógicas (ver Viewport). */
+  render(ctx, viewport, alpha) {}
+
+  /** Se llama tras `enter()` y cada vez que cambia el tamaño de la pantalla. */
+  resize(viewport) {}
+}
+
+return { Scene };
+})();
+__m["assets/manifest.js"] = (function () {
+'use strict';
+/**
+ * Manifiesto de recursos. Está vacío en la Etapa 00: el juego aún no usa
+ * imágenes ni audio externos (todo se dibuja por código).
+ *
+ * Cuando haya recursos, se declaran aquí y el BootScene los precarga (crea la
+ * carpeta que necesites, p. ej. www/assets/images/):
+ *
+ *   images: { 'hero-sheet': 'assets/images/hero-sheet.png' },
+ *   json:   { 'hero-anim':  'assets/data/hero-anim.json' },
+ *   audio:  { 'jump':       'assets/audio/jump.ogg' },
+ */
+const MANIFEST = {
+  images: {},
+  json: {},
+  audio: {},
+};
+
+return { MANIFEST };
+})();
+__m["src/scenes/BootScene.js"] = (function () {
+'use strict';
+const { Scene } = __m["src/core/Scene.js"];
+const { MANIFEST } = __m["assets/manifest.js"];
+
+/** Escena de arranque: precarga los recursos del manifiesto y pasa al título. */
+class BootScene extends Scene {
+  enter() {
+    this.progress = 0;
+    this.error = null;
+    this.game.assets
+      .load(MANIFEST, (p) => {
+        this.progress = p;
+      })
+      .then(() => this.game.scenes.switchTo('title'))
+      .catch((err) => {
+        console.error(err);
+        this.error = err.message;
+      });
+  }
+
+  render(ctx, viewport) {
+    ctx.fillStyle = '#0b0820';
+    ctx.fillRect(0, 0, viewport.width, viewport.height);
+
+    const { safe } = viewport;
+    const cx = safe.x + safe.w / 2;
+    const cy = safe.y + safe.h / 2;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '28px system-ui, sans-serif';
+    ctx.fillStyle = this.error ? '#ff9aa8' : '#cbb8ff';
+    ctx.fillText(this.error ? `Error de carga: ${this.error}` : 'Cargando…', cx, cy - 20);
+
+    if (!this.error) {
+      const w = 360;
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fillRect(cx - w / 2, cy + 20, w, 8);
+      ctx.fillStyle = '#ffd08a';
+      ctx.fillRect(cx - w / 2, cy + 20, w * this.progress, 8);
+    }
+  }
+}
+
+return { BootScene };
+})();
+__m["src/graphics/random.js"] = (function () {
+'use strict';
+/** Generador pseudoaleatorio determinista (mulberry32). Misma semilla → misma secuencia. */
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function next() {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+return { mulberry32 };
+})();
+__m["src/graphics/ParallaxBackdrop.js"] = (function () {
+'use strict';
+const { mixHex, rgba } = __m["src/graphics/color.js"];
+const { mulberry32 } = __m["src/graphics/random.js"];
+
+const TAU = Math.PI * 2;
+/** Longitud del ciclo de las siluetas (unidades lógicas). Garantiza deriva sin saltos. */
+const WRAP = 2048;
+/** Velocidad base de deriva ambiental (unidades lógicas por segundo). */
+const DRIFT_SPEED = 28;
+
+/**
+ * Dibuja el escenario de una región como capas con profundidad:
+ * cielo → estrellas → resplandor de luz → siluetas lejanas → cercanas.
+ *
+ * Transmite 2.5D con: perspectiva atmosférica (lo lejano se tiñe del color del
+ * horizonte), paralaje (cada capa deriva a distinta velocidad), iluminación
+ * (resplandor + borde de luz) y gradientes de sombra en cada silueta.
+ *
+ * Es solo la vista ambiental de una región; no contiene mecánicas ni escenarios
+ * procedurales (eso llegará en etapas futuras).
+ */
+class ParallaxBackdrop {
+  /**
+   * @param {object} region   definición de región (ver regions/RegionDefinition.js)
+   * @param {object} quality  perfil de calidad activo
+   */
+  constructor(region, quality) {
+    this.region = region;
+    this.quality = quality;
+    this.time = 0;
+    this._w = 0;
+    this._h = 0;
+    this._cache = null;
+    this._ys = new Float32Array(0);
+    this._layers = region.layers.map((def) => {
+      const rnd = mulberry32(def.seed);
+      return { def, phases: def.harmonics.map(() => rnd() * TAU) };
+    });
+    this._stars = this._makeStars();
+  }
+
+  setQuality(quality) {
+    this.quality = quality;
+    this._stars = this._makeStars();
+    this._cache = null;
+  }
+
+  resize(viewport) {
+    this._w = viewport.width;
+    this._h = viewport.height;
+    this._cache = null;
+  }
+
+  update(dt) {
+    this.time += dt;
+  }
+
+  _makeStars() {
+    const { count, seed } = this.region.stars;
+    const n = Math.round(count * this.quality.starDensity);
+    const rnd = mulberry32(seed);
+    const stars = [];
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: rnd(),
+        y: rnd() * 0.6,
+        r: 0.7 + rnd() * 1.5,
+        phase: rnd() * TAU,
+        speed: 0.6 + rnd() * 1.6,
+      });
+    }
+    return stars;
+  }
+
+  /** Crea los gradientes (dependen del contexto y del tamaño). Se cachean hasta el próximo resize. */
+  _build(ctx) {
+    const { palette, light } = this.region;
+    const w = this._w;
+    const h = this._h;
+
+    const sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, palette.skyTop);
+    sky.addColorStop(0.5, palette.skyMid);
+    sky.addColorStop(0.88, palette.skyBottom);
+
+    const lx = light.x * w;
+    const ly = light.y * h;
+    const lr = light.radius * Math.max(w, h);
+    const glow = ctx.createRadialGradient(lx, ly, 0, lx, ly, lr);
+    glow.addColorStop(0, rgba(light.color, 0.75));
+    glow.addColorStop(0.35, rgba(light.color, 0.22));
+    glow.addColorStop(1, rgba(light.color, 0));
+
+    const layers = this._layers.map(({ def }) => {
+      const top = mixHex(def.color, palette.skyBottom, def.fade);
+      const bottom = mixHex(top, '#05020f', 0.5);
+      const peak = def.base * h - def.amplitude * h;
+      const fill = ctx.createLinearGradient(0, peak, 0, h);
+      fill.addColorStop(0, top);
+      fill.addColorStop(1, bottom);
+      return { fill, rim: rgba(mixHex(top, light.color, 0.55), 0.55) };
+    });
+
+    this._cache = { sky, glow, lx, ly, lr, layers };
+  }
+
+  render(ctx) {
+    if (!this._cache) this._build(ctx);
+    const c = this._cache;
+    const w = this._w;
+    const h = this._h;
+
+    ctx.fillStyle = c.sky;
+    ctx.fillRect(0, 0, w, h);
+
+    this._drawStars(ctx, w, h);
+
+    ctx.fillStyle = c.glow;
+    ctx.fillRect(c.lx - c.lr, c.ly - c.lr, c.lr * 2, c.lr * 2);
+
+    for (let i = 0; i < this._layers.length; i++) {
+      this._drawLayer(ctx, this._layers[i], c.layers[i], w, h);
+    }
+  }
+
+  _drawStars(ctx, w, h) {
+    const twinkle = this.quality.twinkle;
+    ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < this._stars.length; i++) {
+      const s = this._stars[i];
+      ctx.globalAlpha = twinkle ? 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(this.time * s.speed + s.phase)) : 0.8;
+      ctx.fillRect(s.x * w - s.r, s.y * h - s.r, s.r * 2, s.r * 2);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  _drawLayer(ctx, layer, style, w, h) {
+    const { def, phases } = layer;
+    const step = this.quality.ridgeStep;
+    const count = Math.ceil(w / step) + 3;
+    if (this._ys.length < count) this._ys = new Float32Array(count);
+    const ys = this._ys;
+
+    const offset = this.time * DRIFT_SPEED * def.parallax;
+    const baseY = def.base * h;
+    const amp = def.amplitude * h;
+    let total = 0;
+    for (let k = 0; k < def.harmonics.length; k++) total += def.harmonics[k][1];
+
+    for (let i = 0; i < count; i++) {
+      const x = (i - 1) * step;
+      let n = 0;
+      for (let k = 0; k < def.harmonics.length; k++) {
+        const hm = def.harmonics[k];
+        n += hm[1] * (0.5 + 0.5 * Math.sin((TAU * hm[0] * (x + offset)) / WRAP + phases[k]));
+      }
+      ys[i] = baseY - amp * (n / total);
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(-step, h + 2);
+    for (let i = 0; i < count; i++) ctx.lineTo((i - 1) * step, ys[i]);
+    ctx.lineTo((count - 2) * step, h + 2);
+    ctx.closePath();
+    ctx.fillStyle = style.fill;
+    ctx.fill();
+
+    if (this.quality.rim) {
+      ctx.beginPath();
+      ctx.moveTo(-step, ys[0]);
+      for (let i = 1; i < count; i++) ctx.lineTo((i - 1) * step, ys[i]);
+      ctx.strokeStyle = style.rim;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+}
+
+return { ParallaxBackdrop };
+})();
+__m["src/characters/Character.js"] = (function () {
+'use strict';
+const { getCharacterRenderer } = __m["src/characters/CharacterRendererRegistry.js"];
+
+/**
+ * Instancia de un personaje en pantalla: estado mutable (animación, apariencia,
+ * accesorios) sobre una definición inmutable. No sabe cómo dibujarse; delega
+ * en el renderer indicado por la definición.
+ */
+class Character {
+  /** @param {import('./CharacterDefinition.js').CharacterDefinition} definition */
+  constructor(definition) {
+    this.definition = definition;
+    this.renderer = getCharacterRenderer(definition.render.type);
+    this.skin = definition.skins[0];
+    this.accessories = [];
+    this.animation = 'idle';
+    this.time = 0;
+  }
+
+  setSkin(skinId) {
+    const skin = this.definition.skins.find((s) => s.id === skinId);
+    if (skin) this.skin = skin;
+  }
+
+  play(animation) {
+    if (!this.definition.animations[animation] || animation === this.animation) return;
+    this.animation = animation;
+    this.time = 0;
+  }
+
+  update(dt) {
+    this.time += dt;
+  }
+
+  render(ctx, x, y, size) {
+    this.renderer.draw(ctx, this, x, y, size);
+  }
+}
+
+return { Character };
+})();
+__m["src/scenes/TitleScene.js"] = (function () {
+'use strict';
+const { Scene } = __m["src/core/Scene.js"];
+const { ParallaxBackdrop } = __m["src/graphics/ParallaxBackdrop.js"];
+const { Character } = __m["src/characters/Character.js"];
+
+/**
+ * Pantalla de título de la Etapa 00. Integra los sistemas fundamentales para
+ * comprobar que trabajan juntos: región (fondo con capas), personaje
+ * provisional, interfaz, calidad gráfica y guardado.
+ */
+class TitleScene extends Scene {
+  enter() {
+    const g = this.game;
+    const region = g.regions.get('preview-nebula') || g.regions.list()[0];
+    this.backdrop = new ParallaxBackdrop(region, g.quality);
+
+    const selected = g.save.data.profile.selectedCharacter;
+    const definition = g.characters.get(selected) || g.characters.list()[0];
+    this.character = new Character(definition);
+
+    g.ui.show('title');
+    this._offQuality = g.bus.on('quality:changed', () => this.backdrop.setQuality(g.quality));
+  }
+
+  exit() {
+    this._offQuality();
+    this.game.ui.hide();
+  }
+
+  update(dt) {
+    this.backdrop.update(dt);
+    this.character.update(dt);
+  }
+
+  resize(viewport) {
+    this.backdrop.resize(viewport);
+  }
+
+  render(ctx, viewport) {
+    this.backdrop.render(ctx);
+    const { safe } = viewport;
+    // Composición vertical: el personaje se centra y su tamaño sigue al ancho del área segura.
+    this.character.render(ctx, safe.x + safe.w / 2, safe.y + safe.h * 0.62, safe.w * 0.3);
+  }
+}
+
+return { TitleScene };
+})();
+__m["src/scenes/index.js"] = (function () {
+'use strict';
+const { BootScene } = __m["src/scenes/BootScene.js"];
+const { TitleScene } = __m["src/scenes/TitleScene.js"];
+
+/** Escenas disponibles (nombre → clase). Añade aquí las nuevas. */
+const SCENES = {
+  boot: BootScene,
+  title: TitleScene,
+};
+
+return { SCENES };
+})();
+__m["src/core/Game.js"] = (function () {
+'use strict';
+const { GAME, LOOP } = __m["src/config/game.config.js"];
+const { QUALITY_PROFILES, DEFAULT_QUALITY } = __m["src/config/quality.config.js"];
+const { EventBus } = __m["src/core/EventBus.js"];
+const { Loop } = __m["src/core/Loop.js"];
+const { Viewport } = __m["src/core/Viewport.js"];
+const { Input } = __m["src/core/Input.js"];
+const { SceneManager } = __m["src/core/SceneManager.js"];
+const { AssetLoader } = __m["src/core/AssetLoader.js"];
+const { SaveManager } = __m["src/save/SaveManager.js"];
+const { AudioManager } = __m["src/audio/AudioManager.js"];
+const { UIManager } = __m["src/ui/UIManager.js"];
+const { CharacterRegistry } = __m["src/characters/CharacterRegistry.js"];
+const { registerCharacterRenderer } = __m["src/characters/CharacterRendererRegistry.js"];
+const { placeholderRenderer } = __m["src/characters/renderers/placeholderRenderer.js"];
+const { CHARACTER_DEFINITIONS } = __m["src/characters/definitions/index.js"];
+const { RegionRegistry } = __m["src/regions/RegionRegistry.js"];
+const { REGION_DEFINITIONS } = __m["src/regions/definitions/index.js"];
+const { SCENES } = __m["src/scenes/index.js"];
+
+/**
+ * Sistema principal: crea los servicios y los conecta. Las escenas y la UI
+ * acceden a ellos a través de `game` (game.save, game.audio, game.scenes…).
+ */
+class Game {
+  constructor({ canvas, appEl, uiEl }) {
+    this.config = GAME;
+    this.canvas = canvas;
+    this.appEl = appEl;
+    this.bus = new EventBus();
+
+    this.save = new SaveManager({ key: `${GAME.id}.save` });
+    this.save.load();
+
+    const saved = this.save.data.settings.quality;
+    this.qualityId = QUALITY_PROFILES[saved] ? saved : DEFAULT_QUALITY;
+
+    this.ctx = canvas.getContext('2d', { alpha: false });
+    this.viewport = new Viewport({ canvas, appEl, uiEl, bus: this.bus, maxDpr: this.quality.maxDpr });
+    this.input = new Input({ target: appEl, viewport: this.viewport, bus: this.bus });
+    this.audio = new AudioManager({ bus: this.bus });
+    this.assets = new AssetLoader({ audio: this.audio });
+
+    this.characters = new CharacterRegistry();
+    this.regions = new RegionRegistry();
+    this._registerContent();
+
+    this.scenes = new SceneManager(this);
+    for (const [name, SceneClass] of Object.entries(SCENES)) this.scenes.register(name, SceneClass);
+
+    this.ui = new UIManager({ root: uiEl, game: this });
+
+    this.loop = new Loop({
+      update: (dt) => this.scenes.update(dt),
+      render: () => this._render(),
+      fixedStep: LOOP.fixedStep,
+      maxFrameDelta: LOOP.maxFrameDelta,
+      maxSubSteps: LOOP.maxSubSteps,
+    });
+    this.loop.setTargetFps(this.quality.targetFps);
+  }
+
+  get quality() {
+    return QUALITY_PROFILES[this.qualityId];
+  }
+
+  setQuality(id) {
+    if (!QUALITY_PROFILES[id] || id === this.qualityId) return;
+    this.qualityId = id;
+    this.save.data.settings.quality = id;
+    this.save.commit();
+    this.loop.setTargetFps(this.quality.targetFps);
+    this.viewport.setMaxDpr(this.quality.maxDpr);
+    this.bus.emit('quality:changed', this.quality);
+  }
+
+  start() {
+    document.title = GAME.name;
+
+    const volumes = this.save.data.settings.volumes;
+    for (const bus of Object.keys(volumes)) this.audio.setVolume(bus, volumes[bus]);
+    this.audio.attachAutoUnlock(this.appEl);
+
+    this.viewport.init();
+    this.ui.debug.init();
+    this.bus.on('resize', (vp) => this.scenes.resize(vp));
+    this.input.attach();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.loop.stop();
+        this.audio.suspend();
+        this.save.flush();
+      } else {
+        this.audio.resume();
+        this.loop.start();
+      }
+    });
+    window.addEventListener('pagehide', () => this.save.flush());
+
+    this.scenes.switchTo('boot');
+    this.loop.start();
+  }
+
+  _registerContent() {
+    registerCharacterRenderer('placeholder', placeholderRenderer);
+    for (const def of CHARACTER_DEFINITIONS) this.characters.register(def);
+    for (const def of REGION_DEFINITIONS) this.regions.register(def);
+  }
+
+  _render() {
+    const ctx = this.ctx;
+    this.viewport.applyTransform(ctx);
+    this.scenes.render(ctx, this.viewport, 0);
+  }
+}
+
+return { Game };
+})();
+__m["src/main.js"] = (function () {
+'use strict';
+const { Game } = __m["src/core/Game.js"];
+
+const game = new Game({
+  canvas: document.getElementById('game-canvas'),
+  appEl: document.getElementById('app'),
+  uiEl: document.getElementById('ui'),
+});
+game.start();
+
+// Con ?debug en la URL, el juego queda accesible en la consola como `__game`.
+if (new URLSearchParams(window.location.search).has('debug')) {
+  window.__game = game;
+}
+
+return {  };
+})();
+})();
+</script>
+  </body>
+</html>
