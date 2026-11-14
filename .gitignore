@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# Generados al añadir Android (etapa futura): se pueden regenerar
+android/app/build/
+android/.gradle/
+android/local.properties
+*.apk
+*.aab

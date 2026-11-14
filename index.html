@@ -53,25 +53,54 @@ body {
   display: block;
 }
 
-/* Capa de interfaz: Viewport.js la coloca y dimensiona sobre el área segura (720 u de ancho, vertical) */
+/* Capa de interfaz: Viewport.js la coloca y dimensiona sobre el área segura (1280×720 u) */
 #ui {
   position: absolute;
   pointer-events: none;
 }
 
+/* Aviso para pantallas en vertical: el juego es horizontal */
+#rotate-hint {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #0b0820;
+  text-align: center;
+  font-size: 18px;
+}
+
+#rotate-hint .rotate-icon {
+  font-size: 64px;
+  line-height: 1;
+}
+
+#rotate-hint p {
+  margin: 0;
+}
+
+@media (orientation: portrait) {
+  #rotate-hint {
+    display: flex;
+  }
+}
+
 </style>
     <style>
 /*
- * Estilos de la interfaz (composición VERTICAL). Las medidas se expresan en
- * unidades lógicas (área segura de 720 u de ancho) multiplicadas por --u, con
- * mínimos para que el texto y los botones táctiles sigan siendo cómodos en
- * teléfonos pequeños.
+ * Estilos de la interfaz. Las medidas se expresan en unidades lógicas (1280×720)
+ * multiplicadas por --u, con mínimos para que el texto y los botones táctiles
+ * sigan siendo cómodos en teléfonos pequeños.
  */
 #ui {
-  --btn-h: max(44px, calc(72px * var(--u)));
-  --fs-xs: max(12px, calc(22px * var(--u)));
-  --fs-sm: max(14px, calc(28px * var(--u)));
-  --fs-md: max(15px, calc(32px * var(--u)));
+  --btn-h: max(44px, calc(56px * var(--u)));
+  --fs-xs: max(11px, calc(16px * var(--u)));
+  --fs-sm: max(12px, calc(20px * var(--u)));
+  --fs-md: max(14px, calc(24px * var(--u)));
   --pad: calc(40px * var(--u));
 }
 
@@ -88,11 +117,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: calc(170px * var(--u)) var(--pad) calc(64px * var(--u));
+  padding: calc(56px * var(--u)) var(--pad) calc(28px * var(--u));
 }
 
 .title-block {
-  width: 100%;
   text-align: center;
 }
 
@@ -108,12 +136,11 @@ body {
 
 .logo {
   margin: calc(8px * var(--u)) 0 0;
-  /* Sin mínimo en px: el logo siempre escala con la columna y nunca se corta. */
-  font-size: calc(124px * var(--u));
+  font-size: max(40px, calc(132px * var(--u)));
   line-height: 1;
   font-weight: 800;
-  letter-spacing: 0.12em;
-  text-indent: 0.12em;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
   background: linear-gradient(180deg, #ffffff 15%, #ffd08a 55%, #ff7fb0 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -130,29 +157,24 @@ body {
 }
 
 .note {
-  margin: calc(28px * var(--u)) auto 0;
-  max-width: calc(520px * var(--u));
+  margin: calc(22px * var(--u)) 0 0;
   font-size: var(--fs-sm);
-  line-height: 1.4;
   color: #f3ecff;
-  opacity: 0.75;
+  opacity: 0.7;
   text-align: center;
-  text-wrap: balance;
   text-shadow: 0 1px 6px rgba(11, 8, 32, 0.8);
 }
 
 .bottom-bar {
   width: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: calc(28px * var(--u));
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .chips {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   gap: 8px;
 }
 
@@ -168,19 +190,9 @@ body {
 
 .controls {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  max-width: 100%;
-  gap: calc(20px * var(--u));
+  gap: 10px;
   pointer-events: auto;
-}
-
-.control-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px 12px;
 }
 
 .control-label {
@@ -243,9 +255,9 @@ body {
   left: 8px;
   top: 8px;
   margin: 0;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border-radius: 10px;
-  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color: #bfffd4;
   background: rgba(0, 0, 0, 0.6);
   pointer-events: none;
@@ -256,23 +268,17 @@ body {
   display: none;
 }
 
-/*
- * Respaldo para ventanas apaisadas muy bajas (p. ej. un teléfono girado en un
- * navegador que no puede bloquear la orientación): la columna vertical queda
- * muy pequeña, así que se omite el texto decorativo para que nada se solape.
- */
-@media (orientation: landscape) and (max-height: 520px) {
-  .note {
-    display: none;
-  }
-}
-
 </style>
   </head>
   <body>
     <div id="app">
       <canvas id="game-canvas"></canvas>
       <div id="ui"></div>
+    </div>
+
+    <div id="rotate-hint" role="alert">
+      <div class="rotate-icon" aria-hidden="true">⟲</div>
+      <p>Gira tu dispositivo a horizontal</p>
     </div>
 
     <noscript>Este juego necesita JavaScript activado.</noscript>
@@ -294,27 +300,20 @@ const GAME = Object.freeze({
   id: 'quasar',
   name: 'QUASAR',
   tagline: 'Runner 2.5D',
-  version: '0.1.1',
-  stage: 'Etapa 00 · Corrección 00.1',
+  version: '0.1.0',
+  stage: 'Etapa 00 · Fundación',
 });
 
 /**
- * Composición de diseño: VERTICAL (Portrait) exclusivamente.
- *
- * Todo el juego se dibuja en "unidades lógicas". El área segura mide siempre
- * 720 unidades de ancho (9:16) y entre 1280 y `maxHeight` de alto, y se escala
- * de forma uniforme (sin deformar) a cualquier pantalla:
- *  - Teléfonos alargados (9:19.5, 9:20…): el área segura crece en vertical
- *    hasta `maxHeight` para aprovechar la pantalla.
- *  - Tablets (3:4, 4:3…) y ventanas horizontales: el área segura se centra y
- *    el fondo se extiende a los lados, sin barras negras.
- * Lo importante (interfaz, personaje, gameplay futuro) vive dentro del área
- * segura y nunca se corta.
+ * Resolución de diseño. Todo el juego se dibuja en "unidades lógicas":
+ * el área segura mide siempre 1280×720 unidades (16:9) y se escala de forma
+ * uniforme (sin deformar) a cualquier pantalla. Si la pantalla es más ancha
+ * o más alta, el fondo se extiende más allá del área segura, pero lo
+ * importante (interfaz, personaje, gameplay futuro) nunca se corta.
  */
 const VIEW = Object.freeze({
-  designWidth: 720,
-  designHeight: 1280,
-  maxHeight: 1700,
+  designWidth: 1280,
+  designHeight: 720,
 });
 
 /** Parámetros del bucle principal (paso fijo para física/lógica futura). */
@@ -505,16 +504,13 @@ const { VIEW } = __m["src/config/game.config.js"];
 
 /**
  * Gestiona el tamaño del canvas y la conversión entre píxeles de pantalla y
- * "unidades lógicas" del juego. La composición es VERTICAL (Portrait).
+ * "unidades lógicas" del juego.
  *
  * Reglas:
  *  - El canvas ocupa toda la ventana (sin barras negras).
- *  - La escala es uniforme: nunca se deforma nada. Se calcula para que el área
- *    mínima de diseño (720×1280, 9:16) quepa siempre entera.
- *  - Área segura: 720 unidades de ancho, centrada. Su alto es el de la pantalla
- *    (descontando muescas/barras del sistema) con un mínimo de 1280 y un
- *    máximo de `VIEW.maxHeight`: en teléfonos alargados aprovecha la altura y
- *    en tablets u ventanas anchas queda centrada con el fondo a los lados.
+ *  - La escala es uniforme: nunca se deforma nada.
+ *  - Existe un área segura de 1280×720 unidades, centrada, donde vive todo lo
+ *    importante. Descuenta además muescas/barras del sistema (safe-area-inset).
  *  - El fondo puede dibujarse en todo `width × height` (unidades lógicas).
  */
 class Viewport {
@@ -552,26 +548,7 @@ class Viewport {
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
     if (window.visualViewport) window.visualViewport.addEventListener('resize', this._onResize);
-    this._lockPortrait();
     this.refresh();
-  }
-
-  /**
-   * Pide al sistema bloquear la orientación en vertical. Los navegadores solo
-   * lo permiten en pantalla completa o como app instalada (y el APK lo fijará
-   * en el manifiesto de Android), así que es de mejor esfuerzo: si se rechaza,
-   * el diseño vertical sigue funcionando centrado en cualquier orientación.
-   */
-  _lockPortrait() {
-    try {
-      const lock = window.screen && window.screen.orientation && window.screen.orientation.lock;
-      if (lock) {
-        const result = window.screen.orientation.lock('portrait');
-        if (result && typeof result.catch === 'function') result.catch(() => {});
-      }
-    } catch (_) {
-      /* sin soporte: se ignora */
-    }
   }
 
   setMaxDpr(value) {
@@ -606,7 +583,6 @@ class Viewport {
     const availW = Math.max(1, w - inset.left - inset.right);
     const availH = Math.max(1, h - inset.top - inset.bottom);
 
-    // Escala uniforme: el área mínima de diseño (720×1280) cabe siempre entera.
     const scale = Math.min(availW / VIEW.designWidth, availH / VIEW.designHeight);
     const dpr = Math.min(window.devicePixelRatio || 1, this.maxDpr);
 
@@ -621,16 +597,13 @@ class Viewport {
     this.width = w / scale;
     this.height = h / scale;
 
-    // Alto del área segura: toda la altura disponible, entre el mínimo de
-    // diseño y el máximo permitido. El ancho es fijo.
-    const safeH = Math.min(Math.max(availH / scale, VIEW.designHeight), VIEW.maxHeight);
     const safePxX = inset.left + (availW - VIEW.designWidth * scale) / 2;
-    const safePxY = inset.top + (availH - safeH * scale) / 2;
+    const safePxY = inset.top + (availH - VIEW.designHeight * scale) / 2;
     this.safe = {
       x: safePxX / scale,
       y: safePxY / scale,
       w: VIEW.designWidth,
-      h: safeH,
+      h: VIEW.designHeight,
     };
 
     // La capa de interfaz (DOM) usa el mismo área segura y la misma escala.
@@ -639,7 +612,7 @@ class Viewport {
     s.left = `${safePxX}px`;
     s.top = `${safePxY}px`;
     s.width = `${VIEW.designWidth * scale}px`;
-    s.height = `${safeH * scale}px`;
+    s.height = `${VIEW.designHeight * scale}px`;
 
     this.bus.emit('resize', this);
   }
@@ -1191,10 +1164,12 @@ class DebugOverlay {
     const g = this.game;
     const vp = g.viewport;
     this.el.textContent = [
-      `FPS      ${g.loop.fps.toFixed(0)} (tope ${g.quality.targetFps}) · ${g.quality.label}`,
+      `FPS      ${g.loop.fps.toFixed(0)} (tope ${g.quality.targetFps})`,
       `Pantalla ${window.innerWidth}×${window.innerHeight} px`,
-      `Lógica   ${vp.width.toFixed(0)}×${vp.height.toFixed(0)} u · segura ${vp.safe.w.toFixed(0)}×${vp.safe.h.toFixed(0)}`,
-      `Escala   ${vp.scale.toFixed(3)} · DPR ${vp.dpr.toFixed(2)} · ${g.scenes.currentName}`,
+      `Lógica   ${vp.width.toFixed(0)}×${vp.height.toFixed(0)} u`,
+      `Escala   ${vp.scale.toFixed(3)} · DPR ${vp.dpr.toFixed(2)}`,
+      `Calidad  ${g.quality.label}`,
+      `Escena   ${g.scenes.currentName}`,
     ].join('\n');
   }
 }
@@ -1300,13 +1275,14 @@ class TitleScreen {
       h(
         'footer',
         { class: 'bottom-bar' },
+        h('div', { class: 'chips' }, h('span', { class: 'chip' }, `v${config.version}`), h('span', { class: 'chip' }, 'Web · Canvas 2D')),
         h(
           'div',
           { class: 'controls' },
-          h('div', { class: 'control-row' }, h('span', { class: 'control-label' }, 'Calidad'), quality),
+          h('span', { class: 'control-label' }, 'Calidad'),
+          quality,
           this.debugBtn
-        ),
-        h('div', { class: 'chips' }, h('span', { class: 'chip' }, `v${config.version}`), h('span', { class: 'chip' }, 'Web · Canvas 2D'))
+        )
       )
     );
     container.append(this.root);
@@ -1779,8 +1755,7 @@ __m["assets/manifest.js"] = (function () {
  * Manifiesto de recursos. Está vacío en la Etapa 00: el juego aún no usa
  * imágenes ni audio externos (todo se dibuja por código).
  *
- * Cuando haya recursos, se declaran aquí y el BootScene los precarga (crea la
- * carpeta que necesites, p. ej. www/assets/images/):
+ * Cuando haya recursos, se declaran aquí y el BootScene los precarga:
  *
  *   images: { 'hero-sheet': 'assets/images/hero-sheet.png' },
  *   json:   { 'hero-anim':  'assets/data/hero-anim.json' },
@@ -2121,8 +2096,7 @@ class TitleScene extends Scene {
   render(ctx, viewport) {
     this.backdrop.render(ctx);
     const { safe } = viewport;
-    // Composición vertical: el personaje se centra y su tamaño sigue al ancho del área segura.
-    this.character.render(ctx, safe.x + safe.w / 2, safe.y + safe.h * 0.62, safe.w * 0.3);
+    this.character.render(ctx, safe.x + safe.w / 2, safe.y + safe.h * 0.66, 150);
   }
 }
 

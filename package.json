@@ -1,0 +1,15 @@
+{
+  "name": "quasar",
+  "version": "0.1.0",
+  "description": "QUASAR (nombre provisional): videojuego Runner 2.5D con tecnologías web, preparado para Android con Capacitor.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "check": "node tools/check.mjs",
+    "build:single": "node tools/build-single.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
