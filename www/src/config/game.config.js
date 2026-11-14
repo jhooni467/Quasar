@@ -10,20 +10,27 @@ export const GAME = Object.freeze({
   id: 'quasar',
   name: 'QUASAR',
   tagline: 'Runner 2.5D',
-  version: '0.1.0',
-  stage: 'Etapa 00 · Fundación',
+  version: '0.1.1',
+  stage: 'Etapa 00 · Corrección 00.1',
 });
 
 /**
- * Resolución de diseño. Todo el juego se dibuja en "unidades lógicas":
- * el área segura mide siempre 1280×720 unidades (16:9) y se escala de forma
- * uniforme (sin deformar) a cualquier pantalla. Si la pantalla es más ancha
- * o más alta, el fondo se extiende más allá del área segura, pero lo
- * importante (interfaz, personaje, gameplay futuro) nunca se corta.
+ * Composición de diseño: VERTICAL (Portrait) exclusivamente.
+ *
+ * Todo el juego se dibuja en "unidades lógicas". El área segura mide siempre
+ * 720 unidades de ancho (9:16) y entre 1280 y `maxHeight` de alto, y se escala
+ * de forma uniforme (sin deformar) a cualquier pantalla:
+ *  - Teléfonos alargados (9:19.5, 9:20…): el área segura crece en vertical
+ *    hasta `maxHeight` para aprovechar la pantalla.
+ *  - Tablets (3:4, 4:3…) y ventanas horizontales: el área segura se centra y
+ *    el fondo se extiende a los lados, sin barras negras.
+ * Lo importante (interfaz, personaje, gameplay futuro) vive dentro del área
+ * segura y nunca se corta.
  */
 export const VIEW = Object.freeze({
-  designWidth: 1280,
-  designHeight: 720,
+  designWidth: 720,
+  designHeight: 1280,
+  maxHeight: 1700,
 });
 
 /** Parámetros del bucle principal (paso fijo para física/lógica futura). */

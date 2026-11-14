@@ -2,13 +2,16 @@ import { VIEW } from '../config/game.config.js';
 
 /**
  * Gestiona el tamaño del canvas y la conversión entre píxeles de pantalla y
- * "unidades lógicas" del juego.
+ * "unidades lógicas" del juego. La composición es VERTICAL (Portrait).
  *
  * Reglas:
  *  - El canvas ocupa toda la ventana (sin barras negras).
- *  - La escala es uniforme: nunca se deforma nada.
- *  - Existe un área segura de 1280×720 unidades, centrada, donde vive todo lo
- *    importante. Descuenta además muescas/barras del sistema (safe-area-inset).
+ *  - La escala es uniforme: nunca se deforma nada. Se calcula para que el área
+ *    mínima de diseño (720×1280, 9:16) quepa siempre entera.
+ *  - Área segura: 720 unidades de ancho, centrada. Su alto es el de la pantalla
+ *    (descontando muescas/barras del sistema) con un mínimo de 1280 y un
+ *    máximo de `VIEW.maxHeight`: en teléfonos alargados aprovecha la altura y
+ *    en tablets u ventanas anchas queda centrada con el fondo a los lados.
  *  - El fondo puede dibujarse en todo `width × height` (unidades lógicas).
  */
 export class Viewport {
@@ -46,7 +49,26 @@ export class Viewport {
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
     if (window.visualViewport) window.visualViewport.addEventListener('resize', this._onResize);
+    this._lockPortrait();
     this.refresh();
+  }
+
+  /**
+   * Pide al sistema bloquear la orientación en vertical. Los navegadores solo
+   * lo permiten en pantalla completa o como app instalada (y el APK lo fijará
+   * en el manifiesto de Android), así que es de mejor esfuerzo: si se rechaza,
+   * el diseño vertical sigue funcionando centrado en cualquier orientación.
+   */
+  _lockPortrait() {
+    try {
+      const lock = window.screen && window.screen.orientation && window.screen.orientation.lock;
+      if (lock) {
+        const result = window.screen.orientation.lock('portrait');
+        if (result && typeof result.catch === 'function') result.catch(() => {});
+      }
+    } catch (_) {
+      /* sin soporte: se ignora */
+    }
   }
 
   setMaxDpr(value) {
@@ -81,6 +103,7 @@ export class Viewport {
     const availW = Math.max(1, w - inset.left - inset.right);
     const availH = Math.max(1, h - inset.top - inset.bottom);
 
+    // Escala uniforme: el área mínima de diseño (720×1280) cabe siempre entera.
     const scale = Math.min(availW / VIEW.designWidth, availH / VIEW.designHeight);
     const dpr = Math.min(window.devicePixelRatio || 1, this.maxDpr);
 
@@ -95,13 +118,16 @@ export class Viewport {
     this.width = w / scale;
     this.height = h / scale;
 
+    // Alto del área segura: toda la altura disponible, entre el mínimo de
+    // diseño y el máximo permitido. El ancho es fijo.
+    const safeH = Math.min(Math.max(availH / scale, VIEW.designHeight), VIEW.maxHeight);
     const safePxX = inset.left + (availW - VIEW.designWidth * scale) / 2;
-    const safePxY = inset.top + (availH - VIEW.designHeight * scale) / 2;
+    const safePxY = inset.top + (availH - safeH * scale) / 2;
     this.safe = {
       x: safePxX / scale,
       y: safePxY / scale,
       w: VIEW.designWidth,
-      h: VIEW.designHeight,
+      h: safeH,
     };
 
     // La capa de interfaz (DOM) usa el mismo área segura y la misma escala.
@@ -110,7 +136,7 @@ export class Viewport {
     s.left = `${safePxX}px`;
     s.top = `${safePxY}px`;
     s.width = `${VIEW.designWidth * scale}px`;
-    s.height = `${VIEW.designHeight * scale}px`;
+    s.height = `${safeH * scale}px`;
 
     this.bus.emit('resize', this);
   }

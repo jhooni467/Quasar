@@ -55,14 +55,13 @@ export class TitleScreen {
       h(
         'footer',
         { class: 'bottom-bar' },
-        h('div', { class: 'chips' }, h('span', { class: 'chip' }, `v${config.version}`), h('span', { class: 'chip' }, 'Web · Canvas 2D')),
         h(
           'div',
           { class: 'controls' },
-          h('span', { class: 'control-label' }, 'Calidad'),
-          quality,
+          h('div', { class: 'control-row' }, h('span', { class: 'control-label' }, 'Calidad'), quality),
           this.debugBtn
-        )
+        ),
+        h('div', { class: 'chips' }, h('span', { class: 'chip' }, `v${config.version}`), h('span', { class: 'chip' }, 'Web · Canvas 2D'))
       )
     );
     container.append(this.root);

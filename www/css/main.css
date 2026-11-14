@@ -39,38 +39,8 @@ body {
   display: block;
 }
 
-/* Capa de interfaz: Viewport.js la coloca y dimensiona sobre el área segura (1280×720 u) */
+/* Capa de interfaz: Viewport.js la coloca y dimensiona sobre el área segura (720 u de ancho, vertical) */
 #ui {
   position: absolute;
   pointer-events: none;
-}
-
-/* Aviso para pantallas en vertical: el juego es horizontal */
-#rotate-hint {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: #0b0820;
-  text-align: center;
-  font-size: 18px;
-}
-
-#rotate-hint .rotate-icon {
-  font-size: 64px;
-  line-height: 1;
-}
-
-#rotate-hint p {
-  margin: 0;
-}
-
-@media (orientation: portrait) {
-  #rotate-hint {
-    display: flex;
-  }
 }

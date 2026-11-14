@@ -30,7 +30,7 @@ Las escenas y la interfaz reciben `game` y toman de él lo que necesitan. Los m�
 ### `core/` (sistema principal)
 - **`Game`**: crea y conecta los servicios; arranque, pausa al pasar a segundo plano y cambio de calidad.
 - **`Loop`**: lógica con paso fijo de 1/60 s (`update(dt)`) y `render(alpha)` por fotograma; tope de FPS; descarta el retraso acumulado en dispositivos lentos.
-- **`Viewport`**: área segura de 1280×720 unidades, escala uniforme, densidad de píxeles limitada por calidad, margen de muescas. Emite `resize`.
+- **`Viewport`**: área segura vertical de 720 unidades de ancho (alto entre 1280 y 1700), escala uniforme, densidad de píxeles limitada por calidad, margen de muescas. Emite `resize`.
 - **`Scene` / `SceneManager`**: ciclo de vida `enter → update/render → exit` y `resize`.
 - **`Registry`**: base genérica de registros con validación.
 - **`AssetLoader`**: imágenes, JSON y audio desde el manifiesto, con progreso.

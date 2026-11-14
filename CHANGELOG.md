@@ -1,11 +1,20 @@
 # Cambios
 
+## 0.1.1 · Etapa 00 · Corrección 00.1
+
+Composición **vertical (Portrait)**.
+
+- Área segura de 720 unidades de ancho (9:16) y alto entre 1280 y 1700 según la pantalla.
+- Se elimina el aviso de «gira tu dispositivo» y se intenta bloquear la orientación en vertical.
+- Pantalla de título reorganizada en columna; panel de diagnóstico más compacto.
+- La versión de un solo archivo se genera ahora en `index.html` (raíz) para GitHub Pages.
+
 ## 0.1.0 · Etapa 00 · Fundación
 
 Primera versión: base técnica organizada y ejecutable en navegador. Sin mecánicas de juego.
 
 - Estructura modular: núcleo, escenas, personajes, regiones, gráficos, interfaz, audio, configuración y guardado.
-- Lienzo adaptable con área segura de 1280×720 unidades lógicas, sin deformaciones; aviso de giro en vertical.
+- Lienzo adaptable con área segura de 1280×720 unidades lógicas, sin deformaciones; aviso de giro en vertical (reemplazado en 0.1.1 por la composición vertical).
 - Bucle de paso fijo con tope de FPS por perfil de calidad.
 - Perfiles de calidad gráfica (Baja/Media/Alta) con guardado.
 - Sistema de personajes modular (definiciones + renderers) con personaje provisional.

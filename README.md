@@ -4,9 +4,9 @@
 
 Videojuego original de tipo **Runner 2.5D** con estética colorida, llamativa y fantástica. Es un universo compuesto por regiones, criaturas, escenarios y fenómenos propios. El estilo es 2D pero busca transmitir tridimensionalidad con perspectiva, profundidad, iluminación, sombras, escalas y capas ambientales.
 
-Pensado para **teléfonos y tablets Android en horizontal**. Se desarrolla primero en navegador y después se empaqueta como APK con [Capacitor](https://capacitorjs.com/).
+Pensado para **teléfonos y tablets Android en vertical (Portrait)**. Se desarrolla primero en navegador y después se empaqueta como APK con [Capacitor](https://capacitorjs.com/).
 
-## Estado actual: v0.1.0 · Etapa 00 · Fundación
+## Estado actual: v0.1.1 · Etapa 00 · Corrección 00.1
 
 Esta versión es **solo la base técnica**. Aún **no hay mecánicas de juego**.
 
@@ -14,7 +14,7 @@ Lo que existe y funciona:
 
 - Aplicación ejecutable en el navegador (pantalla de arranque y pantalla de título).
 - Lienzo que se adapta a cualquier tamaño y relación de aspecto, sin deformar ni cortar la interfaz.
-- Aviso para girar el dispositivo cuando está en vertical.
+- Composición vertical (Portrait): intenta bloquear la orientación y, si el navegador no lo permite, se centra en cualquier orientación.
 - Región de prueba con fondo en capas (cielo, estrellas, luz, siluetas con paralaje) y personaje provisional, para comprobar que los sistemas trabajan juntos.
 - Calidad gráfica seleccionable (Baja / Media / Alta) con guardado, y panel de diagnóstico (FPS, tamaño, escala).
 - Sistemas preparados pero vacíos de contenido: personajes modulares, regiones, audio, carga de recursos, guardado versionado.
@@ -58,7 +58,7 @@ También puedes abrir el `index.html` de la raíz directamente en un navegador.
 
 > **Importante:** `index.html` (raíz) se genera automáticamente. No lo edites a mano: cambia el código en `www/` y regéneralo con `npm run build:single` antes de subir los cambios.
 
-**Para probar en pantalla de móvil sin móvil:** en Chrome, `F12` → icono de dispositivo → elige un teléfono y ponlo en horizontal. Con el botón **Diagnóstico** de la pantalla de título verás FPS, tamaño y escala.
+**Para probar en pantalla de móvil sin móvil:** en Chrome, `F12` → icono de dispositivo → elige un teléfono (en vertical). Con el botón **Diagnóstico** de la pantalla de título verás FPS, tamaño y escala.
 
 ## Tecnología elegida
 
@@ -71,7 +71,7 @@ También puedes abrir el `index.html` de la raíz directamente en un navegador.
 
 Decisiones técnicas relevantes:
 
-- **Área segura de 1280×720 unidades lógicas.** El juego se dibuja en unidades lógicas y se escala de forma uniforme. Todo lo importante vive en el área segura de 16:9, centrada; en pantallas más anchas o más altas el fondo se extiende más allá, sin barras negras y sin cortar nada. También se respetan las muescas y barras del sistema (`safe-area-inset`).
+- **Área segura vertical de 720 unidades de ancho (9:16).** El juego se dibuja en unidades lógicas y se escala de forma uniforme. Su alto va de 1280 a 1700 unidades según la pantalla: los teléfonos alargados aprovechan toda la altura; en tablets o ventanas anchas el área queda centrada y el fondo se extiende a los lados, sin barras negras y sin cortar nada. También se respetan las muescas y barras del sistema (`safe-area-inset`).
 - **Bucle de paso fijo (60 Hz) con render separado.** La lógica será determinista, lo que facilita la física y la generación procedural futuras, y es independiente de la tasa de refresco de la pantalla.
 - **Perfiles de calidad.** Todo coste de render (densidad de píxeles, FPS, detalle) se lee de un perfil central, para añadir optimizaciones sin reescribir sistemas.
 - **Contenido como datos.** Personajes y regiones son definiciones validadas, desacopladas de cómo se dibujan. Sustituir el personaje provisional por uno con sprites es registrar un renderer y una definición, sin tocar el resto.
@@ -123,7 +123,7 @@ Capacitor se añadirá cuando se aborde la conversión a Android (ver [docs/ANDR
 
 ## Versión inicial
 
-**v0.1.0 · Etapa 00 · Fundación.** Consulta [CHANGELOG.md](CHANGELOG.md).
+**v0.1.1 · Etapa 00 · Corrección 00.1.** Consulta [CHANGELOG.md](CHANGELOG.md).
 
 ## Hoja de ruta
 
