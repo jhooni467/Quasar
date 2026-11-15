@@ -39,6 +39,6 @@ export class TitleScene extends Scene {
     this.backdrop.render(ctx);
     const { safe } = viewport;
     // Composición vertical: el personaje se centra y su tamaño sigue al ancho del área segura.
-    this.character.render(ctx, safe.x + safe.w / 2, safe.y + safe.h * 0.62, safe.w * 0.3);
+    this.character.render(ctx, safe.x + safe.w / 2, safe.y + safe.h * 0.5, safe.w * 0.3);
   }
 }

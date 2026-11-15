@@ -17,6 +17,12 @@ export const QUALITY_PROFILES = Object.freeze({
     starDensity: 0.4, // fracción de estrellas respecto al diseño de la región
     twinkle: false, // parpadeo de estrellas
     rim: false, // borde de luz en las siluetas
+    // — Partida (runner) —
+    drawDistance: 62, // metros de pista que se dibujan
+    scenery: 0.55, // cantidad de elementos ambientales (1 = diseño de la región)
+    spriteRes: 0.7, // resolución de los sprites pre-dibujados
+    grain: false, // textura pictórica y viñeta sobre toda la pantalla
+    particles: 0.5, // cantidad de partículas (polvo, destellos)
   }),
   medium: Object.freeze({
     id: 'medium',
@@ -27,6 +33,11 @@ export const QUALITY_PROFILES = Object.freeze({
     starDensity: 0.8,
     twinkle: true,
     rim: true,
+    drawDistance: 84,
+    scenery: 0.85,
+    spriteRes: 1,
+    grain: true,
+    particles: 0.8,
   }),
   high: Object.freeze({
     id: 'high',
@@ -37,6 +48,11 @@ export const QUALITY_PROFILES = Object.freeze({
     starDensity: 1,
     twinkle: true,
     rim: true,
+    drawDistance: 100,
+    scenery: 1,
+    spriteRes: 1.3,
+    grain: true,
+    particles: 1,
   }),
 });
 

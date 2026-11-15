@@ -14,6 +14,10 @@ export class Character {
     this.accessories = [];
     this.animation = 'idle';
     this.time = 0;
+    /** Inclinación (-1..1) por cambio de carril; la fija quien controla al personaje. */
+    this.lean = 0;
+    /** false si quien lo dibuja ya pinta su propia sombra (p. ej. el runner). */
+    this.drawShadow = true;
   }
 
   setSkin(skinId) {

@@ -267,6 +267,280 @@ body {
   }
 }
 
+/* ───────────── Botones ───────────── */
+
+.btn {
+  pointer-events: auto;
+  min-height: var(--btn-h);
+  padding: 0 calc(52px * var(--u));
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: var(--fs-md);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  color: #3a1050;
+  background: linear-gradient(180deg, #fff2c9 0%, #ffc65e 55%, #ff9d5c 100%);
+  box-shadow: 0 calc(8px * var(--u)) 0 #b5527a, 0 calc(18px * var(--u)) calc(34px * var(--u)) rgba(255, 127, 176, 0.45);
+}
+
+.btn-primary:active {
+  transform: translateY(calc(5px * var(--u)));
+  box-shadow: 0 calc(3px * var(--u)) 0 #b5527a, 0 calc(8px * var(--u)) calc(18px * var(--u)) rgba(255, 127, 176, 0.35);
+}
+
+.btn-secondary {
+  color: #f3ecff;
+  background: rgba(36, 10, 70, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.28);
+}
+
+.btn-secondary:active {
+  background: rgba(36, 10, 70, 0.85);
+}
+
+.btn-play {
+  min-width: calc(380px * var(--u));
+  min-height: max(56px, calc(100px * var(--u)));
+  font-size: calc(44px * var(--u));
+}
+
+/* ───────────── HUD de la partida ───────────── */
+
+.hud {
+  position: absolute;
+  inset: 0;
+  padding: calc(34px * var(--u)) var(--pad) 0;
+  text-shadow: 0 2px 8px rgba(30, 6, 60, 0.7);
+}
+
+.hud-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: calc(16px * var(--u));
+}
+
+.hud-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.35em 0.85em;
+  border-radius: 999px;
+  background: rgba(36, 10, 70, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  font-size: var(--fs-md);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-coins {
+  justify-self: start;
+}
+
+.hud-dist {
+  justify-self: end;
+}
+
+.hud-unit {
+  font-size: var(--fs-xs);
+  opacity: 0.8;
+}
+
+.coin-icon {
+  width: 0.95em;
+  height: 0.95em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff0a8 0 22%, #ffc93c 45%, #e08a1e 100%);
+  box-shadow: 0 0 0 2px #b8641a;
+}
+
+.hud-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: calc(200px * var(--u));
+}
+
+.hud-score-value {
+  font-size: max(30px, calc(76px * var(--u)));
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  /* contorno oscuro para que se lea sobre nubes claras */
+  text-shadow: 0 0 calc(3px * var(--u)) #3a1260, 0 calc(4px * var(--u)) 0 #4a1666, calc(3px * var(--u)) 0 0 #4a1666, calc(-3px * var(--u)) 0 0 #4a1666,
+    0 calc(-3px * var(--u)) 0 #4a1666, 0 calc(10px * var(--u)) calc(14px * var(--u)) rgba(30, 6, 60, 0.5);
+}
+
+.hud-score-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.hud-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(215px * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(10px * var(--u));
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  opacity: 0;
+  animation: hint-in 0.4s 0.3s ease-out forwards, hint-out 0.6s 6s ease-in forwards;
+  transition: opacity 0.3s;
+}
+
+.hud-hint.gone {
+  animation: none;
+  opacity: 0;
+}
+
+.hint-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.3em 1em 0.3em 0.4em;
+  border-radius: 999px;
+  background: rgba(36, 10, 70, 0.55);
+}
+
+.hint-key {
+  min-width: 3.2em;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.92);
+  color: #4a1666;
+  text-shadow: none;
+  font-weight: 900;
+}
+
+@keyframes hint-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hint-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ───────────── Fin de partida y pausa ───────────── */
+
+.over-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad);
+  background: radial-gradient(ellipse at center, rgba(20, 6, 40, 0.55), rgba(20, 6, 40, 0.1) 75%);
+  animation: over-in 0.35s ease-out;
+}
+
+.over-card {
+  width: 100%;
+  max-width: calc(560px * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: calc(26px * var(--u));
+  padding: calc(44px * var(--u)) calc(40px * var(--u));
+  border-radius: calc(40px * var(--u));
+  text-align: center;
+  background: linear-gradient(180deg, rgba(74, 26, 110, 0.92), rgba(36, 10, 70, 0.92));
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 calc(20px * var(--u)) calc(60px * var(--u)) rgba(10, 2, 30, 0.6);
+  pointer-events: auto;
+}
+
+.over-title {
+  margin: 0;
+  font-size: max(24px, calc(60px * var(--u)));
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #ffe3a8;
+}
+
+.over-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.over-score-value {
+  font-size: max(40px, calc(120px * var(--u)));
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #ffffff 20%, #ffc65e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.over-score-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.over-stats {
+  display: flex;
+  justify-content: center;
+  gap: calc(24px * var(--u));
+}
+
+.over-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: calc(16px * var(--u)) 8px;
+  border-radius: calc(24px * var(--u));
+  background: rgba(11, 8, 32, 0.4);
+}
+
+.over-stat-value {
+  font-size: var(--fs-md);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.over-stat-label {
+  font-size: var(--fs-xs);
+  opacity: 0.75;
+}
+
+@keyframes over-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 </style>
   </head>
   <body>
@@ -294,8 +568,8 @@ const GAME = Object.freeze({
   id: 'quasar',
   name: 'QUASAR',
   tagline: 'Runner 2.5D',
-  version: '0.1.1',
-  stage: 'Etapa 00 · Corrección 00.1',
+  version: '0.2.0',
+  stage: 'Etapa 01 · Primer núcleo jugable',
 });
 
 /**
@@ -347,6 +621,12 @@ const QUALITY_PROFILES = Object.freeze({
     starDensity: 0.4, // fracción de estrellas respecto al diseño de la región
     twinkle: false, // parpadeo de estrellas
     rim: false, // borde de luz en las siluetas
+    // — Partida (runner) —
+    drawDistance: 62, // metros de pista que se dibujan
+    scenery: 0.55, // cantidad de elementos ambientales (1 = diseño de la región)
+    spriteRes: 0.7, // resolución de los sprites pre-dibujados
+    grain: false, // textura pictórica y viñeta sobre toda la pantalla
+    particles: 0.5, // cantidad de partículas (polvo, destellos)
   }),
   medium: Object.freeze({
     id: 'medium',
@@ -357,6 +637,11 @@ const QUALITY_PROFILES = Object.freeze({
     starDensity: 0.8,
     twinkle: true,
     rim: true,
+    drawDistance: 84,
+    scenery: 0.85,
+    spriteRes: 1,
+    grain: true,
+    particles: 0.8,
   }),
   high: Object.freeze({
     id: 'high',
@@ -367,6 +652,11 @@ const QUALITY_PROFILES = Object.freeze({
     starDensity: 1,
     twinkle: true,
     rim: true,
+    drawDistance: 100,
+    scenery: 1,
+    spriteRes: 1.3,
+    grain: true,
+    particles: 1,
   }),
 });
 
@@ -656,9 +946,8 @@ __m["src/core/Input.js"] = (function () {
 'use strict';
 /**
  * Entrada básica: posición del puntero (en unidades lógicas) y estado del
- * teclado. Emite eventos en el bus. NO interpreta gestos todavía: el
- * movimiento por carriles, saltos y deslizamientos (deslizar/tocar) se
- * construirán sobre esta capa en una etapa futura.
+ * teclado. Emite eventos en el bus. No interpreta gestos: de eso se encarga
+ * `Gestures.js`, construido sobre esta capa.
  */
 class Input {
   constructor({ target, viewport, bus }) {
@@ -719,6 +1008,151 @@ class Input {
 }
 
 return { Input };
+})();
+__m["src/core/Gestures.js"] = (function () {
+'use strict';
+/**
+ * Reconoce deslizamientos (swipes) sobre la capa de entrada y los emite en el
+ * bus como `gesture:swipe` con la dirección: 'left' | 'right' | 'up' | 'down'.
+ * También traduce el teclado (flechas / WASD) para poder probar en ordenador.
+ *
+ * Decisiones para que responda bien en móvil:
+ *  - El gesto se emite EN CUANTO el dedo recorre la distancia mínima, sin
+ *    esperar a que lo levante: la respuesta es inmediata.
+ *  - Un trazo cuenta UNA vez por dirección: un deslizamiento largo no se repite
+ *    mientras el dedo siga en la misma dirección. Si el dedo cambia de dirección
+ *    sin levantarse (p. ej. izquierda y luego arriba) se emite el nuevo gesto.
+ *  - Cada dedo se sigue por separado (`pointerId`), así que un segundo dedo no
+ *    interfiere con el primero.
+ *  - Los toques que empiezan sobre un botón de la interfaz se ignoran.
+ *  - Se bloquean el desplazamiento, el zoom por pellizco, el doble toque y el
+ *    menú contextual, que si no moverían la página durante la partida.
+ *
+ * Solo escucha mientras `enabled` sea true, para que las pantallas de menú no
+ * reciban gestos de juego.
+ */
+const MIN_SWIPE_PX = 18;
+const SWIPE_FRACTION = 0.055; // de la dimensión menor de la ventana
+/** Un gesto es "horizontal" o "vertical" si domina claramente un eje. */
+const AXIS_DOMINANCE = 1.15;
+
+const KEY_DIRECTIONS = {
+  ArrowLeft: 'left',
+  KeyA: 'left',
+  ArrowRight: 'right',
+  KeyD: 'right',
+  ArrowUp: 'up',
+  KeyW: 'up',
+  Space: 'up',
+  ArrowDown: 'down',
+  KeyS: 'down',
+};
+
+class Gestures {
+  /** @param {{bus: import('./EventBus.js').EventBus, target: HTMLElement}} cfg */
+  constructor({ bus, target }) {
+    this.bus = bus;
+    this.target = target;
+    this.enabled = false;
+    this._touches = new Map(); // pointerId → { x, y }
+    this._offs = [];
+    this._blockers = [];
+  }
+
+  attach() {
+    this._offs.push(
+      this.bus.on('input:pointerdown', (_pointer, e) => this._down(e)),
+      this.bus.on('input:pointermove', (_pointer, e) => this._move(e)),
+      this.bus.on('input:pointerup', (_pointer, e) => this._up(e)),
+      this.bus.on('input:keydown', (code, e) => this._key(code, e))
+    );
+    this._blockPageGestures();
+  }
+
+  detach() {
+    for (const off of this._offs) off();
+    this._offs.length = 0;
+    for (const [el, type, fn, opts] of this._blockers) el.removeEventListener(type, fn, opts);
+    this._blockers.length = 0;
+  }
+
+  /** Activa o desactiva el reconocimiento (y descarta toques en curso). */
+  setEnabled(value) {
+    this.enabled = Boolean(value);
+    this._touches.clear();
+  }
+
+  /** Distancia mínima (px de pantalla) para considerar un deslizamiento. */
+  get threshold() {
+    const min = Math.min(window.innerWidth, window.innerHeight);
+    return Math.max(MIN_SWIPE_PX, min * SWIPE_FRACTION);
+  }
+
+  _down(e) {
+    if (!this.enabled) return;
+    if (e.target && e.target.closest && e.target.closest('button, a, input, select')) return;
+    this._touches.set(e.pointerId, { x: e.clientX, y: e.clientY, dir: null });
+  }
+
+  _move(e) {
+    const t = this._touches.get(e.pointerId);
+    if (!t || !this.enabled) return;
+    const dx = e.clientX - t.x;
+    const dy = e.clientY - t.y;
+    const ax = Math.abs(dx);
+    const ay = Math.abs(dy);
+    if (Math.max(ax, ay) < this.threshold) return;
+
+    let dir = null;
+    if (ax > ay * AXIS_DOMINANCE) dir = dx < 0 ? 'left' : 'right';
+    else if (ay > ax * AXIS_DOMINANCE) dir = dy < 0 ? 'up' : 'down';
+    if (!dir) return; // diagonal ambigua: se espera a que se defina
+
+    // El origen avanza con el dedo: un cambio de dirección se mide desde el punto más lejano.
+    t.x = e.clientX;
+    t.y = e.clientY;
+    if (dir === t.dir) return; // mismo trazo, misma dirección: ya se emitió
+    t.dir = dir;
+    this.bus.emit('gesture:swipe', dir);
+  }
+
+  _up(e) {
+    this._touches.delete(e.pointerId);
+  }
+
+  _key(code, e) {
+    if (!this.enabled || e.repeat) return;
+    const dir = KEY_DIRECTIONS[code];
+    if (!dir) return;
+    if (e.preventDefault) e.preventDefault();
+    this.bus.emit('gesture:swipe', dir);
+  }
+
+  /** Evita que el navegador interprete los gestos del juego como acciones de la página. */
+  _blockPageGestures() {
+    const stop = (e) => {
+      if (e.cancelable) e.preventDefault();
+    };
+    const opts = { passive: false };
+    const add = (el, type) => {
+      el.addEventListener(type, stop, opts);
+      this._blockers.push([el, type, stop, opts]);
+    };
+    add(this.target, 'touchmove'); // desplazamiento y "tirar para recargar"
+    // Pellizco con dos dedos (zoom). Un toque simple NO se bloquea: los botones de la interfaz lo necesitan para recibir `click`.
+    const stopMulti = (e) => {
+      if (e.touches && e.touches.length > 1 && e.cancelable) e.preventDefault();
+    };
+    this.target.addEventListener('touchstart', stopMulti, opts);
+    this._blockers.push([this.target, 'touchstart', stopMulti, opts]);
+    add(document, 'gesturestart'); // zoom por pellizco en Safari
+    add(document, 'gesturechange');
+    add(document, 'contextmenu'); // pulsación larga
+    add(document, 'dblclick');
+  }
+}
+
+return { Gestures };
 })();
 __m["src/core/SceneManager.js"] = (function () {
 'use strict';
@@ -1195,6 +1629,8 @@ class DebugOverlay {
       `Pantalla ${window.innerWidth}×${window.innerHeight} px`,
       `Lógica   ${vp.width.toFixed(0)}×${vp.height.toFixed(0)} u · segura ${vp.safe.w.toFixed(0)}×${vp.safe.h.toFixed(0)}`,
       `Escala   ${vp.scale.toFixed(3)} · DPR ${vp.dpr.toFixed(2)} · ${g.scenes.currentName}`,
+      `Dibujo   ${g.renderMs.toFixed(1)} ms/fotograma`,
+      ...(g.scenes.current && g.scenes.current.debugInfo ? [g.scenes.current.debugInfo()] : []),
     ].join('\n');
   }
 }
@@ -1248,9 +1684,8 @@ const { SegmentedControl } = __m["src/ui/components/SegmentedControl.js"];
 const { QUALITY_ORDER, QUALITY_PROFILES } = __m["src/config/quality.config.js"];
 
 /**
- * Pantalla de título de la Etapa 00. Muestra la identidad del proyecto y los
- * ajustes técnicos disponibles hoy (calidad gráfica y diagnóstico).
- * No hay botón de jugar: todavía no existen mecánicas.
+ * Pantalla de título: identidad del proyecto, botón de jugar y los ajustes
+ * técnicos disponibles (calidad gráfica y diagnóstico).
  */
 class TitleScreen {
   constructor(game, ui) {
@@ -1295,11 +1730,12 @@ class TitleScreen {
         h('p', { class: 'eyebrow' }, config.tagline),
         h('h1', { class: 'logo' }, config.name),
         h('p', { class: 'subtitle' }, config.stage),
-        h('p', { class: 'note' }, 'Base técnica lista · las mecánicas llegan en próximas etapas')
+        h('p', { class: 'note' }, 'Desliza para moverte, saltar y deslizarte')
       ),
       h(
         'footer',
         { class: 'bottom-bar' },
+        h('button', { class: 'btn btn-primary btn-play', type: 'button', onclick: () => this.game.scenes.switchTo('game') }, 'Jugar'),
         h(
           'div',
           { class: 'controls' },
@@ -1319,11 +1755,164 @@ class TitleScreen {
 
 return { TitleScreen };
 })();
+__m["src/ui/screens/HudScreen.js"] = (function () {
+'use strict';
+const { h } = __m["src/ui/components/dom.js"];
+
+/**
+ * HUD de la partida: puntuación (centro), monedas (izquierda) y distancia
+ * (derecha). Solo se actualiza el texto cuando el valor cambia, para no tocar
+ * el DOM en cada fotograma. Incluye una pista de gestos que se desvanece sola.
+ */
+class HudScreen {
+  constructor(game, ui) {
+    this.game = game;
+    this.ui = ui;
+    this._last = { score: -1, distance: -1, coins: -1 };
+  }
+
+  mount(container) {
+    this.scoreEl = h('span', { class: 'hud-score-value' }, '0');
+    this.coinsEl = h('span', {}, '0');
+    this.distEl = h('span', {}, '0');
+
+    this.hint = h(
+      'div',
+      { class: 'hud-hint', 'aria-hidden': 'true' },
+      h('div', { class: 'hint-row' }, h('span', { class: 'hint-key' }, '←  →'), 'Cambia de carril'),
+      h('div', { class: 'hint-row' }, h('span', { class: 'hint-key' }, '↑'), 'Salta'),
+      h('div', { class: 'hint-row' }, h('span', { class: 'hint-key' }, '↓'), 'Deslízate')
+    );
+
+    this.root = h(
+      'div',
+      { class: 'hud' },
+      h(
+        'div',
+        { class: 'hud-top' },
+        h('div', { class: 'hud-pill hud-coins', 'aria-label': 'Monedas' }, h('span', { class: 'coin-icon', 'aria-hidden': 'true' }), this.coinsEl),
+        h('div', { class: 'hud-score' }, this.scoreEl, h('span', { class: 'hud-score-label' }, 'Puntos')),
+        h('div', { class: 'hud-pill hud-dist', 'aria-label': 'Distancia' }, this.distEl, h('span', { class: 'hud-unit' }, 'm'))
+      ),
+      this.hint
+    );
+    container.append(this.root);
+  }
+
+  /** Actualiza los marcadores (solo toca el DOM si cambian). */
+  setValues({ score, distance, coins }) {
+    const d = Math.floor(distance);
+    if (score !== this._last.score) {
+      this._last.score = score;
+      this.scoreEl.textContent = String(score);
+    }
+    if (d !== this._last.distance) {
+      this._last.distance = d;
+      this.distEl.textContent = String(d);
+    }
+    if (coins !== this._last.coins) {
+      this._last.coins = coins;
+      this.coinsEl.textContent = String(coins);
+    }
+  }
+
+  hideHint() {
+    if (this.hint) this.hint.classList.add('gone');
+  }
+
+  unmount() {
+    if (this.root) this.root.remove();
+  }
+}
+
+return { HudScreen };
+})();
+__m["src/ui/screens/GameOverScreen.js"] = (function () {
+'use strict';
+const { h } = __m["src/ui/components/dom.js"];
+
+/**
+ * Fin de partida: resumen y opciones. Recibe en `params`:
+ *   { summary: {score, distance, coins}, onRetry(), onHome() }
+ */
+class GameOverScreen {
+  constructor(game, ui, params) {
+    this.params = params;
+  }
+
+  mount(container) {
+    const { summary, onRetry, onHome } = this.params;
+    const stat = (label, value) => h('div', { class: 'over-stat' }, h('span', { class: 'over-stat-value' }, String(value)), h('span', { class: 'over-stat-label' }, label));
+
+    this.retry = h('button', { class: 'btn btn-primary', type: 'button', onclick: onRetry }, 'Jugar de nuevo');
+    this.root = h(
+      'div',
+      { class: 'over-screen' },
+      h(
+        'div',
+        { class: 'over-card', role: 'dialog', 'aria-label': 'Fin de la partida' },
+        h('h2', { class: 'over-title' }, '¡Tropezaste!'),
+        h('div', { class: 'over-score' }, h('span', { class: 'over-score-value' }, String(summary.score)), h('span', { class: 'over-score-label' }, 'Puntos')),
+        h('div', { class: 'over-stats' }, stat('Distancia (m)', Math.floor(summary.distance)), stat('Monedas', summary.coins)),
+        this.retry,
+        h('button', { class: 'btn btn-secondary', type: 'button', onclick: onHome }, 'Inicio')
+      )
+    );
+    container.append(this.root);
+  }
+
+  unmount() {
+    if (this.root) this.root.remove();
+  }
+}
+
+return { GameOverScreen };
+})();
+__m["src/ui/screens/PauseScreen.js"] = (function () {
+'use strict';
+const { h } = __m["src/ui/components/dom.js"];
+
+/**
+ * Pausa (se activa sola al salir de la app o con Esc / P). Recibe en `params`:
+ *   { summary: {score, distance, coins}, onResume(), onHome() }
+ */
+class PauseScreen {
+  constructor(game, ui, params) {
+    this.params = params;
+  }
+
+  mount(container) {
+    const { summary, onResume, onHome } = this.params;
+    this.root = h(
+      'div',
+      { class: 'over-screen' },
+      h(
+        'div',
+        { class: 'over-card', role: 'dialog', 'aria-label': 'Partida en pausa' },
+        h('h2', { class: 'over-title' }, 'Pausa'),
+        h('div', { class: 'over-score' }, h('span', { class: 'over-score-value' }, String(summary.score)), h('span', { class: 'over-score-label' }, 'Puntos')),
+        h('button', { class: 'btn btn-primary', type: 'button', onclick: onResume }, 'Continuar'),
+        h('button', { class: 'btn btn-secondary', type: 'button', onclick: onHome }, 'Salir al inicio')
+      )
+    );
+    container.append(this.root);
+  }
+
+  unmount() {
+    if (this.root) this.root.remove();
+  }
+}
+
+return { PauseScreen };
+})();
 __m["src/ui/UIManager.js"] = (function () {
 'use strict';
 const { h } = __m["src/ui/components/dom.js"];
 const { DebugOverlay } = __m["src/ui/DebugOverlay.js"];
 const { TitleScreen } = __m["src/ui/screens/TitleScreen.js"];
+const { HudScreen } = __m["src/ui/screens/HudScreen.js"];
+const { GameOverScreen } = __m["src/ui/screens/GameOverScreen.js"];
+const { PauseScreen } = __m["src/ui/screens/PauseScreen.js"];
 
 /**
  * Capa de interfaz en DOM encima del canvas, alineada con el área segura.
@@ -1342,19 +1931,28 @@ class UIManager {
     this.root.append(this.debug.el);
 
     this.register('title', TitleScreen);
+    this.register('hud', HudScreen);
+    this.register('gameover', GameOverScreen);
+    this.register('pause', PauseScreen);
+  }
+
+  /** Pantalla de UI visible ahora (o null). */
+  get current() {
+    return this._current;
   }
 
   register(name, ScreenClass) {
     this._screens.set(name, ScreenClass);
   }
 
-  show(name) {
+  /** @param {string} name  @param {object} [params] se pasan a la pantalla (tercer argumento del constructor) */
+  show(name, params) {
     this.hide();
     const ScreenClass = this._screens.get(name);
     if (!ScreenClass) throw new Error(`Pantalla de UI no registrada: "${name}"`);
     this._container = h('div', { class: 'screen' });
     this.root.append(this._container);
-    this._current = new ScreenClass(this.game, this);
+    this._current = new ScreenClass(this.game, this, params);
     this._current.mount(this._container);
   }
 
@@ -1538,10 +2136,20 @@ __m["src/characters/renderers/placeholderRenderer.js"] = (function () {
 const { mixHex } = __m["src/graphics/color.js"];
 
 /**
- * Renderer del personaje PROVISIONAL: una silueta neutra y sin rostro con
- * sombra, solo para ocupar el lugar del protagonista mientras no exista su
- * diseño. No define estilo ni anatomía; se sustituye registrando otro renderer.
+ * Renderer del personaje PROVISIONAL: una silueta neutra y sin rostro, vista
+ * desde atrás como en el runner, con "colored lineart". No define estilo ni
+ * anatomía finales; se sustituye registrando otro renderer.
+ *
+ * Contrato que cumple todo renderer de personaje (también el definitivo):
+ *   draw(ctx, character, x, y, size)
+ *     (x, y) = centro del cuerpo EN PIE; `size` = alto en píxeles.
+ *     Lee `character.animation` ('idle' | 'run' | 'jump' | 'slide' | 'hit'),
+ *     `character.time` (s desde que empezó la animación) y `character.lean`
+ *     (-1..1, inclinación al cambiar de carril).
+ *     La parte inferior (los pies) queda siempre anclada a y + size/2.
  */
+const INK = '#35104f';
+
 function capsule(ctx, cx, cy, w, h) {
   const r = Math.min(w, h) / 2;
   const x = cx - w / 2;
@@ -1559,37 +2167,122 @@ function capsule(ctx, cx, cy, w, h) {
   ctx.closePath();
 }
 
+/** Calcula la pose (escala, giro, posición de los pies) de cada animación. */
+function pose(character, size) {
+  const t = character.time;
+  const p = { sx: 1, sy: 1, rot: character.lean * 0.2, bob: 0, footL: 0, footR: 0, spread: 1 };
+  switch (character.animation) {
+    case 'run': {
+      const ph = t * 13;
+      p.sy = 1 + Math.sin(ph * 2) * 0.035;
+      p.sx = 2 - p.sy;
+      p.bob = -Math.abs(Math.sin(ph)) * size * 0.05;
+      p.footL = Math.sin(ph) * size * 0.1;
+      p.footR = -p.footL;
+      p.rot += Math.sin(ph) * 0.035;
+      break;
+    }
+    case 'jump': {
+      const k = Math.min(1, t * 9);
+      p.sy = 1 + 0.1 * k;
+      p.sx = 1 - 0.07 * k;
+      p.footL = p.footR = size * 0.1 * k; // pies recogidos
+      p.spread = 1 - 0.15 * k;
+      break;
+    }
+    case 'slide': {
+      const k = Math.min(1, t * 14);
+      p.sy = 1 - 0.52 * k;
+      p.sx = 1 + 0.2 * k;
+      p.rot += -0.05 * k;
+      p.spread = 1.3;
+      break;
+    }
+    case 'hit': {
+      const k = Math.min(1, t * 2.4);
+      p.rot = Math.min(t * 11, Math.PI * 2) * 1 + character.lean * 0.2;
+      p.sy = 0.9 - 0.12 * k;
+      p.sx = 1.05 + 0.1 * k;
+      p.bob = size * 0.08 * Math.sin(Math.min(1, t * 3) * Math.PI);
+      break;
+    }
+    default: {
+      const wave = Math.sin(t * 2);
+      p.sy = 1 + wave * 0.02;
+      p.sx = 2 - p.sy;
+      p.bob = wave * size * 0.03;
+    }
+  }
+  return p;
+}
+
 const placeholderRenderer = {
   draw(ctx, character, x, y, size) {
     const body = character.skin.palette.body || '#ffc6e5';
-    const t = character.time;
-    const wave = Math.sin(t * 2);
-    const bob = wave * size * 0.03;
-    const squash = 1 + wave * 0.02;
+    const line = mixHex(body, INK, 0.62);
+    const lw = Math.max(2, size * 0.05);
+    const p = pose(character, size);
+    const bottom = y + size / 2;
 
-    // Sombra en el suelo: se contrae un poco cuando el personaje sube.
-    const shadowScale = 1 - wave * 0.06;
-    ctx.fillStyle = 'rgba(0,0,0,0.28)';
-    ctx.beginPath();
-    ctx.ellipse(x, y + size * 0.62, size * 0.36 * shadowScale, size * 0.07 * shadowScale, 0, 0, Math.PI * 2);
-    ctx.fill();
+    if (character.drawShadow) {
+      ctx.fillStyle = 'rgba(40,12,70,0.3)';
+      ctx.beginPath();
+      ctx.ellipse(x, bottom + size * 0.04, size * 0.36, size * 0.07, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
-    // Cuerpo con degradado (luz desde arriba).
-    const w = size * 0.7 * (2 - squash);
-    const h = size * squash;
-    const cy = y + bob;
-    const grad = ctx.createLinearGradient(0, cy - h / 2, 0, cy + h / 2);
-    grad.addColorStop(0, mixHex(body, '#ffffff', 0.35));
-    grad.addColorStop(1, mixHex(body, '#3a1d70', 0.25));
+    const h = size * p.sy;
+    const w = size * 0.7 * p.sx;
+    const cy = bottom - h / 2 + p.bob;
+
+    ctx.save();
+    ctx.translate(x, cy);
+    ctx.rotate(p.rot);
+
+    // Pies (detrás del cuerpo): alternan al correr y se recogen al saltar.
+    const footW = size * 0.17;
+    const footH = size * 0.11;
+    const fy = h / 2 - footH * 0.35;
+    for (const [side, lift] of [[-1, p.footL], [1, p.footR]]) {
+      const fx = side * w * 0.29 * p.spread;
+      const yy = fy - Math.max(0, lift);
+      ctx.beginPath();
+      ctx.ellipse(fx, yy, footW * (1 - Math.max(0, -lift) / size), footH, 0, 0, Math.PI * 2);
+      ctx.fillStyle = mixHex(body, '#7a3d8c', 0.45);
+      ctx.fill();
+      ctx.lineWidth = lw * 0.9;
+      ctx.strokeStyle = line;
+      ctx.stroke();
+    }
+
+    // Cuerpo con luz arriba-izquierda y contorno de color.
+    const grad = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2);
+    grad.addColorStop(0, mixHex(body, '#ffffff', 0.4));
+    grad.addColorStop(0.5, body);
+    grad.addColorStop(1, mixHex(body, '#5a2a8c', 0.38));
+    capsule(ctx, 0, 0, w, h);
     ctx.fillStyle = grad;
-    capsule(ctx, x, cy, w, h);
     ctx.fill();
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = lw;
+    ctx.strokeStyle = line;
+    ctx.stroke();
+
+    // Marca en la espalda (indica la orientación sin definir un diseño).
+    ctx.fillStyle = mixHex(body, '#7a3d8c', 0.28);
+    capsule(ctx, 0, -h * 0.02, w * 0.46, h * 0.36);
+    ctx.fill();
+    ctx.lineWidth = lw * 0.6;
+    ctx.strokeStyle = mixHex(body, INK, 0.45);
+    ctx.stroke();
 
     // Brillo suave.
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
     ctx.beginPath();
-    ctx.ellipse(x - w * 0.18, cy - h * 0.28, w * 0.1, h * 0.14, -0.3, 0, Math.PI * 2);
+    ctx.ellipse(-w * 0.2, -h * 0.3, w * 0.09, h * 0.13, -0.3, 0, Math.PI * 2);
     ctx.fill();
+
+    ctx.restore();
   },
 };
 
@@ -1607,7 +2300,14 @@ const __default = {
   name: 'Personaje provisional',
   render: { type: 'placeholder' },
   skins: [{ id: 'default', name: 'Base', palette: { body: '#ffc6e5' } }],
-  animations: { idle: { loop: true } },
+  // Animaciones que el sistema de movimiento solicita; todo personaje nuevo debe ofrecerlas.
+  animations: {
+    idle: { loop: true },
+    run: { loop: true },
+    jump: { loop: false },
+    slide: { loop: true },
+    hit: { loop: false },
+  },
   accessories: [],
   abilities: [],
 };
@@ -1640,9 +2340,12 @@ __m["src/regions/RegionDefinition.js"] = (function () {
  *                   harmonics:Array<[number,number]>, seed:number, color:string, fade:number}>} layers
  *           capas de siluetas de lejos a cerca (`parallax` mayor = más cercana y rápida)
  *
- * Campos futuros previstos (se añadirán en sus etapas): obstáculos y
- * coleccionables propios, reglas de generación procedural, música y efectos
- * ambientales, criaturas.
+ * @property {object} [run]   solo regiones JUGABLES: colores del suelo y la pista, elementos
+ *           ambientales y estilo de obstáculos (ver regions/definitions/duskMeadow.js).
+ *           En una región jugable, `layers[].base` es el desplazamiento bajo el horizonte.
+ *
+ * Campos futuros previstos (se añadirán en sus etapas): reglas de generación
+ * procedural por región, música y efectos ambientales, criaturas.
  */
 
 const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
@@ -1688,6 +2391,47 @@ function validateRegionDefinition(def) {
       if (!ok) errors.push(`la capa #${i} está incompleta (armónicos: [[entero, peso], …])`);
     });
   }
+
+  if (def.run !== undefined) errors.push(...validateRun(def.run));
+  return errors;
+}
+
+const SCENERY_TYPES = ['pine', 'tree', 'bush', 'rock', 'mushroom', 'flower', 'lamp'];
+
+/** Valida la sección `run` de una región jugable. */
+function validateRun(run) {
+  const errors = [];
+  if (!run || typeof run !== 'object') return ['"run" debe ser un objeto'];
+  if (!isStr(run.fog)) errors.push('"run.fog" debe ser un color');
+  for (const [group, keys] of [
+    ['ground', ['grass', 'grassShade', 'grassFar']],
+    ['track', ['base', 'shade', 'line', 'curbA', 'curbB', 'edge']],
+  ]) {
+    const g = run[group];
+    if (!g || !keys.every((k) => isStr(g[k]))) errors.push(`"run.${group}" necesita: ${keys.join(', ')}`);
+  }
+  if (!run.palette || typeof run.palette !== 'object') errors.push('falta "run.palette"');
+  const sc = run.scenery;
+  if (!sc || !isNum(sc.density) || !Array.isArray(sc.types) || sc.types.length === 0) {
+    errors.push('"run.scenery" necesita density y una lista de types');
+  } else {
+    sc.types.forEach((t, i) => {
+      const ok =
+        t &&
+        SCENERY_TYPES.includes(t.type) &&
+        isNum(t.weight) &&
+        Array.isArray(t.x) &&
+        t.x.length === 2 &&
+        t.x.every(isNum) &&
+        Array.isArray(t.scale) &&
+        t.scale.length === 2 &&
+        t.scale.every(isNum);
+      if (!ok) errors.push(`el elemento ambiental #${i} está incompleto (tipos: ${SCENERY_TYPES.join(', ')})`);
+    });
+  }
+  const ob = run.obstacles;
+  if (!ob || !ob.hurdle || !ob.gate || !ob.block) errors.push('"run.obstacles" necesita hurdle, gate y block');
+  if (!run.coin) errors.push('falta "run.coin"');
   return errors;
 }
 
@@ -1735,12 +2479,103 @@ const __default = {
 
 return { default: __default };
 })();
+__m["src/regions/definitions/duskMeadow.js"] = (function () {
+'use strict';
+/**
+ * Región de PRUEBA JUGABLE (status: 'preview'): un valle al atardecer con cielo
+ * de nebulosa, colinas lejanas y bosque ilustrado. Sirve para probar el núcleo
+ * de juego en la Etapa 01; las regiones definitivas se diseñarán más adelante.
+ *
+ * Además de los campos comunes (cielo, luz, estrellas, capas de colinas), una
+ * región jugable declara `run`: colores del suelo y la pista, elementos
+ * ambientales y estilo de los obstáculos. Todo es dato: otra región cambia su
+ * aspecto sin tocar el código del dibujado.
+ *
+ * Capas de colinas (`layers`): aquí `base` es el desplazamiento bajo el horizonte
+ * (fracción del alto) y `amplitude` la altura de las colinas sobre él.
+ */
+const __default = {
+  id: 'dusk-meadow',
+  name: 'Valle del atardecer (prueba)',
+  status: 'preview',
+  palette: {
+    skyTop: '#241060',
+    skyMid: '#7a3fae',
+    skyBottom: '#ffb394',
+  },
+  light: { x: 0.74, y: 0.27, radius: 0.55, color: '#ffd9a3' },
+  stars: { count: 70, seed: 21 },
+  layers: [
+    { id: 'lejos', parallax: 0.1, base: 0.0, amplitude: 0.085, harmonics: [[2, 1], [5, 0.5], [9, 0.22]], seed: 5, color: '#b27ad0', fade: 0.55 },
+    { id: 'media', parallax: 0.22, base: 0.004, amplitude: 0.065, harmonics: [[3, 1], [7, 0.45], [12, 0.2]], seed: 17, color: '#7a5cc0', fade: 0.38 },
+    { id: 'cerca', parallax: 0.4, base: 0.01, amplitude: 0.045, harmonics: [[4, 1], [8, 0.4], [15, 0.18]], seed: 29, color: '#2fa5a0', fade: 0.12 },
+  ],
+  run: {
+    /** Color de la bruma del horizonte (perspectiva atmosférica). */
+    fog: '#ffb89a',
+    ground: {
+      grass: '#34b98a',
+      grassShade: '#259172',
+      grassFar: '#6fd39c',
+    },
+    track: {
+      base: '#f7d5b6',
+      shade: '#e9b894',
+      line: '#fff6e6',
+      curbA: '#ff6f91',
+      curbB: '#ffe8c6',
+      edge: '#a7437a',
+    },
+    /** Colores de los elementos ambientales. */
+    palette: {
+      trunk: '#7a4660',
+      pine: { dark: '#1d6a5b', mid: '#2f9a78', light: '#7be0a2' },
+      trees: [
+        { base: '#ff8a4c', light: '#ffc47a', dark: '#d9524a' },
+        { base: '#ff7fb0', light: '#ffc3dd', dark: '#c64f9c' },
+        { base: '#47c4a6', light: '#a2f2cc', dark: '#27898a' },
+      ],
+      bush: { base: '#35b08a', light: '#8ff0b8', dark: '#1f7a74', berry: '#ff6f91' },
+      rock: { base: '#9a86c9', light: '#cdbcf5', dark: '#5d4a96' },
+      mushroom: { cap: '#ff5c7a', spot: '#fff1d6', stem: '#ffe2c2' },
+      flower: ['#ffd36a', '#ff8fb8', '#fff1d6', '#b79bff'],
+      lamp: { post: '#7a4660', glow: '#ffd36a' },
+    },
+    /**
+     * Elementos ambientales: `x` es la distancia lateral desde el borde de la
+     * pista; `scale` multiplica el tamaño base (variedad de escalas).
+     */
+    scenery: {
+      density: 1,
+      types: [
+        { type: 'pine', weight: 4, x: [1.8, 13], scale: [0.8, 1.5] },
+        { type: 'tree', weight: 3, x: [2.2, 11], scale: [0.8, 1.35] },
+        { type: 'bush', weight: 4, x: [0.7, 6], scale: [0.7, 1.3] },
+        { type: 'rock', weight: 2, x: [0.9, 8], scale: [0.6, 1.4] },
+        { type: 'mushroom', weight: 1.5, x: [0.8, 5], scale: [0.8, 1.6] },
+        { type: 'flower', weight: 3, x: [0.6, 3.5], scale: [0.9, 1.5] },
+        { type: 'lamp', weight: 0.8, x: [0.5, 1.2], scale: [1, 1] },
+      ],
+    },
+    /** Estilo de los obstáculos (colored lineart: el contorno sale del propio color). */
+    obstacles: {
+      hurdle: { post: '#ff6f91', stripeA: '#fff1d6', stripeB: '#ff7a9e', top: '#ffc4d6' },
+      gate: { post: '#2fbfae', stripeA: '#fff1d6', stripeB: '#8a5cf0', lantern: '#ffd36a', top: '#a8f0e4' },
+      block: { face: '#8b6ad8', top: '#b9a0ff', side: '#6a4cbc', glyph: '#ffe08a' },
+    },
+    coin: { base: '#ffc93c', light: '#fff0a8', dark: '#e08a1e' },
+  },
+};
+
+return { default: __default };
+})();
 __m["src/regions/definitions/index.js"] = (function () {
 'use strict';
 const previewNebula = __m["src/regions/definitions/previewNebula.js"].default;
+const duskMeadow = __m["src/regions/definitions/duskMeadow.js"].default;
 
 /** Todas las regiones disponibles. Añade aquí las nuevas definiciones. */
-const REGION_DEFINITIONS = [previewNebula];
+const REGION_DEFINITIONS = [previewNebula, duskMeadow];
 
 return { REGION_DEFINITIONS };
 })();
@@ -1854,7 +2689,18 @@ function mulberry32(seed) {
   };
 }
 
-return { mulberry32 };
+/**
+ * Hash determinista de tres enteros → número en [0, 1). Permite generar el
+ * escenario "infinito" sin guardarlo: el mismo (a, b, c) da siempre el mismo valor.
+ */
+function hash3(a, b, c, seed = 0) {
+  let h = Math.imul(a | 0, 374761393) ^ Math.imul(b | 0, 668265263) ^ Math.imul(c | 0, 2147483629) ^ Math.imul(seed | 0, 1274126177);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+}
+
+return { mulberry32, hash3 };
 })();
 __m["src/graphics/ParallaxBackdrop.js"] = (function () {
 'use strict';
@@ -2055,6 +2901,10 @@ class Character {
     this.accessories = [];
     this.animation = 'idle';
     this.time = 0;
+    /** Inclinación (-1..1) por cambio de carril; la fija quien controla al personaje. */
+    this.lean = 0;
+    /** false si quien lo dibuja ya pinta su propia sombra (p. ej. el runner). */
+    this.drawShadow = true;
   }
 
   setSkin(skinId) {
@@ -2122,21 +2972,2596 @@ class TitleScene extends Scene {
     this.backdrop.render(ctx);
     const { safe } = viewport;
     // Composición vertical: el personaje se centra y su tamaño sigue al ancho del área segura.
-    this.character.render(ctx, safe.x + safe.w / 2, safe.y + safe.h * 0.62, safe.w * 0.3);
+    this.character.render(ctx, safe.x + safe.w / 2, safe.y + safe.h * 0.5, safe.w * 0.3);
   }
 }
 
 return { TitleScene };
 })();
+__m["src/config/gameplay.config.js"] = (function () {
+'use strict';
+/**
+ * Parámetros de la jugabilidad. Todo número que afecte a "cómo se siente" el
+ * juego vive aquí para poder afinarlo sin tocar la lógica.
+ *
+ * Unidades del mundo: 1 unidad = ancho de un carril. Distancias en metros
+ * (1 m = 1 unidad de profundidad). El jugador mide 1 unidad de alto.
+ */
+
+/** Carriles: tres, centrados en x = -1, 0 y 1. */
+const LANES = Object.freeze({
+  count: 3,
+  spacing: 1,
+});
+
+const RUN = Object.freeze({
+  /** Velocidad de avance (m/s): arranca en `baseSpeed` y sube con el tiempo hasta `maxSpeed`. */
+  baseSpeed: 9.5,
+  maxSpeed: 18.5,
+  accel: 0.13,
+  /** Rapidez con la que se alcanza la velocidad al empezar (mayor = más brusco). */
+  startRamp: 3.2,
+
+  /** Suavizado del cambio de carril (1/s). 24 ≈ 90 % del camino en ~0,1 s. */
+  laneSmoothing: 24,
+
+  jump: Object.freeze({
+    /** Altura máxima (unidades) y duración total en el aire (s). */
+    height: 1.35,
+    airTime: 0.58,
+    /** Velocidad de caída al deslizar en el aire (unidades/s). */
+    fastFallSpeed: 21,
+  }),
+
+  slide: Object.freeze({
+    duration: 0.72,
+  }),
+
+  /** Tiempo (s) que se recuerda un gesto que llega un instante antes de poder ejecutarse. */
+  inputBuffer: 0.14,
+  slideBuffer: 0.5,
+
+  /** Cuerpo del jugador para colisiones (algo más pequeño que el dibujo: perdona roces). */
+  player: Object.freeze({
+    width: 0.46,
+    depth: 0.5,
+    height: 1,
+    slideHeight: 0.45,
+  }),
+
+  /** Segundos de caída/pantalla de choque antes de mostrar el final de partida. */
+  crashDuration: 1.05,
+
+  scoring: Object.freeze({
+    perMeter: 1,
+    perCoin: 10,
+  }),
+});
+
+/** Cámara de runner: sigue al personaje desde atrás y desde arriba. */
+const CAMERA = Object.freeze({
+  /** Distancia (m) entre la cámara y el personaje. */
+  distance: 5,
+  /** Horizonte y pies del personaje, como fracción del alto del área segura. */
+  horizon: 0.33,
+  feet: 0.8,
+  /** Píxeles por unidad a la altura del personaje, como fracción del ancho seguro. */
+  laneScale: 0.25,
+  /** Cuánto sigue la cámara al personaje lateralmente (0 = fija, 1 = pegada) y su suavizado. */
+  followX: 0.45,
+  followSmooth: 7,
+  /** Cuánto sube la cámara cuando el personaje salta. */
+  jumpLift: 0.35,
+});
+
+const TRACK = Object.freeze({
+  /** Largo (m) de cada fila de un segmento. */
+  rowLength: 3,
+  /** Filas vacías entre segmentos. */
+  gapRows: 4,
+  /** Metros de pista sin nada al empezar. */
+  introDistance: 36,
+  /** Anchura de la pista (a cada lado del centro) y de los bordillos. */
+  halfWidth: 1.5,
+  curbWidth: 0.34,
+  /** Metros por detrás del jugador que se conservan antes de descartar. */
+  keepBehind: 6,
+});
+
+/** Dificultad máxima de los segmentos según la distancia recorrida (m). */
+const DIFFICULTY = Object.freeze([
+  { from: 0, max: 1 },
+  { from: 130, max: 2 },
+  { from: 380, max: 3 },
+]);
+
+return { LANES, RUN, CAMERA, TRACK, DIFFICULTY };
+})();
+__m["src/gameplay/PlayerController.js"] = (function () {
+'use strict';
+const { LANES, RUN } = __m["src/config/gameplay.config.js"];
+
+const G = (8 * RUN.jump.height) / (RUN.jump.airTime * RUN.jump.airTime);
+const JUMP_V = (4 * RUN.jump.height) / RUN.jump.airTime;
+
+/**
+ * Movimiento del jugador: carril, salto y deslizamiento. Sin dibujo ni DOM.
+ *
+ * - Carril: tres posiciones (-1, 0, 1). La posición `x` persigue al carril
+ *   objetivo con un suavizado exponencial (rápido y sin rebotes).
+ * - Salto: parábola con altura y duración fijas (ver RUN.jump).
+ * - Deslizamiento: reduce la altura del cuerpo durante un tiempo. Si se pide
+ *   en el aire, el jugador cae rápido y desliza al tocar el suelo.
+ * - Gestos pedidos un instante antes de poder ejecutarse se recuerdan un
+ *   momento (buffer), para que se sienta preciso.
+ *
+ * Los cambios relevantes se comunican con `onEvent(nombre)`.
+ */
+class PlayerController {
+  constructor() {
+    this.onEvent = null;
+    this.reset();
+  }
+
+  reset() {
+    this.lane = 0;
+    this.x = 0;
+    this.y = 0;
+    this.vy = 0;
+    this.grounded = true;
+    this.slideTime = 0;
+    this.fastFall = false;
+    this.jumpBuffer = 0;
+    this.slideBuffer = 0;
+    /** Inclinación visual (-1..1) según el cambio de carril. */
+    this.lean = 0;
+    /** Impulso visual al chocar contra el borde de la pista (-1 izquierda, 1 derecha). */
+    this.bump = 0;
+    this.animation = 'run';
+    this.animTime = 0;
+  }
+
+  get targetX() {
+    return this.lane * LANES.spacing;
+  }
+
+  get sliding() {
+    return this.slideTime > 0;
+  }
+
+  /** Altura actual del cuerpo para colisiones. */
+  get bodyHeight() {
+    return this.sliding ? RUN.player.slideHeight : RUN.player.height;
+  }
+
+  /** Aplica un gesto: 'left' | 'right' | 'up' | 'down'. */
+  swipe(dir) {
+    if (dir === 'left' || dir === 'right') {
+      const next = this.lane + (dir === 'left' ? -1 : 1);
+      if (next < -1 || next > 1) {
+        this.bump = dir === 'left' ? -1 : 1; // ya está en el borde: pequeño empujón visual
+        return;
+      }
+      this.lane = next;
+      this._emit('lane');
+    } else if (dir === 'up') {
+      if (this.grounded) this._jump();
+      else this.jumpBuffer = RUN.inputBuffer;
+    } else if (dir === 'down') {
+      if (this.grounded) this._slide();
+      else {
+        this.fastFall = true;
+        this.slideBuffer = RUN.slideBuffer;
+      }
+    }
+  }
+
+  update(dt) {
+    // Posición lateral.
+    const dx = this.targetX - this.x;
+    if (Math.abs(dx) < 0.0005) this.x = this.targetX;
+    else this.x += dx * (1 - Math.exp(-dt * RUN.laneSmoothing));
+
+    // Inclinación visual.
+    const leanTarget = Math.max(-1, Math.min(1, (this.targetX - this.x) * 1.6));
+    this.lean += (leanTarget - this.lean) * (1 - Math.exp(-dt * 14));
+    this.bump *= Math.exp(-dt * 12);
+    if (Math.abs(this.bump) < 0.01) this.bump = 0;
+
+    // Temporizadores.
+    if (this.jumpBuffer > 0) this.jumpBuffer -= dt;
+    if (this.slideBuffer > 0) this.slideBuffer -= dt;
+    if (this.slideTime > 0) {
+      this.slideTime -= dt;
+      if (this.slideTime <= 0) {
+        this.slideTime = 0;
+        this._emit('slide-end');
+      }
+    }
+
+    // Vertical.
+    if (!this.grounded) {
+      this.vy = this.fastFall ? -RUN.jump.fastFallSpeed : this.vy - G * dt;
+      this.y += this.vy * dt;
+      if (this.y <= 0) {
+        this.y = 0;
+        this.vy = 0;
+        this.grounded = true;
+        this.fastFall = false;
+        this._emit('land');
+        if (this.slideBuffer > 0) {
+          this.slideBuffer = 0;
+          this._slide();
+        } else if (this.jumpBuffer > 0) {
+          this.jumpBuffer = 0;
+          this._jump();
+        }
+      }
+    }
+
+    this._updateAnimation(dt);
+  }
+
+  _jump() {
+    this.slideTime = 0; // saltar cancela el deslizamiento
+    this.grounded = false;
+    this.fastFall = false;
+    this.vy = JUMP_V;
+    this._emit('jump');
+  }
+
+  _slide() {
+    this.slideTime = RUN.slide.duration;
+    this._emit('slide');
+  }
+
+  _updateAnimation(dt) {
+    const next = !this.grounded ? 'jump' : this.sliding ? 'slide' : 'run';
+    if (next !== this.animation) {
+      this.animation = next;
+      this.animTime = 0;
+    } else {
+      this.animTime += dt;
+    }
+  }
+
+  _emit(name) {
+    if (this.onEvent) this.onEvent(name);
+  }
+}
+
+return { PlayerController };
+})();
+__m["src/gameplay/items.js"] = (function () {
+'use strict';
+/**
+ * Tipos de elementos que pueden aparecer en la pista. Datos puros: tamaño de
+ * la caja de colisión y el rango de alturas que ocupan.
+ *
+ *   w, d     ancho (en x) y fondo (en z) de la caja, en unidades/metros
+ *   y0, y1   altura inferior y superior que ocupa (el jugador choca si su
+ *            cuerpo se solapa con este rango)
+ *   sprite   clave del dibujo (ver graphics/runner/SpriteSet.js)
+ *
+ * Cómo se esquiva cada obstáculo:
+ *   hurdle  valla baja    → SALTAR     (y1 por debajo de la altura del salto)
+ *   gate    arco alto     → DESLIZARSE (y0 por encima del cuerpo deslizando)
+ *   block   bloque macizo → CAMBIAR DE CARRIL (no se puede saltar ni pasar por debajo)
+ */
+const ITEM_TYPES = Object.freeze({
+  hurdle: Object.freeze({ kind: 'obstacle', sprite: 'hurdle', w: 0.8, d: 0.5, y0: 0, y1: 0.55 }),
+  gate: Object.freeze({ kind: 'obstacle', sprite: 'gate', w: 0.9, d: 0.5, y0: 0.85, y1: 2.2 }),
+  block: Object.freeze({ kind: 'obstacle', sprite: 'block', w: 0.86, d: 0.8, y0: 0, y1: 1.7 }),
+  coin: Object.freeze({ kind: 'coin', sprite: null, w: 0.5, d: 0.5, y0: 0, y1: 0.5 }),
+});
+
+/**
+ * Código de cada celda de un segmento → elementos que genera.
+ * `y` es la altura del centro de la moneda.
+ */
+const CELL_CODES = Object.freeze({
+  '.': Object.freeze([]),
+  c: Object.freeze([{ type: 'coin', y: 0.5 }]),
+  l: Object.freeze([{ type: 'hurdle' }]),
+  j: Object.freeze([{ type: 'hurdle' }, { type: 'coin', y: 1.2 }]),
+  h: Object.freeze([{ type: 'gate' }]),
+  u: Object.freeze([{ type: 'gate' }, { type: 'coin', y: 0.35 }]),
+  x: Object.freeze([{ type: 'block' }]),
+});
+
+/** Celdas que bloquean por completo un carril (obligan a cambiar de carril). */
+const BLOCKING_CODES = Object.freeze(['x']);
+
+return { ITEM_TYPES, CELL_CODES, BLOCKING_CODES };
+})();
+__m["src/gameplay/Track.js"] = (function () {
+'use strict';
+const { LANES, TRACK, DIFFICULTY } = __m["src/config/gameplay.config.js"];
+const { ITEM_TYPES, CELL_CODES } = __m["src/gameplay/items.js"];
+
+const EMPTY_ROW = '...';
+
+/** Dificultad máxima permitida a cierta distancia. */
+function difficultyAt(distance) {
+  let max = 1;
+  for (const step of DIFFICULTY) if (distance >= step.from) max = step.max;
+  return max;
+}
+
+/**
+ * Pista: genera, mantiene y descarta los elementos (obstáculos y monedas) por
+ * delante del jugador, a partir de segmentos que le suministra una fuente
+ * (`SegmentSource`). No sabe nada de dibujo.
+ *
+ * `items` está ordenado por `z` creciente. Los objetos se reciclan (pool) para
+ * no generar basura durante la partida.
+ */
+class Track {
+  /** @param {{source: {next: Function}}} cfg */
+  constructor({ source }) {
+    this.source = source;
+    this.items = [];
+    this._pool = [];
+    this._rows = [];
+    this._rowIndex = 0;
+    this._nextZ = 0;
+    this._startZ = 0;
+  }
+
+  reset(startZ = 0) {
+    for (const it of this.items) this._pool.push(it);
+    this.items.length = 0;
+    this._rows.length = 0;
+    this._rowIndex = 0;
+    this._startZ = startZ;
+    this._nextZ = startZ + TRACK.introDistance;
+  }
+
+  /**
+   * Genera lo necesario hasta `z + ahead` y descarta lo que quedó atrás.
+   * @param {number} playerZ
+   * @param {number} ahead  metros por delante que deben estar generados
+   */
+  update(playerZ, ahead) {
+    const limit = playerZ + ahead;
+    while (this._nextZ <= limit) {
+      if (this._rowIndex >= this._rows.length) this._refill(playerZ - this._startZ);
+      this._spawnRow(this._rows[this._rowIndex++], this._nextZ);
+      this._nextZ += TRACK.rowLength;
+    }
+    const cut = playerZ - TRACK.keepBehind;
+    let drop = 0;
+    while (drop < this.items.length && this.items[drop].z < cut) drop++;
+    if (drop > 0) {
+      for (let i = 0; i < drop; i++) this._pool.push(this.items[i]);
+      this.items.splice(0, drop);
+    }
+  }
+
+  _refill(distance) {
+    this._rows.length = 0;
+    this._rowIndex = 0;
+    for (let i = 0; i < TRACK.gapRows; i++) this._rows.push(EMPTY_ROW);
+    const segment = this.source.next({ difficulty: difficultyAt(distance), distance });
+    for (const row of segment.rows) this._rows.push(row);
+  }
+
+  _spawnRow(row, z) {
+    for (let lane = 0; lane < LANES.count; lane++) {
+      const specs = CELL_CODES[row[lane]];
+      for (const spec of specs) this._add(spec, (lane - 1) * LANES.spacing, z);
+    }
+  }
+
+  _add(spec, x, z) {
+    const type = ITEM_TYPES[spec.type];
+    const it = this._pool.pop() || {};
+    it.type = spec.type;
+    it.kind = type.kind;
+    it.sprite = type.sprite;
+    it.x = x;
+    it.z = z;
+    it.w = type.w;
+    it.d = type.d;
+    if (type.kind === 'coin') {
+      it.y = spec.y;
+      it.y0 = spec.y - 0.3;
+      it.y1 = spec.y + 0.3;
+    } else {
+      it.y = 0;
+      it.y0 = type.y0;
+      it.y1 = type.y1;
+    }
+    it.taken = false;
+    it.takenAt = 0;
+    it.phase = ((x * 7 + z * 3) % 6.28) + 3.14;
+    this.items.push(it);
+  }
+}
+
+return { difficultyAt, Track };
+})();
+__m["src/gameplay/Run.js"] = (function () {
+'use strict';
+const { RUN } = __m["src/config/gameplay.config.js"];
+const { PlayerController } = __m["src/gameplay/PlayerController.js"];
+const { Track } = __m["src/gameplay/Track.js"];
+
+/**
+ * Una partida: jugador + pista + marcador + estado. Lógica pura (sin DOM ni
+ * canvas), con paso fijo: se puede ejecutar y probar fuera del navegador.
+ *
+ * Estados:
+ *   running  → se corre, se esquiva y se recogen monedas
+ *   crashed  → acaba de chocar: el mundo frena y se reproduce la caída
+ *   over     → fin de partida (la escena muestra el resumen)
+ *
+ * Eventos (`onEvent(nombre, datos)`): 'jump', 'slide', 'land', 'lane',
+ * 'coin', 'crash', 'over'. Sirven para efectos visuales (y sonoros, más adelante).
+ */
+class Run {
+  /** @param {{source: object}} cfg  fuente de segmentos (ver SegmentSource.js) */
+  constructor({ source }) {
+    this.onEvent = null;
+    this.player = new PlayerController();
+    this.player.onEvent = (name) => this._emit(name);
+    this.track = new Track({ source });
+    this.reset();
+  }
+
+  reset() {
+    this.state = 'running';
+    this.time = 0;
+    this.z = 0;
+    this.speed = 0;
+    this.coins = 0;
+    this.distance = 0;
+    this.score = 0;
+    this.crashTime = 0;
+    /** Obstáculo contra el que se chocó (para dibujarlo/depurar). */
+    this.hitItem = null;
+    this.player.reset();
+    this.track.reset(0);
+    this.track.update(0, 120);
+  }
+
+  /** Gesto de dirección. Se ignora si la partida no está en curso. */
+  swipe(dir) {
+    if (this.state === 'running') this.player.swipe(dir);
+  }
+
+  /** @param {number} dt  paso fijo en segundos @param {number} ahead metros que deben existir por delante */
+  update(dt, ahead = 120) {
+    if (this.state === 'over') return;
+
+    if (this.state === 'crashed') {
+      this.crashTime += dt;
+      this.speed *= Math.exp(-dt * 7);
+      this.z += this.speed * dt;
+      this.player.animTime += dt;
+      if (this.crashTime >= RUN.crashDuration) {
+        this.state = 'over';
+        this._emit('over');
+      }
+      return;
+    }
+
+    this.time += dt;
+    const target = Math.min(RUN.maxSpeed, RUN.baseSpeed + RUN.accel * this.time);
+    this.speed = target * (1 - Math.exp(-this.time * RUN.startRamp));
+    this.z += this.speed * dt;
+    this.player.update(dt);
+    this.track.update(this.z, ahead);
+    this._collide();
+
+    this.distance = Math.max(0, this.z);
+    this._updateScore();
+  }
+
+  _updateScore() {
+    this.score = Math.floor(this.distance * RUN.scoring.perMeter) + this.coins * RUN.scoring.perCoin;
+  }
+
+  _collide() {
+    const p = this.player;
+    const body = RUN.player;
+    const pTop = p.y + p.bodyHeight;
+    const items = this.track.items;
+    const reach = 1.6;
+
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      if (it.z < this.z - reach) continue;
+      if (it.z > this.z + reach) break;
+      if (it.taken) continue;
+
+      const dx = Math.abs(it.x - p.x);
+      const dz = Math.abs(it.z - this.z);
+
+      if (it.kind === 'coin') {
+        if (dx < 0.62 && dz < 0.75 && it.y0 < pTop + 0.1 && it.y1 > p.y - 0.1) {
+          it.taken = true;
+          it.takenAt = this.time;
+          this.coins++;
+          this._updateScore();
+          this._emit('coin', it);
+        }
+        continue;
+      }
+
+      if (dx < (it.w + body.width) / 2 && dz < (it.d + body.depth) / 2 && p.y < it.y1 && pTop > it.y0) {
+        this.hitItem = it;
+        this.state = 'crashed';
+        this.crashTime = 0;
+        p.animation = 'hit';
+        p.animTime = 0;
+        this._emit('crash', it);
+        return;
+      }
+    }
+  }
+
+  _emit(name, data) {
+    if (this.onEvent) this.onEvent(name, data);
+  }
+}
+
+return { Run };
+})();
+__m["src/gameplay/segments/SegmentDefinition.js"] = (function () {
+'use strict';
+const { CELL_CODES, BLOCKING_CODES } = __m["src/gameplay/items.js"];
+const { LANES } = __m["src/config/gameplay.config.js"];
+
+/**
+ * Definición de segmento: un tramo de pista diseñado a mano. Datos puros.
+ *
+ * @typedef {Object} SegmentDefinition
+ * @property {string}   id
+ * @property {string}   name
+ * @property {1|2|3}    difficulty
+ * @property {string[]} rows   filas de la MÁS CERCANA a la más lejana. Cada fila tiene un
+ *                             carácter por carril (izquierda, centro, derecha):
+ *                               .  vacío            c  moneda
+ *                               l  valla baja (saltar)      j  valla baja + moneda encima
+ *                               h  arco alto (deslizarse)   u  arco alto + moneda debajo
+ *                               x  bloque macizo (cambiar de carril)
+ *
+ * Cada fila mide `TRACK.rowLength` metros. Para separar obstáculos se dejan
+ * filas vacías ('...'). Los segmentos se validan al registrarse: así un error
+ * de diseño (por ejemplo, un tramo imposible) se detecta al arrancar.
+ *
+ * Esta es la forma de contenido "diseñado a mano". La generación procedural
+ * futura producirá segmentos con esta misma forma (ver SegmentSource.js).
+ */
+
+const isStr = (v) => typeof v === 'string' && v.length > 0;
+
+/** Filas que se necesitan entre dos cambios de carril consecutivos. */
+const ROWS_BETWEEN_LANE_CHANGES = 2;
+
+/**
+ * Comprueba que existe al menos un recorrido posible esquivando los bloques,
+ * suponiendo un cambio de carril como máximo cada `ROWS_BETWEEN_LANE_CHANGES`
+ * filas. Empieza desde cualquier carril (los segmentos van precedidos de una pausa).
+ */
+function hasSafePath(rows) {
+  const n = LANES.count;
+  const free = (row, lane) => !BLOCKING_CODES.includes(row[lane]);
+  // estado: carril + filas desde el último cambio (saturado)
+  let states = new Set();
+  for (let lane = 0; lane < n; lane++) if (free(rows[0], lane)) states.add(`${lane}:${ROWS_BETWEEN_LANE_CHANGES}`);
+  if (states.size === 0) return false;
+
+  for (let r = 1; r < rows.length; r++) {
+    const next = new Set();
+    for (const key of states) {
+      const [lane, since] = key.split(':').map(Number);
+      const age = Math.min(ROWS_BETWEEN_LANE_CHANGES, since + 1);
+      if (free(rows[r], lane)) next.add(`${lane}:${age}`);
+      if (since >= ROWS_BETWEEN_LANE_CHANGES) {
+        for (const to of [lane - 1, lane + 1]) {
+          if (to >= 0 && to < n && free(rows[r], to)) next.add(`${to}:0`);
+        }
+      }
+    }
+    if (next.size === 0) return false;
+    states = next;
+  }
+  return true;
+}
+
+/** Devuelve la lista de errores de una definición de segmento (vacía si es válida). */
+function validateSegmentDefinition(def) {
+  const errors = [];
+  if (!def || typeof def !== 'object') return ['la definición no es un objeto'];
+  if (!isStr(def.id)) errors.push('falta "id"');
+  if (!isStr(def.name)) errors.push('falta "name"');
+  if (![1, 2, 3].includes(def.difficulty)) errors.push('"difficulty" debe ser 1, 2 o 3');
+  if (!Array.isArray(def.rows) || def.rows.length < 2) {
+    errors.push('"rows" debe ser una lista con al menos 2 filas');
+    return errors;
+  }
+  def.rows.forEach((row, i) => {
+    if (typeof row !== 'string' || row.length !== LANES.count) {
+      errors.push(`la fila #${i} debe ser un texto de ${LANES.count} caracteres`);
+    } else if (![...row].every((ch) => ch in CELL_CODES)) {
+      errors.push(`la fila #${i} ("${row}") usa un carácter desconocido`);
+    }
+  });
+  if (errors.length === 0 && !hasSafePath(def.rows)) {
+    errors.push('no existe un recorrido posible entre los bloques (hay que dejar más hueco entre ellos)');
+  }
+  return errors;
+}
+
+return { hasSafePath, validateSegmentDefinition };
+})();
+__m["src/gameplay/segments/SegmentRegistry.js"] = (function () {
+'use strict';
+const { Registry } = __m["src/core/Registry.js"];
+const { validateSegmentDefinition } = __m["src/gameplay/segments/SegmentDefinition.js"];
+
+/** Registro de segmentos diseñados a mano. */
+class SegmentRegistry extends Registry {
+  constructor() {
+    super('segmento', validateSegmentDefinition);
+  }
+}
+
+return { SegmentRegistry };
+})();
+__m["src/gameplay/segments/definitions/easy.js"] = (function () {
+'use strict';
+/**
+ * Segmentos de dificultad 1: un solo tipo de problema cada vez y mucho espacio.
+ * Cada fila mide 3 m; ver SegmentDefinition.js para el significado de los códigos.
+ */
+const SEGMENTS_EASY = [
+  {
+    id: 'monedas-centro',
+    name: 'Línea de monedas',
+    difficulty: 1,
+    rows: ['.c.', '.c.', '.c.', '.c.', '.c.', '.c.', '.c.', '.c.'],
+  },
+  {
+    id: 'monedas-ola',
+    name: 'Ola de monedas',
+    difficulty: 1,
+    rows: ['c..', 'c..', '.c.', '..c', '..c', '.c.', 'c..', 'c..', '.c.', '..c'],
+  },
+  {
+    id: 'primera-valla',
+    name: 'Una valla',
+    difficulty: 1,
+    rows: ['...', '...', '...', '.l.', '...', '...', '...', '...', 'l..', '...', '...', '...'],
+  },
+  {
+    id: 'vallas-premio',
+    name: 'Muro de vallas con premio',
+    difficulty: 1,
+    rows: ['...', '...', '...', 'jjj', '...', '...', '...', '...', '.c.', '.c.', '.c.'],
+  },
+  {
+    id: 'arco-simple',
+    name: 'Un arco',
+    difficulty: 1,
+    rows: ['...', '...', '...', 'uuu', '...', '...', '...', '...', '..c', '..c'],
+  },
+  {
+    id: 'bloques-sueltos',
+    name: 'Bloques sueltos',
+    difficulty: 1,
+    rows: ['...', '...', 'x..', '...', '...', '...', '...', '..x', '...', '...', '...', '...', '.x.', '...', '...'],
+  },
+  {
+    id: 'zigzag-monedas',
+    name: 'Zigzag de monedas',
+    difficulty: 1,
+    rows: ['c..', '.c.', '..c', '.c.', 'c..', '.c.', '..c', '.c.', 'c..'],
+  },
+];
+
+return { SEGMENTS_EASY };
+})();
+__m["src/gameplay/segments/definitions/medium.js"] = (function () {
+'use strict';
+/** Segmentos de dificultad 2: combinan dos tipos de obstáculo con menos margen. */
+const SEGMENTS_MEDIUM = [
+  {
+    id: 'slalom-bloques',
+    name: 'Slalom de bloques',
+    difficulty: 2,
+    rows: ['...', '...', 'x..', '...', '...', '.x.', '...', '...', '..x', '...', '...', '.x.', '...', '...', 'x..', '...'],
+  },
+  {
+    id: 'muros-dobles',
+    name: 'Muros dobles',
+    difficulty: 2,
+    rows: ['...', '...', 'xx.', '...', '...', '...', '.xx', '...', '...', '...', 'x.x', '...', '...'],
+  },
+  {
+    id: 'valla-y-arco',
+    name: 'Salta y desliza',
+    difficulty: 2,
+    rows: ['...', '...', 'lll', '...', '...', '...', 'hhh', '...', '...', '...', 'jjj', '...', '...', '...', 'uuu', '...'],
+  },
+  {
+    id: 'mixto-1',
+    name: 'Mezcla de tres',
+    difficulty: 2,
+    rows: ['...', '...', 'l.x', '...', '...', '...', 'x.h', '...', '...', '...', 'hxl', '...', '...'],
+  },
+  {
+    id: 'bloque-central',
+    name: 'Bloque central y monedas',
+    difficulty: 2,
+    rows: ['...', '...', '.x.', 'c.c', 'c.c', '...', '...', '.x.', 'c.c', 'c.c', '...', '...'],
+  },
+  {
+    id: 'arcos-y-bloques',
+    name: 'Arcos y bloques',
+    difficulty: 2,
+    rows: ['...', '...', 'hh.', '...', '...', '...', 'x.x', '...', '...', '...', '.hh', '...', '...', '...', 'xx.', '...'],
+  },
+];
+
+return { SEGMENTS_MEDIUM };
+})();
+__m["src/gameplay/segments/definitions/hard.js"] = (function () {
+'use strict';
+/** Segmentos de dificultad 3: más tipos de obstáculo seguidos y menos descanso. */
+const SEGMENTS_HARD = [
+  {
+    id: 'gimnasia',
+    name: 'Valla, arco, valla, arco',
+    difficulty: 3,
+    rows: ['...', '...', 'lll', '...', '...', 'hhh', '...', '...', 'lll', '...', '...', 'hhh', '...', '...'],
+  },
+  {
+    id: 'laberinto',
+    name: 'Laberinto de bloques',
+    difficulty: 3,
+    rows: ['...', '...', 'xx.', '...', '...', 'x.x', '...', '...', '.xx', '...', '...', 'x.x', '...', '...', 'xx.', '...'],
+  },
+  {
+    id: 'combo-carriles',
+    name: 'Cada carril, su reto',
+    difficulty: 3,
+    rows: ['...', '...', 'lxh', '...', '...', '...', 'hlx', '...', '...', '...', 'xhl', '...', '...', '...', 'l.h', '...'],
+  },
+  {
+    id: 'salto-bloque',
+    name: 'Salta y esquiva',
+    difficulty: 3,
+    rows: ['...', '...', 'lll', '...', '...', 'x..', '...', '...', 'jjj', '...', '...', '..x', '...', '...', 'hhh', '...'],
+  },
+];
+
+return { SEGMENTS_HARD };
+})();
+__m["src/gameplay/segments/definitions/index.js"] = (function () {
+'use strict';
+const { SEGMENTS_EASY } = __m["src/gameplay/segments/definitions/easy.js"];
+const { SEGMENTS_MEDIUM } = __m["src/gameplay/segments/definitions/medium.js"];
+const { SEGMENTS_HARD } = __m["src/gameplay/segments/definitions/hard.js"];
+
+/** Todos los segmentos diseñados a mano. Añade aquí los nuevos. */
+const SEGMENT_DEFINITIONS = [...SEGMENTS_EASY, ...SEGMENTS_MEDIUM, ...SEGMENTS_HARD];
+
+return { SEGMENT_DEFINITIONS };
+})();
+__m["src/gameplay/segments/SegmentSource.js"] = (function () {
+'use strict';
+/**
+ * Fuente de segmentos: de dónde sale el siguiente tramo de pista.
+ *
+ * Interfaz (cualquier fuente futura debe implementarla):
+ *
+ *   next({ difficulty, distance }) → SegmentDefinition
+ *     - `difficulty`: dificultad máxima permitida ahora (1–3)
+ *     - `distance`:   metros recorridos hasta el momento
+ *
+ * El `Track` solo conoce esta interfaz. Hoy existe `HandmadeSegmentSource`
+ * (elige entre segmentos diseñados a mano). La generación procedural futura
+ * será otra fuente que fabrique segmentos con la misma forma de datos, sin
+ * tocar el `Track`, la lógica de juego ni el dibujado.
+ */
+
+/** Elige entre los segmentos diseñados a mano, con azar por semilla. */
+class HandmadeSegmentSource {
+  /**
+   * @param {{registry: import('./SegmentRegistry.js').SegmentRegistry, rnd: () => number}} cfg
+   */
+  constructor({ registry, rnd }) {
+    this.registry = registry;
+    this.rnd = rnd;
+    this._last = null;
+    this._count = 0;
+  }
+
+  next({ difficulty }) {
+    const all = this.registry.list();
+    let pool = all.filter((s) => s.difficulty <= difficulty);
+    if (pool.length === 0) pool = all;
+    if (pool.length === 0) throw new Error('No hay segmentos registrados');
+
+    // El primer tramo siempre es suave (monedas) para dar tiempo a entender los gestos.
+    if (this._count === 0) {
+      const intro = pool.find((s) => s.difficulty === 1 && s.rows.every((r) => !/[lhxju]/.test(r)));
+      if (intro) return this._take(intro);
+    }
+
+    // Evita repetir el anterior y favorece los de la dificultad actual.
+    const candidates = pool.filter((s) => s.id !== this._last);
+    const list = candidates.length ? candidates : pool;
+    let total = 0;
+    for (const s of list) total += s.difficulty === difficulty ? 3 : 1;
+    let roll = this.rnd() * total;
+    for (const s of list) {
+      roll -= s.difficulty === difficulty ? 3 : 1;
+      if (roll <= 0) return this._take(s);
+    }
+    return this._take(list[list.length - 1]);
+  }
+
+  _take(segment) {
+    this._last = segment.id;
+    this._count++;
+    return segment;
+  }
+}
+
+return { HandmadeSegmentSource };
+})();
+__m["src/graphics/runner/Projection.js"] = (function () {
+'use strict';
+const { CAMERA } = __m["src/config/gameplay.config.js"];
+
+/**
+ * Proyección en perspectiva de la cámara de runner (2.5D). Matemática pura,
+ * sin dibujar.
+ *
+ * Mundo: x lateral (1 = un carril), y altura, z hacia delante (metros).
+ * La cámara está detrás y por encima del personaje, mirando hacia delante:
+ *
+ *      escala(z) = f / profundidad        profundidad = z − z_cámara
+ *      pantalla.x = centro + (x − camX) · escala
+ *      pantalla.y = horizonte + (altura_cámara − y) · escala
+ *
+ * Con esto las líneas paralelas de la pista convergen en el horizonte y los
+ * objetos crecen al acercarse, igual que en un juego 3D, pero con dibujo 2D.
+ *
+ * El ajuste se calcula desde el área segura (viewport.safe), así que el
+ * personaje queda en el mismo punto relativo en cualquier teléfono o tablet y
+ * la pista siempre cabe a lo ancho.
+ */
+class Projection {
+  constructor() {
+    this.centerX = 0;
+    this.horizonY = 0;
+    this.feetY = 0;
+    this.unit = 100; // píxeles por unidad a la altura del personaje
+    this.f = 500;
+    this.baseCamH = 3;
+    this.camH = 3;
+    this.camX = 0;
+    this.camZ = 0;
+    this.shakeX = 0;
+    this.shakeY = 0;
+  }
+
+  /** Recalcula la geometría de pantalla. @param {{safe:{x:number,y:number,w:number,h:number}}} viewport */
+  resize(viewport) {
+    const { safe } = viewport;
+    this.centerX = safe.x + safe.w / 2;
+    this.horizonY = safe.y + safe.h * CAMERA.horizon;
+    this.feetY = safe.y + safe.h * CAMERA.feet;
+    this.unit = safe.w * CAMERA.laneScale;
+    this.f = this.unit * CAMERA.distance;
+    this.baseCamH = (this.feetY - this.horizonY) / this.unit;
+    this.camH = this.baseCamH;
+  }
+
+  /** Coloca la cámara siguiendo al jugador. @param {number} playerZ @param {number} camX @param {number} lift */
+  follow(playerZ, camX, lift) {
+    this.camZ = playerZ - CAMERA.distance;
+    this.camX = camX;
+    this.camH = this.baseCamH + lift;
+  }
+
+  /** Profundidad (m) de una z del mundo. */
+  depth(z) {
+    return z - this.camZ;
+  }
+
+  /** Escala (px por unidad) a cierta profundidad. */
+  scaleAt(depth) {
+    return this.f / depth;
+  }
+
+  /** Y de pantalla del suelo (y = 0) a cierta profundidad. */
+  groundY(depth) {
+    return this.horizonY + this.camH * (this.f / depth) + this.shakeY;
+  }
+
+  /**
+   * Proyecta un punto del mundo. Escribe en `out` {x, y, s, depth} y devuelve
+   * false si el punto queda detrás de la cámara.
+   */
+  project(wx, wy, wz, out) {
+    const depth = wz - this.camZ;
+    if (depth < 0.5) return false;
+    const s = this.f / depth;
+    out.x = this.centerX + (wx - this.camX) * s + this.shakeX;
+    out.y = this.horizonY + (this.camH - wy) * s + this.shakeY;
+    out.s = s;
+    out.depth = depth;
+    return true;
+  }
+}
+
+return { Projection };
+})();
+__m["src/graphics/runner/artKit.js"] = (function () {
+'use strict';
+const { mixHex, rgba } = __m["src/graphics/color.js"];
+
+/**
+ * Herramientas de dibujo ilustrado para los sprites del runner.
+ *
+ * Estilo: ilustración 2D con volumen. Formas orgánicas (vértices con ligera
+ * irregularidad), luz desde arriba a la izquierda, trazos de pincel sutiles y
+ * "colored lineart": el contorno se obtiene oscureciendo y saturando el color
+ * del propio objeto hacia un violeta profundo; nunca se usa negro puro.
+ */
+const TAU = Math.PI * 2;
+const INK_TINT = '#35104f';
+
+/** Color de contorno que armoniza con `fill` (más oscuro y violáceo). */
+function lineColor(fill, amount = 0.6) {
+  return mixHex(fill, INK_TINT, amount);
+}
+
+/** Sombra suave en el suelo (elipse con degradado radial). */
+function groundShadow(ctx, cx, cy, rx, ry, alpha = 0.32) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(1, ry / rx);
+  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+  g.addColorStop(0, `rgba(45,14,76,${alpha})`);
+  g.addColorStop(0.6, `rgba(45,14,76,${alpha * 0.55})`);
+  g.addColorStop(1, 'rgba(45,14,76,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(0, 0, rx, 0, TAU);
+  ctx.fill();
+  ctx.restore();
+}
+
+/** Curva cerrada suave que pasa cerca de los puntos (puntos medios + curvas cuadráticas). */
+function smoothClosed(ctx, pts) {
+  const n = pts.length;
+  ctx.beginPath();
+  ctx.moveTo((pts[n - 1][0] + pts[0][0]) / 2, (pts[n - 1][1] + pts[0][1]) / 2);
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    const q = pts[(i + 1) % n];
+    ctx.quadraticCurveTo(p[0], p[1], (p[0] + q[0]) / 2, (p[1] + q[1]) / 2);
+  }
+  ctx.closePath();
+}
+
+/** Polígono con esquinas redondeadas (radio `r`). */
+function roundedPoly(ctx, pts, r) {
+  const n = pts.length;
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const m0 = mid(pts[n - 1], pts[0]);
+  ctx.beginPath();
+  ctx.moveTo(m0[0], m0[1]);
+  for (let i = 0; i < n; i++) {
+    const m = mid(pts[i], pts[(i + 1) % n]);
+    ctx.arcTo(pts[i][0], pts[i][1], m[0], m[1], r);
+  }
+  ctx.closePath();
+}
+
+/** Rectángulo redondeado con vértices ligeramente irregulares. */
+function wobblyRect(ctx, x, y, w, h, r, rnd, jitter = 0) {
+  const j = () => (rnd ? (rnd() * 2 - 1) * jitter : 0);
+  roundedPoly(
+    ctx,
+    [
+      [x + j(), y + j()],
+      [x + w + j(), y + j()],
+      [x + w + j(), y + h + j()],
+      [x + j(), y + h + j()],
+    ],
+    r
+  );
+}
+
+/** Mancha orgánica (elipse con radios irregulares). */
+function blob(ctx, cx, cy, rx, ry, rnd, n = 9, jitter = 0.1, rot = 0) {
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * TAU + rot;
+    const k = 1 + (rnd() * 2 - 1) * jitter;
+    pts.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]);
+  }
+  smoothClosed(ctx, pts);
+}
+
+/** Trazo de pincel: polígono alargado y afilado, de (x0,y0) a (x1,y1). */
+function brush(ctx, x0, y0, x1, y1, w, color, alpha = 1) {
+  const dx = x1 - x0;
+  const dy = y1 - y0;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = -dy / len;
+  const ny = dx / len;
+  const mx = (x0 + x1) / 2;
+  const my = (y0 + y1) / 2;
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x0 + nx * w * 0.5, y0 + ny * w * 0.5);
+  ctx.quadraticCurveTo(mx + nx * w * 0.75, my + ny * w * 0.75, x1, y1);
+  ctx.quadraticCurveTo(mx - nx * w * 0.4, my - ny * w * 0.4, x0 - nx * w * 0.5, y0 - ny * w * 0.5);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+/**
+ * Textura pictórica dentro de la forma que esté en el camino actual de `ctx`:
+ * trazos cortos y translúcidos de luces y sombras. Debe llamarse con una forma
+ * ya trazada (se recorta con ella).
+ */
+function paintTexture(ctx, rnd, box, { light, dark, count = 26, len = 0.22, width = 0.07, alpha = 0.32 }) {
+  ctx.save();
+  ctx.clip();
+  const [x, y, w, h] = box;
+  for (let i = 0; i < count; i++) {
+    const px = x + rnd() * w;
+    const py = y + rnd() * h;
+    const l = len * Math.min(w, h) * (0.6 + rnd() * 0.8);
+    const a = -0.9 + (rnd() - 0.5) * 0.8; // trazos inclinados, como pincelada
+    brush(ctx, px, py, px + Math.cos(a) * l, py + Math.sin(a) * l, width * Math.min(w, h) * (0.6 + rnd() * 0.8), rnd() < 0.55 ? light : dark, alpha);
+  }
+  ctx.restore();
+}
+
+/** Relleno con luz arriba y sombra abajo. */
+function litGradient(ctx, y0, y1, light, base, dark) {
+  const g = ctx.createLinearGradient(0, y0, 0, y1);
+  g.addColorStop(0, light);
+  g.addColorStop(0.45, base);
+  g.addColorStop(1, dark);
+  return g;
+}
+
+/** Rellena y contornea el camino actual con "colored lineart". */
+function fillAndLine(ctx, fill, lineWidth, line, join = 'round') {
+  ctx.fillStyle = fill;
+  ctx.fill();
+  if (lineWidth > 0) {
+    ctx.lineJoin = join;
+    ctx.lineCap = 'round';
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = line;
+    ctx.stroke();
+  }
+}
+
+return { TAU, lineColor, groundShadow, smoothClosed, roundedPoly, wobblyRect, blob, brush, paintTexture, litGradient, fillAndLine };
+})();
+__m["src/graphics/runner/scenery.js"] = (function () {
+'use strict';
+const { mixHex, rgba } = __m["src/graphics/color.js"];
+const { TAU, lineColor, groundShadow, blob, brush, paintTexture, litGradient, fillAndLine, wobblyRect, roundedPoly } = __m["src/graphics/runner/artKit.js"];
+
+/**
+ * Elementos ambientales (árboles, arbustos, rocas…). Cada función dibuja en un
+ * canvas ya preparado y recibe la geometría `g`:
+ *   g.cx      centro horizontal           g.yBase   línea del suelo
+ *   g.yTop    parte alta del objeto       g.u       píxeles por unidad del mundo
+ *   g.wu      ancho del objeto (unidades) g.hu      alto del objeto (unidades)
+ *
+ * Contornos finos y del color del propio objeto: el escenario no se llena de
+ * bordes gruesos (esos se reservan para personaje y obstáculos).
+ */
+
+/** Pino de pincelada (varias capas de trazos que cuelgan hacia abajo). */
+function paintPine(ctx, g, rnd, pal) {
+  const { cx, yBase, yTop } = g;
+  const h = yBase - yTop;
+  const w = g.wu * g.u;
+  const c = pal.pine;
+  groundShadow(ctx, cx, yBase, w * 0.5, h * 0.045, 0.34);
+
+  // tronco
+  ctx.beginPath();
+  wobblyRect(ctx, cx - w * 0.04, yBase - h * 0.16, w * 0.08, h * 0.17, w * 0.02, rnd, 1.5);
+  fillAndLine(ctx, pal.trunk, w * 0.012, lineColor(pal.trunk));
+
+  const tiers = 5;
+  for (let t = 0; t < tiers; t++) {
+    const f = t / (tiers - 1);
+    const top = yTop + h * (0.0 + f * 0.56);
+    const bot = top + h * 0.34;
+    const hw = w * (0.17 + f * 0.31);
+
+    // silueta del piso con borde inferior irregular
+    const pts = [[cx, top]];
+    pts.push([cx - hw * 0.55, top + (bot - top) * 0.55]);
+    const n = 7;
+    for (let i = 0; i <= n; i++) {
+      const u = -1 + (i / n) * 2;
+      const jag = (i % 2 ? 1 : -1) * h * 0.018 * (0.5 + rnd());
+      pts.push([cx + u * hw, bot + jag - Math.abs(u) * h * 0.012]);
+    }
+    pts.push([cx + hw * 0.55, top + (bot - top) * 0.55]);
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.closePath();
+    fillAndLine(ctx, litGradient(ctx, top, bot, c.mid, c.dark, mixHex(c.dark, '#10223a', 0.35)), w * 0.01, lineColor(c.dark, 0.5));
+
+    // pinceladas que cuelgan: más claras a la izquierda (la luz llega de ese lado)
+    const strokes = 12 + t * 4;
+    for (let i = 0; i < strokes; i++) {
+      const u = (rnd() * 2 - 1) * 0.92;
+      const sx = cx + u * hw * 0.35;
+      const sy = top + (bot - top) * (0.12 + rnd() * 0.3);
+      const ex = cx + u * hw;
+      const ey = bot + (rnd() - 0.4) * h * 0.025;
+      const lightK = Math.max(0, Math.min(1, 0.5 - u * 0.55 + (rnd() - 0.5) * 0.35));
+      const col = mixHex(c.dark, c.light, lightK);
+      brush(ctx, sx, sy, ex, ey, w * (0.045 + rnd() * 0.04), col, 0.88);
+    }
+    // destellos
+    for (let i = 0; i < 4; i++) {
+      const u = -0.2 - rnd() * 0.7;
+      brush(ctx, cx + u * hw * 0.3, top + (bot - top) * 0.25, cx + u * hw, bot - h * 0.02, w * 0.03, c.light, 0.55);
+    }
+  }
+}
+
+/** Árbol redondo (copa de manchas). `variant` elige la paleta (naranja, rosa, turquesa). */
+function paintTree(ctx, g, rnd, pal, variant = 0) {
+  const { cx, yBase, yTop } = g;
+  const h = yBase - yTop;
+  const w = g.wu * g.u;
+  const col = pal.trees[variant % pal.trees.length];
+  groundShadow(ctx, cx, yBase, w * 0.46, h * 0.04, 0.34);
+
+  // tronco ligeramente curvo
+  const tw = w * 0.1;
+  ctx.beginPath();
+  ctx.moveTo(cx - tw * 0.6, yBase);
+  ctx.quadraticCurveTo(cx - tw * 0.8, yBase - h * 0.25, cx - tw * 0.35, yBase - h * 0.42);
+  ctx.lineTo(cx + tw * 0.45, yBase - h * 0.42);
+  ctx.quadraticCurveTo(cx + tw * 0.9, yBase - h * 0.22, cx + tw * 0.7, yBase);
+  ctx.closePath();
+  fillAndLine(ctx, litGradient(ctx, yBase - h * 0.4, yBase, mixHex(pal.trunk, '#ffffff', 0.2), pal.trunk, mixHex(pal.trunk, '#2a0f3a', 0.4)), w * 0.012, lineColor(pal.trunk));
+
+  // copa: manchas grandes de atrás hacia delante
+  const cy = yTop + h * 0.36;
+  const blobs = [
+    [-0.2, 0.1, 0.27, 0.24],
+    [0.21, 0.12, 0.27, 0.24],
+    [0, -0.06, 0.32, 0.27],
+    [-0.08, 0.2, 0.3, 0.22],
+    [0.12, 0.22, 0.27, 0.2],
+  ];
+  for (let i = 0; i < blobs.length; i++) {
+    const [bx, by, rx, ry] = blobs[i];
+    const x = cx + bx * w;
+    const y = cy + by * h;
+    blob(ctx, x, y, rx * w, ry * h, rnd, 10, 0.1);
+    const fill = litGradient(ctx, y - ry * h, y + ry * h, col.light, col.base, col.dark);
+    fillAndLine(ctx, fill, w * 0.011, lineColor(col.dark, 0.55));
+    paintTexture(ctx, rnd, [x - rx * w, y - ry * h, rx * w * 2, ry * h * 2], { light: col.light, dark: col.dark, count: 14, width: 0.09, alpha: 0.3 });
+  }
+  // luces de pincel arriba a la izquierda
+  for (let i = 0; i < 6; i++) {
+    const x = cx - w * (0.05 + rnd() * 0.25);
+    const y = cy - h * (0.04 + rnd() * 0.16);
+    brush(ctx, x, y, x + w * 0.12, y - h * 0.02, w * 0.03, col.light, 0.6);
+  }
+}
+
+/** Arbusto bajo con bayas. */
+function paintBush(ctx, g, rnd, pal) {
+  const { cx, yBase, yTop } = g;
+  const h = yBase - yTop;
+  const w = g.wu * g.u;
+  const c = pal.bush;
+  groundShadow(ctx, cx, yBase, w * 0.55, h * 0.12, 0.3);
+  const blobs = [
+    [-0.26, 0.55, 0.3, 0.42],
+    [0.26, 0.58, 0.28, 0.4],
+    [0, 0.4, 0.34, 0.5],
+  ];
+  for (const [bx, by, rx, ry] of blobs) {
+    const x = cx + bx * w;
+    const y = yTop + by * h;
+    blob(ctx, x, y, rx * w, ry * h, rnd, 9, 0.1);
+    fillAndLine(ctx, litGradient(ctx, y - ry * h, y + ry * h, c.light, c.base, c.dark), w * 0.014, lineColor(c.dark, 0.55));
+    paintTexture(ctx, rnd, [x - rx * w, y - ry * h, rx * w * 2, ry * h * 2], { light: c.light, dark: c.dark, count: 10, width: 0.1, alpha: 0.3 });
+  }
+  ctx.fillStyle = c.berry;
+  for (let i = 0; i < 6; i++) {
+    const x = cx + (rnd() - 0.5) * w * 0.7;
+    const y = yTop + h * (0.3 + rnd() * 0.45);
+    ctx.beginPath();
+    ctx.arc(x, y, w * 0.032, 0, TAU);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.beginPath();
+    ctx.arc(x - w * 0.01, y - w * 0.01, w * 0.011, 0, TAU);
+    ctx.fill();
+    ctx.fillStyle = c.berry;
+  }
+}
+
+/** Roca facetada (aspecto "low poly" suave). */
+function paintRock(ctx, g, rnd, pal) {
+  const { cx, yBase, yTop } = g;
+  const h = yBase - yTop;
+  const w = g.wu * g.u;
+  const c = pal.rock;
+  groundShadow(ctx, cx, yBase, w * 0.6, h * 0.14, 0.3);
+  const pts = [
+    [cx - w * 0.48, yBase - h * 0.02],
+    [cx - w * 0.42, yBase - h * 0.5],
+    [cx - w * 0.12, yTop + h * 0.02],
+    [cx + w * 0.22, yTop + h * 0.12],
+    [cx + w * 0.46, yBase - h * 0.42],
+    [cx + w * 0.5, yBase - h * 0.03],
+  ].map(([x, y]) => [x + (rnd() - 0.5) * w * 0.06, y + (rnd() - 0.5) * h * 0.05]);
+  roundedPoly(ctx, pts, w * 0.06);
+  fillAndLine(ctx, c.base, w * 0.02, lineColor(c.dark, 0.55));
+  // facetas
+  const facet = (poly, color, alpha) => {
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(poly[0][0], poly[0][1]);
+    for (let i = 1; i < poly.length; i++) ctx.lineTo(poly[i][0], poly[i][1]);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  };
+  facet([pts[1], pts[2], pts[3], [cx - w * 0.02, yBase - h * 0.55]], c.light, 0.85);
+  facet([pts[3], pts[4], pts[5], [cx + w * 0.1, yBase - h * 0.05], [cx + w * 0.02, yBase - h * 0.5]], c.dark, 0.55);
+  facet([pts[0], pts[1], [cx - w * 0.1, yBase - h * 0.35], [cx - w * 0.15, yBase - h * 0.04]], mixHex(c.base, c.dark, 0.35), 0.55);
+}
+
+/** Seta con motas. */
+function paintMushroom(ctx, g, rnd, pal) {
+  const { cx, yBase, yTop } = g;
+  const h = yBase - yTop;
+  const w = g.wu * g.u;
+  const c = pal.mushroom;
+  groundShadow(ctx, cx, yBase, w * 0.5, h * 0.09, 0.3);
+  // pie
+  ctx.beginPath();
+  wobblyRect(ctx, cx - w * 0.14, yTop + h * 0.45, w * 0.28, h * 0.55, w * 0.08, rnd, 1);
+  fillAndLine(ctx, litGradient(ctx, yTop + h * 0.45, yBase, '#fff5e4', c.stem, mixHex(c.stem, '#b97c8e', 0.5)), w * 0.03, lineColor(c.stem, 0.5));
+  // sombrero
+  ctx.beginPath();
+  ctx.moveTo(cx - w * 0.5, yTop + h * 0.62);
+  ctx.bezierCurveTo(cx - w * 0.52, yTop - h * 0.04, cx + w * 0.52, yTop - h * 0.04, cx + w * 0.5, yTop + h * 0.62);
+  ctx.quadraticCurveTo(cx, yTop + h * 0.76, cx - w * 0.5, yTop + h * 0.62);
+  ctx.closePath();
+  fillAndLine(ctx, litGradient(ctx, yTop, yTop + h * 0.7, mixHex(c.cap, '#ffffff', 0.35), c.cap, mixHex(c.cap, '#4b0f4f', 0.4)), w * 0.035, lineColor(c.cap, 0.62));
+  ctx.fillStyle = c.spot;
+  for (const [sx, sy, sr] of [[-0.22, 0.28, 0.09], [0.12, 0.2, 0.11], [0.3, 0.42, 0.07], [-0.02, 0.45, 0.06]]) {
+    ctx.beginPath();
+    ctx.ellipse(cx + sx * w, yTop + sy * h, sr * w, sr * w * 0.8, 0, 0, TAU);
+    ctx.fill();
+  }
+}
+
+/** Flores pequeñas (tres tallos). */
+function paintFlower(ctx, g, rnd, pal) {
+  const { cx, yBase, yTop } = g;
+  const h = yBase - yTop;
+  const w = g.wu * g.u;
+  groundShadow(ctx, cx, yBase, w * 0.5, h * 0.08, 0.22);
+  const heads = [-0.28, 0.02, 0.3];
+  for (let i = 0; i < heads.length; i++) {
+    const x = cx + heads[i] * w;
+    const top = yTop + h * (0.1 + (i === 1 ? 0 : 0.2));
+    ctx.strokeStyle = '#2c9477';
+    ctx.lineWidth = w * 0.035;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x - heads[i] * w * 0.2, yBase);
+    ctx.quadraticCurveTo(x - heads[i] * w * 0.1, (yBase + top) / 2, x, top);
+    ctx.stroke();
+    const petal = pal.flower[(i + Math.floor(rnd() * 4)) % pal.flower.length];
+    ctx.fillStyle = petal;
+    ctx.strokeStyle = lineColor(petal, 0.5);
+    ctx.lineWidth = w * 0.012;
+    for (let p = 0; p < 5; p++) {
+      const a = (p / 5) * TAU + rnd() * 0.3;
+      ctx.beginPath();
+      ctx.ellipse(x + Math.cos(a) * w * 0.07, top + Math.sin(a) * w * 0.07, w * 0.065, w * 0.045, a, 0, TAU);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.fillStyle = '#ffe9a8';
+    ctx.beginPath();
+    ctx.arc(x, top, w * 0.04, 0, TAU);
+    ctx.fill();
+  }
+}
+
+/** Farola con halo luminoso (decoración del atardecer). */
+function paintLamp(ctx, g, rnd, pal) {
+  const { cx, yBase, yTop } = g;
+  const h = yBase - yTop;
+  const w = g.wu * g.u;
+  const c = pal.lamp;
+  groundShadow(ctx, cx, yBase, w * 0.9, h * 0.03, 0.28);
+  // poste
+  ctx.beginPath();
+  wobblyRect(ctx, cx - w * 0.07, yTop + h * 0.16, w * 0.14, h * 0.84, w * 0.05, rnd, 0.8);
+  fillAndLine(ctx, litGradient(ctx, yTop, yBase, mixHex(c.post, '#fff', 0.25), c.post, mixHex(c.post, '#2a0f3a', 0.4)), w * 0.03, lineColor(c.post));
+  // halo
+  const r = w * 1.6;
+  const gl = ctx.createRadialGradient(cx, yTop + h * 0.1, 0, cx, yTop + h * 0.1, r);
+  gl.addColorStop(0, rgba(c.glow, 0.7));
+  gl.addColorStop(0.35, rgba(c.glow, 0.22));
+  gl.addColorStop(1, rgba(c.glow, 0));
+  ctx.fillStyle = gl;
+  ctx.fillRect(cx - r, yTop + h * 0.1 - r, r * 2, r * 2);
+  // farol
+  ctx.beginPath();
+  ctx.arc(cx, yTop + h * 0.1, w * 0.36, 0, TAU);
+  fillAndLine(ctx, '#fff3c4', w * 0.04, lineColor(c.glow, 0.6));
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.beginPath();
+  ctx.arc(cx - w * 0.1, yTop + h * 0.07, w * 0.09, 0, TAU);
+  ctx.fill();
+}
+
+return { paintPine, paintTree, paintBush, paintRock, paintMushroom, paintFlower, paintLamp };
+})();
+__m["src/graphics/runner/obstacles.js"] = (function () {
+'use strict';
+const { mixHex } = __m["src/graphics/color.js"];
+const { TAU, lineColor, groundShadow, paintTexture, litGradient, fillAndLine, wobblyRect, roundedPoly } = __m["src/graphics/runner/artKit.js"];
+
+/**
+ * Obstáculos. Son los objetos importantes del juego, así que llevan "colored
+ * lineart" GRUESO (el contorno es el color del objeto, más oscuro y violáceo),
+ * volumen con luz arriba-izquierda y una cara superior visible (la cámara los
+ * mira desde arriba) para que se lean como objetos 3D.
+ *
+ * Geometría `g`: cx, yBase (suelo), u (píxeles por unidad del mundo), wu (ancho
+ * en unidades). Las alturas se miden en unidades desde el suelo con `g.y(h)`,
+ * de modo que el dibujo coincide con la caja de colisión de gameplay/items.js.
+ */
+
+/** Rellena el camino actual con franjas inclinadas (palo de caramelo) y lo deja listo para contornear. */
+function candyStripes(ctx, x, y, w, h, count, colorA, colorB) {
+  ctx.save();
+  ctx.clip();
+  ctx.fillStyle = colorA;
+  ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
+  ctx.fillStyle = colorB;
+  const step = w / count;
+  for (let i = 0; i < count; i += 2) {
+    // Path2D: no altera el camino actual, que el llamador contornea después
+    const stripe = new Path2D();
+    stripe.moveTo(x + i * step + h * 0.35, y);
+    stripe.lineTo(x + (i + 1) * step + h * 0.35, y);
+    stripe.lineTo(x + (i + 1) * step - h * 0.35, y + h);
+    stripe.lineTo(x + i * step - h * 0.35, y + h);
+    stripe.closePath();
+    ctx.fill(stripe);
+  }
+  // volumen: luz arriba, sombra abajo
+  const shade = ctx.createLinearGradient(0, y, 0, y + h);
+  shade.addColorStop(0, 'rgba(255,255,255,0.34)');
+  shade.addColorStop(0.5, 'rgba(255,255,255,0)');
+  shade.addColorStop(1, 'rgba(60,10,90,0.3)');
+  ctx.fillStyle = shade;
+  ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
+  ctx.restore();
+}
+
+function post(ctx, x, y, w, h, color, lw, rnd) {
+  ctx.beginPath();
+  wobblyRect(ctx, x, y, w, h, w * 0.42, rnd, 1.2);
+  fillAndLine(ctx, litGradient(ctx, y, y + h, mixHex(color, '#ffffff', 0.32), color, mixHex(color, '#4a0f4f', 0.38)), lw, lineColor(color));
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.beginPath();
+  ctx.ellipse(x + w * 0.32, y + h * 0.3, w * 0.1, Math.min(h * 0.14, w * 0.5), 0, 0, TAU);
+  ctx.fill();
+}
+
+/** Valla baja: se SALTA. Dos postes y una barra a rayas con cara superior. */
+function paintHurdle(ctx, g, rnd, pal) {
+  const { cx } = g;
+  const w = g.wu * g.u;
+  const lw = Math.max(4, g.u * 0.05);
+  groundShadow(ctx, cx, g.yBase, w * 0.62, g.u * 0.1, 0.38);
+
+  const postW = w * 0.16;
+  for (const side of [-1, 1]) post(ctx, cx + side * w * 0.36 - postW / 2, g.y(0.6), postW, g.y(0) - g.y(0.6), pal.post, lw, rnd);
+
+  // cara superior de la barra (más clara)
+  const bx = cx - w * 0.5;
+  const frontTop = g.y(0.56);
+  const frontH = g.y(0.2) - frontTop;
+  const topH = g.u * 0.1;
+  ctx.beginPath();
+  roundedPoly(ctx, [[bx + w * 0.04, frontTop - topH], [bx + w * 0.96, frontTop - topH], [bx + w, frontTop + lw], [bx, frontTop + lw]], lw * 0.7);
+  fillAndLine(ctx, pal.top, lw, lineColor(pal.top, 0.55));
+  // cara frontal a rayas
+  ctx.beginPath();
+  wobblyRect(ctx, bx, frontTop, w, frontH, frontH * 0.3, rnd, 1);
+  candyStripes(ctx, bx, frontTop, w, frontH, 9, pal.stripeA, pal.stripeB);
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = lw;
+  ctx.strokeStyle = lineColor(pal.stripeB, 0.62);
+  ctx.stroke();
+}
+
+/** Arco alto: se pasa DESLIZÁNDOSE por debajo (el paso libre llega hasta 0,85). */
+function paintGate(ctx, g, rnd, pal) {
+  const { cx } = g;
+  const w = g.wu * g.u;
+  const lw = Math.max(4, g.u * 0.05);
+  groundShadow(ctx, cx, g.yBase, w * 0.62, g.u * 0.1, 0.36);
+
+  const postW = w * 0.19;
+  for (const side of [-1, 1]) post(ctx, cx + side * w * 0.4 - postW / 2, g.y(2.0), postW, g.y(0) - g.y(2.0), pal.post, lw, rnd);
+
+  // viga baja (borde inferior a 0,85 de altura) con cara superior
+  const bx = cx - w * 0.5;
+  const frontTop = g.y(1.4);
+  const frontH = g.y(0.85) - frontTop;
+  const topH = g.u * 0.12;
+  ctx.beginPath();
+  roundedPoly(ctx, [[bx + w * 0.05, frontTop - topH], [bx + w * 0.95, frontTop - topH], [bx + w, frontTop + lw], [bx, frontTop + lw]], lw * 0.7);
+  fillAndLine(ctx, pal.top, lw, lineColor(pal.top, 0.55));
+  ctx.beginPath();
+  wobblyRect(ctx, bx, frontTop, w, frontH, frontH * 0.3, rnd, 1);
+  candyStripes(ctx, bx, frontTop, w, frontH, 8, pal.stripeA, pal.stripeB);
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = lw;
+  ctx.strokeStyle = lineColor(pal.stripeB, 0.62);
+  ctx.stroke();
+
+  // coronación: farolillo y banderines sobre los postes, para que se lea como "arco"
+  const lanternY = g.y(2.12);
+  ctx.beginPath();
+  ctx.ellipse(cx, lanternY, w * 0.16, g.u * 0.2, 0, 0, TAU);
+  fillAndLine(ctx, litGradient(ctx, lanternY - g.u * 0.2, lanternY + g.u * 0.2, '#fff6c8', pal.lantern, mixHex(pal.lantern, '#c0521e', 0.5)), lw, lineColor(pal.lantern, 0.6));
+  ctx.strokeStyle = lineColor(pal.post);
+  ctx.lineWidth = lw * 0.8;
+  ctx.beginPath();
+  ctx.moveTo(cx - w * 0.4, g.y(2.0));
+  ctx.quadraticCurveTo(cx, g.y(2.28), cx + w * 0.4, g.y(2.0));
+  ctx.stroke();
+  for (const side of [-1, 1]) {
+    ctx.beginPath();
+    const px = cx + side * w * 0.4;
+    ctx.moveTo(px, g.y(2.0));
+    ctx.lineTo(px + side * w * 0.2, g.y(2.12));
+    ctx.lineTo(px, g.y(2.2));
+    ctx.closePath();
+    fillAndLine(ctx, pal.stripeB, lw * 0.8, lineColor(pal.stripeB, 0.6));
+  }
+}
+
+/** Bloque macizo: hay que CAMBIAR DE CARRIL. Piedra tallada con cara superior. */
+function paintBlock(ctx, g, rnd, pal) {
+  const { cx } = g;
+  const w = g.wu * g.u;
+  const lw = Math.max(5, g.u * 0.06);
+  groundShadow(ctx, cx, g.yBase, w * 0.66, g.u * 0.13, 0.4);
+
+  const x0 = cx - w / 2;
+  const frontTop = g.y(1.45);
+  const frontBottom = g.y(0);
+  const frontH = frontBottom - frontTop;
+  const topH = g.u * 0.28;
+
+  // cara superior (trapecio más estrecho al fondo)
+  ctx.beginPath();
+  roundedPoly(ctx, [[x0 + w * 0.1, frontTop - topH], [x0 + w * 0.9, frontTop - topH], [x0 + w, frontTop + lw * 0.6], [x0, frontTop + lw * 0.6]], lw * 0.9);
+  fillAndLine(ctx, litGradient(ctx, frontTop - topH, frontTop, mixHex(pal.top, '#ffffff', 0.25), pal.top, mixHex(pal.top, pal.face, 0.4)), lw, lineColor(pal.top, 0.6));
+  paintTexture(ctx, rnd, [x0, frontTop - topH, w, topH], { light: '#ffffff', dark: pal.face, count: 10, width: 0.1, alpha: 0.18 });
+
+  // cara frontal
+  ctx.beginPath();
+  wobblyRect(ctx, x0, frontTop, w, frontH, w * 0.12, rnd, 1.5);
+  fillAndLine(ctx, litGradient(ctx, frontTop, frontBottom, mixHex(pal.face, '#ffffff', 0.18), pal.face, pal.side), lw, lineColor(pal.face, 0.62));
+  paintTexture(ctx, rnd, [x0, frontTop, w, frontH], { light: pal.top, dark: pal.side, count: 22, width: 0.07, alpha: 0.26 });
+
+  // juntas de piedra
+  ctx.strokeStyle = lineColor(pal.face, 0.4);
+  ctx.globalAlpha = 0.55;
+  ctx.lineWidth = lw * 0.35;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x0 + w * 0.06, frontTop + frontH * 0.5);
+  ctx.lineTo(x0 + w * 0.94, frontTop + frontH * 0.5);
+  ctx.moveTo(x0 + w * 0.36, frontTop + frontH * 0.5);
+  ctx.lineTo(x0 + w * 0.36, frontBottom - lw);
+  ctx.moveTo(x0 + w * 0.68, frontTop + lw);
+  ctx.lineTo(x0 + w * 0.68, frontTop + frontH * 0.5);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // estrella tallada (símbolo de QUASAR)
+  const sx = cx;
+  const sy = frontTop + frontH * 0.27;
+  const r = w * 0.17;
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    const rr = i % 2 ? r * 0.45 : r;
+    ctx.lineTo(sx + Math.cos(a) * rr, sy + Math.sin(a) * rr);
+  }
+  ctx.closePath();
+  fillAndLine(ctx, pal.glyph, lw * 0.5, lineColor(pal.glyph, 0.6));
+}
+
+return { paintHurdle, paintGate, paintBlock };
+})();
+__m["src/graphics/runner/sky.js"] = (function () {
+'use strict';
+const { mixHex, rgba } = __m["src/graphics/color.js"];
+const { TAU, blob } = __m["src/graphics/runner/artKit.js"];
+
+/** Nube ilustrada: manchas superpuestas, luz arriba y tono cálido abajo. */
+function paintCloud(ctx, W, H, rnd, tint) {
+  const base = tint.base;
+  const puffs = 6;
+  for (let pass = 0; pass < 2; pass++) {
+    for (let i = 0; i < puffs; i++) {
+      const f = i / (puffs - 1);
+      const rx = W * (0.16 + Math.sin(f * Math.PI) * 0.1);
+      const ry = H * (0.28 + Math.sin(f * Math.PI) * 0.18);
+      const x = W * (0.14 + f * 0.72);
+      const y = H * 0.62 - Math.sin(f * Math.PI) * H * 0.16 + (rnd() - 0.5) * H * 0.05;
+      blob(ctx, x, y + (pass === 0 ? H * 0.05 : 0), rx * (pass === 0 ? 1.04 : 1), ry * (pass === 0 ? 1.04 : 1), rnd, 9, 0.06);
+      if (pass === 0) {
+        ctx.fillStyle = rgba(tint.shade, 0.9);
+      } else {
+        const g = ctx.createLinearGradient(0, y - ry, 0, y + ry);
+        g.addColorStop(0, tint.light);
+        g.addColorStop(1, base);
+        ctx.fillStyle = g;
+      }
+      ctx.fill();
+    }
+  }
+}
+
+/** Planeta con anillo y halo: un guiño cósmico al nombre QUASAR. */
+function paintPlanet(ctx, W, H, pal) {
+  const cx = W / 2;
+  const cy = H / 2;
+  const r = Math.min(W, H) * 0.27;
+
+  const halo = ctx.createRadialGradient(cx, cy, r * 0.6, cx, cy, Math.min(W, H) * 0.5);
+  halo.addColorStop(0, rgba(pal.glow, 0.45));
+  halo.addColorStop(1, rgba(pal.glow, 0));
+  ctx.fillStyle = halo;
+  ctx.fillRect(0, 0, W, H);
+
+  const ring = (front) => {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(-0.28);
+    ctx.lineCap = 'round';
+    for (const [rad, width, color] of [[r * 1.75, r * 0.2, pal.ring], [r * 1.5, r * 0.09, mixHex(pal.ring, '#ffffff', 0.4)]]) {
+      ctx.beginPath();
+      ctx.ellipse(0, 0, rad, rad * 0.26, 0, front ? 0 : Math.PI, front ? Math.PI : TAU);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    }
+    ctx.restore();
+  };
+
+  ring(false);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, TAU);
+  ctx.clip();
+  const body = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+  body.addColorStop(0, pal.light);
+  body.addColorStop(0.55, pal.base);
+  body.addColorStop(1, pal.dark);
+  ctx.fillStyle = body;
+  ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+  ctx.globalAlpha = 0.28;
+  for (let i = 0; i < 5; i++) {
+    ctx.fillStyle = i % 2 ? pal.light : pal.dark;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - r * 0.6 + i * r * 0.32, r * 1.1, r * 0.09, -0.28, 0, TAU);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  ring(true);
+}
+
+return { paintCloud, paintPlanet };
+})();
+__m["src/graphics/runner/SpriteSet.js"] = (function () {
+'use strict';
+const { mulberry32 } = __m["src/graphics/random.js"];
+const { paintPine, paintTree, paintBush, paintRock, paintMushroom, paintFlower, paintLamp } = __m["src/graphics/runner/scenery.js"];
+const { paintHurdle, paintGate, paintBlock } = __m["src/graphics/runner/obstacles.js"];
+const { paintCloud, paintPlanet } = __m["src/graphics/runner/sky.js"];
+
+/**
+ * Dibuja una sola vez todos los sprites de una región en lienzos fuera de
+ * pantalla; durante la partida solo se escalan y estampan (`drawImage`), que es
+ * muchísimo más barato que dibujar trazos y degradados en cada fotograma.
+ *
+ * Cada sprite guarda:
+ *   canvas  el dibujo
+ *   ppu     píxeles del sprite por unidad del mundo
+ *   ax, ay  punto de anclaje en píxeles del sprite (centro horizontal y línea del suelo)
+ */
+const cache = new Map();
+
+function makeSprite({ wu, hu, padX = 0.08, padTop = 0.08, padBottom = 0.16, ppu, seed, paint }) {
+  const W = Math.ceil((wu + padX * 2) * ppu);
+  const H = Math.ceil((hu + padTop + padBottom) * ppu);
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const yBase = (padTop + hu) * ppu;
+  const g = { cx: W / 2, yBase, yTop: padTop * ppu, u: ppu, wu, hu, W, H, y: (h) => yBase - h * ppu };
+  paint(ctx, g, mulberry32(seed));
+  return { canvas, ppu, ax: W / 2, ay: yBase };
+}
+
+/** Variantes de cada elemento ambiental: tipo → claves de sprite. */
+const VARIANTS = { pine: 3, tree: 6, bush: 2, rock: 2, mushroom: 1, flower: 2, lamp: 1 };
+
+class SpriteSet {
+  /** @param {object} region definición de región jugable  @param {number} res factor de resolución (calidad) */
+  constructor(region, res = 1) {
+    this.sprites = new Map();
+    this.variants = VARIANTS;
+    const run = region.run;
+    const pal = run.palette;
+    const ob = run.obstacles;
+    const R = res;
+    const add = (key, spec) => this.sprites.set(key, makeSprite(spec));
+
+    // Obstáculos (contorno grueso → más resolución)
+    add('hurdle', { wu: 0.98, hu: 0.7, ppu: 250 * R, seed: 101, paint: (c, g, r) => paintHurdle(c, g, r, ob.hurdle) });
+    add('gate', { wu: 1.06, hu: 2.4, padTop: 0.1, ppu: 190 * R, seed: 102, paint: (c, g, r) => paintGate(c, g, r, ob.gate) });
+    add('block', { wu: 0.98, hu: 1.75, padTop: 0.12, ppu: 220 * R, seed: 103, paint: (c, g, r) => paintBlock(c, g, r, ob.block) });
+
+    // Elementos ambientales
+    for (let i = 0; i < VARIANTS.pine; i++) add(`pine${i}`, { wu: 2.6, hu: 4.8, padX: 0.1, ppu: 92 * R, seed: 200 + i * 7, paint: (c, g, r) => paintPine(c, g, r, pal) });
+    for (let i = 0; i < VARIANTS.tree; i++) add(`tree${i}`, { wu: 2.8, hu: 4.1, padX: 0.1, ppu: 92 * R, seed: 300 + i * 11, paint: (c, g, r) => paintTree(c, g, r, pal, i) });
+    for (let i = 0; i < VARIANTS.bush; i++) add(`bush${i}`, { wu: 1.8, hu: 1.05, ppu: 120 * R, seed: 400 + i * 13, paint: (c, g, r) => paintBush(c, g, r, pal) });
+    for (let i = 0; i < VARIANTS.rock; i++) add(`rock${i}`, { wu: 1.3, hu: 0.85, ppu: 120 * R, seed: 500 + i * 17, paint: (c, g, r) => paintRock(c, g, r, pal) });
+    add('mushroom0', { wu: 0.95, hu: 0.95, ppu: 140 * R, seed: 600, paint: (c, g, r) => paintMushroom(c, g, r, pal) });
+    for (let i = 0; i < VARIANTS.flower; i++) add(`flower${i}`, { wu: 0.8, hu: 0.6, ppu: 150 * R, seed: 700 + i * 19, paint: (c, g, r) => paintFlower(c, g, r, pal) });
+    add('lamp0', { wu: 0.4, hu: 3.1, padX: 0.9, ppu: 100 * R, seed: 800, paint: (c, g, r) => paintLamp(c, g, r, pal) });
+
+    // Cielo
+    const cloudTint = { base: '#ffd9cf', light: '#fff4ee', shade: '#c88fc8' };
+    for (let i = 0; i < 3; i++) {
+      const ppu = 100 * R;
+      const W = Math.ceil(5 * ppu);
+      const H = Math.ceil(1.9 * ppu);
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      paintCloud(canvas.getContext('2d'), W, H, mulberry32(900 + i * 5), cloudTint);
+      this.sprites.set(`cloud${i}`, { canvas, ppu, ax: W / 2, ay: H / 2 });
+    }
+    {
+      const ppu = 100 * R;
+      const W = Math.ceil(4.2 * ppu);
+      const H = Math.ceil(3.2 * ppu);
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      paintPlanet(canvas.getContext('2d'), W, H, { base: '#ff9d7a', light: '#ffd9a6', dark: '#b4488f', ring: '#ffc7a0', glow: '#ffd9a3' });
+      this.sprites.set('planet', { canvas, ppu, ax: W / 2, ay: H / 2 });
+    }
+  }
+
+  get(key) {
+    return this.sprites.get(key);
+  }
+
+  /** Obtiene (o crea) el juego de sprites de una región para cierta resolución. */
+  static forRegion(region, res) {
+    const key = `${region.id}@${res}`;
+    let set = cache.get(key);
+    if (!set) {
+      set = new SpriteSet(region, res);
+      cache.set(key, set);
+    }
+    return set;
+  }
+}
+
+return { SpriteSet };
+})();
+__m["src/graphics/runner/RunnerRenderer.js"] = (function () {
+'use strict';
+const { CAMERA, TRACK } = __m["src/config/gameplay.config.js"];
+const { mixHex, rgba } = __m["src/graphics/color.js"];
+const { mulberry32, hash3 } = __m["src/graphics/random.js"];
+const { Projection } = __m["src/graphics/runner/Projection.js"];
+const { SpriteSet } = __m["src/graphics/runner/SpriteSet.js"];
+
+const TAU = Math.PI * 2;
+/** Largo (m) de cada franja del suelo y de cada "casilla" de escenario. */
+const STRIPE = 4;
+const SLOT = 4;
+/** Metros por detrás del jugador que aún se dibujan, y distancia a la que se desvanecen. */
+const BEHIND = 3.2;
+const NEAR_FADE = 5.2;
+
+const out = { x: 0, y: 0, s: 0, depth: 0 };
+
+/**
+ * Dibuja una partida: cielo, pista en perspectiva, escenario, obstáculos,
+ * monedas, personaje y efectos. No contiene reglas de juego: solo LEE el
+ * estado de `Run`.
+ *
+ * Rendimiento: todo lo costoso (degradados, sprites) se prepara una vez en
+ * `resize`/constructor; por fotograma solo hay rellenos de polígonos simples,
+ * estampado de sprites ya dibujados y unas pocas partículas, sin reservar memoria.
+ */
+class RunnerRenderer {
+  /**
+   * @param {{region: object, quality: object, character: import('../../characters/Character.js').Character}} cfg
+   */
+  constructor({ region, quality, character }) {
+    this.region = region;
+    this.run = region.run;
+    this.quality = quality;
+    this.character = character;
+    this.proj = new Projection();
+    this.sprites = SpriteSet.forRegion(region, quality.spriteRes);
+    this.time = 0;
+    this.camX = 0;
+    this.lift = 0;
+    this.shake = 0;
+    this.flash = 0;
+    this.sceneryTable = this._buildSceneryTable();
+    this._seed = (Math.random() * 1e9) | 0;
+    this._rnd = mulberry32(this._seed);
+    this._particles = Array.from({ length: 56 }, () => ({ on: false, kind: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, life: 0, max: 1, size: 1 }));
+    this._puffTimer = 0;
+    this._clouds = this._buildClouds();
+    this._grain = null;
+    this._vp = { width: 0, height: 0 };
+    this._hills = this._buildHills();
+  }
+
+  setQuality(quality) {
+    this.quality = quality;
+    this.sprites = SpriteSet.forRegion(this.region, quality.spriteRes);
+    this.sceneryTable = this._buildSceneryTable();
+    this._grain = null;
+    if (this._vp.width) this._buildGradients();
+  }
+
+  resize(viewport) {
+    this.proj.resize(viewport);
+    this.safe = viewport.safe;
+    this._vp.width = viewport.width;
+    this._vp.height = viewport.height;
+    this._buildGradients();
+  }
+
+  /* ───────────── preparación ───────────── */
+
+  _buildSceneryTable() {
+    const types = this.run.scenery.types;
+    let total = 0;
+    const table = types.map((t) => {
+      total += t.weight;
+      return { ...t, acc: total };
+    });
+    return { list: table, total };
+  }
+
+  _buildClouds() {
+    const rnd = mulberry32(77);
+    return Array.from({ length: 6 }, (_, i) => ({
+      sprite: `cloud${i % 3}`,
+      x: rnd(),
+      y: 0.05 + rnd() * 0.2,
+      scale: 0.5 + rnd() * 0.55,
+      speed: 0.004 + rnd() * 0.006,
+      par: 0.02 + rnd() * 0.05,
+    }));
+  }
+
+  _buildHills() {
+    const pal = this.region.palette;
+    return this.region.layers.map((l) => {
+      const rnd = mulberry32(l.seed);
+      return {
+        ...l,
+        fill: mixHex(l.color, pal.skyBottom, l.fade),
+        phases: l.harmonics.map(() => rnd() * TAU),
+        norm: l.harmonics.reduce((a, [, w]) => a + w, 0),
+      };
+    });
+  }
+
+  _buildGradients() {
+    const { width: W, height: H } = this._vp;
+    const p = this.proj;
+    const pal = this.region.palette;
+    const r = this.run;
+    const ctx = document.createElement('canvas').getContext('2d');
+    const hz = p.horizonY;
+
+    this.skyGrad = ctx.createLinearGradient(0, 0, 0, hz);
+    this.skyGrad.addColorStop(0, pal.skyTop);
+    this.skyGrad.addColorStop(0.55, pal.skyMid);
+    this.skyGrad.addColorStop(1, pal.skyBottom);
+
+    const span = Math.max(1, H - hz);
+    this.grassGrad = ctx.createLinearGradient(0, hz, 0, H);
+    this.grassGrad.addColorStop(0, mixHex(r.ground.grassFar, r.fog, 0.4));
+    this.grassGrad.addColorStop(0.06, r.ground.grassFar);
+    this.grassGrad.addColorStop(0.28, r.ground.grass);
+    this.grassGrad.addColorStop(1, r.ground.grassShade);
+
+    this.trackGrad = ctx.createLinearGradient(0, hz, 0, H);
+    this.trackGrad.addColorStop(0, mixHex(r.track.base, r.fog, 0.5));
+    this.trackGrad.addColorStop(0.12, mixHex(r.track.base, r.fog, 0.12));
+    this.trackGrad.addColorStop(0.4, r.track.base);
+    this.trackGrad.addColorStop(1, mixHex(r.track.base, r.track.shade, 0.5));
+
+    this.hazeGrad = ctx.createLinearGradient(0, hz - span * 0.2, 0, hz + span * 0.3);
+    this.hazeGrad.addColorStop(0, rgba(r.fog, 0));
+    this.hazeGrad.addColorStop(0.4, rgba(r.fog, 0.38));
+    this.hazeGrad.addColorStop(1, rgba(r.fog, 0));
+    this._hazeTop = hz - span * 0.2;
+    this._hazeH = span * 0.5;
+
+    const light = this.region.light;
+    const lx = W * light.x;
+    const ly = this.safe.y + this.safe.h * light.y;
+    const lr = W * light.radius;
+    this.glowGrad = ctx.createRadialGradient(lx, ly, 0, lx, ly, lr);
+    this.glowGrad.addColorStop(0, rgba(light.color, 0.8));
+    this.glowGrad.addColorStop(0.3, rgba(light.color, 0.3));
+    this.glowGrad.addColorStop(1, rgba(light.color, 0));
+    this._glow = { x: lx, y: ly, r: lr };
+
+    this.vignette = ctx.createRadialGradient(W / 2, H * 0.55, Math.min(W, H) * 0.3, W / 2, H * 0.55, Math.max(W, H) * 0.78);
+    this.vignette.addColorStop(0, 'rgba(36,10,70,0)');
+    this.vignette.addColorStop(1, 'rgba(36,10,70,0.38)');
+
+    // Estrellas (posiciones fijas, parpadeo por tiempo).
+    const rnd = mulberry32(this.region.stars.seed);
+    const n = Math.round(this.region.stars.count * this.quality.starDensity);
+    this._stars = Array.from({ length: n }, () => ({ x: rnd() * W, y: rnd() * hz * 0.85, r: 0.6 + rnd() * 1.3, ph: rnd() * TAU }));
+  }
+
+  /** Textura pictórica: pinceladas translúcidas en un mosaico pequeño que se repite. */
+  _makeGrain(ctx) {
+    const S = 192;
+    const c = document.createElement('canvas');
+    c.width = c.height = S;
+    const g = c.getContext('2d');
+    const rnd = mulberry32(4242);
+    g.lineCap = 'round';
+    for (let i = 0; i < 110; i++) {
+      const x = rnd() * S;
+      const y = rnd() * S;
+      const a = -0.8 + (rnd() - 0.5) * 0.9;
+      const l = 5 + rnd() * 13;
+      g.strokeStyle = rnd() < 0.5 ? 'rgba(255,240,225,0.9)' : 'rgba(60,20,100,0.9)';
+      g.lineWidth = 1.5 + rnd() * 3.5;
+      for (const ox of [-S, 0, S]) for (const oy of [-S, 0, S]) {
+        g.beginPath();
+        g.moveTo(x + ox, y + oy);
+        g.lineTo(x + ox + Math.cos(a) * l, y + oy + Math.sin(a) * l);
+        g.stroke();
+      }
+    }
+    return ctx.createPattern(c, 'repeat');
+  }
+
+  /* ───────────── actualización ───────────── */
+
+  /** Avanza efectos visuales. @param {number} dt @param {import('../../gameplay/Run.js').Run} run */
+  update(dt, run) {
+    this.time += dt;
+    const p = run.player;
+
+    // Cámara: sigue lateralmente con suavizado y sube un poco al saltar.
+    const camTarget = p.x * CAMERA.followX;
+    this.camX += (camTarget - this.camX) * (1 - Math.exp(-dt * CAMERA.followSmooth));
+    const liftTarget = p.y * CAMERA.jumpLift;
+    this.lift += (liftTarget - this.lift) * (1 - Math.exp(-dt * 10));
+
+    this.shake *= Math.exp(-dt * 7);
+    this.flash *= Math.exp(-dt * 6);
+
+    // Polvo continuo al deslizarse.
+    if (run.state === 'running' && p.sliding) {
+      this._puffTimer -= dt;
+      if (this._puffTimer <= 0) {
+        this._puffTimer = 0.045;
+        this._emit(0, p.x, 0.05, run.z - 0.2, 2);
+      }
+    }
+
+    // Partículas.
+    for (const q of this._particles) {
+      if (!q.on) continue;
+      q.life -= dt;
+      if (q.life <= 0) {
+        q.on = false;
+        continue;
+      }
+      q.x += q.vx * dt;
+      q.y += q.vy * dt;
+      q.vy -= (q.kind === 1 ? 0 : 2.5) * dt;
+      q.vx *= Math.exp(-dt * 2);
+    }
+
+    this.character.lean = p.lean + p.bump * 0.6;
+    this.character.drawShadow = false;
+    this.character.play(p.animation);
+    this.character.update(dt);
+  }
+
+  /** Reacciona a eventos de la partida con efectos visuales. */
+  onRunEvent(name, data, run) {
+    const p = run.player;
+    switch (name) {
+      case 'jump':
+        this._emit(0, p.x, 0.05, run.z, 3);
+        break;
+      case 'land':
+        this._emit(0, p.x, 0.05, run.z, 6);
+        this.shake = Math.max(this.shake, 0.18);
+        break;
+      case 'lane':
+        this._emit(0, p.x, 0.05, run.z - 0.1, 2);
+        break;
+      case 'coin':
+        this._emit(1, data.x, data.y, data.z, 6);
+        break;
+      case 'crash':
+        this.shake = 1;
+        this.flash = 0.7;
+        this._emit(0, p.x, 0.4, run.z, 10);
+        this._emit(1, p.x, 0.6, run.z, 8);
+        break;
+      default:
+    }
+  }
+
+  /** @param {number} kind 0 = polvo, 1 = destello */
+  _emit(kind, x, y, z, n) {
+    const count = Math.max(1, Math.round(n * this.quality.particles));
+    const rnd = this._rnd;
+    for (let i = 0; i < count; i++) {
+      const q = this._particles.find((e) => !e.on);
+      if (!q) return;
+      q.on = true;
+      q.kind = kind;
+      q.x = x + (rnd() - 0.5) * 0.3;
+      q.y = y;
+      q.z = z + (rnd() - 0.5) * 0.4;
+      q.vx = (rnd() - 0.5) * (kind === 1 ? 3 : 1.8);
+      q.vy = kind === 1 ? 1.2 + rnd() * 2.2 : 0.4 + rnd() * 1.2;
+      q.max = q.life = kind === 1 ? 0.5 + rnd() * 0.3 : 0.35 + rnd() * 0.3;
+      q.size = kind === 1 ? 0.07 + rnd() * 0.06 : 0.14 + rnd() * 0.16;
+    }
+  }
+
+  /* ───────────── dibujo ───────────── */
+
+  /** @param {CanvasRenderingContext2D} ctx @param {{width:number,height:number}} vp @param {import('../../gameplay/Run.js').Run} run */
+  render(ctx, vp, run) {
+    const p = this.proj;
+    const W = vp.width;
+    const H = vp.height;
+    p.follow(run.z, this.camX, this.lift);
+    p.shakeX = this.shake > 0.01 ? (this._rnd() - 0.5) * this.shake * 14 : 0;
+    p.shakeY = this.shake > 0.01 ? (this._rnd() - 0.5) * this.shake * 14 : 0;
+
+    this._drawSky(ctx, W);
+    this._drawGround(ctx, W, H, run);
+    this._drawWorld(ctx, W, H, run);
+
+    if (this.quality.grain) {
+      ctx.fillStyle = this.vignette;
+      ctx.fillRect(0, 0, W, H);
+      if (!this._grain) this._grain = this._makeGrain(ctx);
+      ctx.globalAlpha = 0.045;
+      ctx.fillStyle = this._grain;
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalAlpha = 1;
+    }
+    if (this.flash > 0.02) {
+      ctx.fillStyle = `rgba(255,236,230,${Math.min(0.6, this.flash)})`;
+      ctx.fillRect(0, 0, W, H);
+    }
+  }
+
+  _drawSky(ctx, W) {
+    const p = this.proj;
+    const hz = p.horizonY;
+    const t = this.time;
+    ctx.fillStyle = this.skyGrad;
+    ctx.fillRect(0, 0, W, hz + 2);
+
+    // Estrellas.
+    ctx.fillStyle = '#fff6e8';
+    for (const s of this._stars) {
+      const tw = this.quality.twinkle ? 0.55 + 0.45 * Math.sin(t * 1.6 + s.ph) : 0.8;
+      ctx.globalAlpha = tw * 0.9;
+      ctx.beginPath();
+      ctx.arc(s.x - this.camX * 3, s.y, s.r, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Resplandor y planeta.
+    const g = this._glow;
+    ctx.fillStyle = this.glowGrad;
+    ctx.fillRect(g.x - g.r, g.y - g.r, g.r * 2, g.r * 2);
+    const planet = this.sprites.get('planet');
+    const pk = (this.safe.w * 0.4) / (planet.canvas.width);
+    ctx.drawImage(planet.canvas, g.x - planet.ax * pk - this.camX * 5, this.safe.y + this.safe.h * 0.13 - planet.ay * pk, planet.canvas.width * pk, planet.canvas.height * pk);
+
+    // Nubes a la deriva.
+    const wrap = W + 600;
+    for (const c of this._clouds) {
+      const sp = this.sprites.get(c.sprite);
+      const k = (this.safe.w * 0.42 * c.scale) / sp.canvas.width;
+      const x = ((c.x * wrap + t * c.speed * wrap - this.camX * c.par * 100) % wrap + wrap) % wrap - 300;
+      const y = this.safe.y + this.safe.h * c.y;
+      ctx.globalAlpha = 0.82;
+      ctx.drawImage(sp.canvas, x - sp.ax * k, y - sp.ay * k, sp.canvas.width * k, sp.canvas.height * k);
+    }
+    ctx.globalAlpha = 1;
+
+    // Colinas.
+    const step = this.quality.ridgeStep;
+    for (const l of this._hills) {
+      const base = hz + l.base * this.safe.h;
+      const amp = l.amplitude * this.safe.h;
+      const off = this.camX * l.parallax * 0.6 + t * 0.002 * l.parallax;
+      ctx.fillStyle = l.fill;
+      ctx.beginPath();
+      ctx.moveTo(-step, hz + 6);
+      for (let x = -step; x <= W + step; x += step) {
+        const u = x / W + off;
+        let v = 0;
+        for (let i = 0; i < l.harmonics.length; i++) v += Math.sin(u * TAU * l.harmonics[i][0] + l.phases[i]) * l.harmonics[i][1];
+        v = (v / l.norm + 1) / 2;
+        ctx.lineTo(x, base - v * amp);
+      }
+      ctx.lineTo(W + step, hz + 6);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  _drawGround(ctx, W, H, run) {
+    const p = this.proj;
+    const r = this.run;
+    const hz = p.horizonY;
+    const dist = this.quality.drawDistance;
+    const zFar = run.z + dist;
+
+    ctx.fillStyle = this.grassGrad;
+    ctx.fillRect(0, hz, W, H - hz);
+
+    const hw = TRACK.halfWidth;
+    const cw = TRACK.curbWidth;
+    const nearD = 0.7;
+    const farD = 700;
+    const yN = p.groundY(nearD);
+    const yF = p.groundY(farD);
+    const sN = p.scaleAt(nearD);
+    const sF = p.scaleAt(farD);
+    const cxN = p.centerX - p.camX * sN + p.shakeX;
+    const cxF = p.centerX - p.camX * sF + p.shakeX;
+
+    // Pista y bordillos (base continua).
+    const poly = (x0n, x1n, x0f, x1f) => {
+      ctx.beginPath();
+      ctx.moveTo(cxN + x0n * sN, yN);
+      ctx.lineTo(cxN + x1n * sN, yN);
+      ctx.lineTo(cxF + x1f * sF, yF);
+      ctx.lineTo(cxF + x0f * sF, yF);
+      ctx.closePath();
+    };
+    ctx.fillStyle = r.track.curbA;
+    poly(-hw - cw, -hw, -hw - cw, -hw);
+    ctx.fill();
+    poly(hw, hw + cw, hw, hw + cw);
+    ctx.fill();
+    ctx.fillStyle = this.trackGrad;
+    poly(-hw, hw, -hw, hw);
+    ctx.fill();
+
+    // Franjas alternas ligadas al mundo: dan la sensación de velocidad.
+    const first = Math.floor((p.camZ + nearD) / STRIPE);
+    const last = Math.floor(zFar / STRIPE);
+    const shade = rgba(r.track.shade, 1);
+    const grassShade = rgba(r.ground.grassShade, 1);
+    const trapezoid = (z0, z1, xa, xb) => {
+      const d0 = Math.max(z0 - p.camZ, nearD);
+      const d1 = z1 - p.camZ;
+      const s0 = p.scaleAt(d0);
+      const s1 = p.scaleAt(d1);
+      const y0 = p.groundY(d0);
+      const y1 = p.groundY(d1);
+      const c0 = p.centerX - p.camX * s0 + p.shakeX;
+      const c1 = p.centerX - p.camX * s1 + p.shakeX;
+      ctx.beginPath();
+      ctx.moveTo(c0 + xa * s0, y0);
+      ctx.lineTo(c0 + xb * s0, y0);
+      ctx.lineTo(c1 + xb * s1, y1);
+      ctx.lineTo(c1 + xa * s1, y1);
+      ctx.closePath();
+    };
+
+    for (let i = first; i <= last; i++) {
+      const z0 = i * STRIPE;
+      const z1 = z0 + STRIPE;
+      const fade = 1 - Math.min(1, (z0 - run.z) / dist);
+      if (i & 1) {
+        ctx.globalAlpha = 0.16 * fade;
+        ctx.fillStyle = grassShade;
+        const d0 = Math.max(z0 - p.camZ, nearD);
+        const ya = p.groundY(d0);
+        const yb = p.groundY(z1 - p.camZ);
+        ctx.fillRect(0, yb, W, ya - yb);
+        ctx.globalAlpha = 0.5 * fade;
+        ctx.fillStyle = shade;
+        trapezoid(z0, z1, -hw, hw);
+        ctx.fill();
+      } else {
+        // curbs alternos (franjas claras)
+        ctx.globalAlpha = fade;
+        ctx.fillStyle = r.track.curbB;
+        trapezoid(z0, z1, -hw - cw, -hw);
+        ctx.fill();
+        trapezoid(z0, z1, hw, hw + cw);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // Líneas discontinuas entre carriles.
+    ctx.fillStyle = rgba(r.track.line, 0.9);
+    ctx.beginPath();
+    const lw = 0.035;
+    for (let i = first; i <= last; i++) {
+      const z0 = i * STRIPE + 0.4;
+      const z1 = z0 + 1.7;
+      for (const lx of [-0.5, 0.5]) {
+        const d0 = Math.max(z0 - p.camZ, nearD);
+        const d1 = z1 - p.camZ;
+        if (d1 <= nearD) continue;
+        const s0 = p.scaleAt(d0);
+        const s1 = p.scaleAt(d1);
+        const y0 = p.groundY(d0);
+        const y1 = p.groundY(d1);
+        const c0 = p.centerX - p.camX * s0 + p.shakeX;
+        const c1 = p.centerX - p.camX * s1 + p.shakeX;
+        ctx.moveTo(c0 + (lx - lw) * s0, y0);
+        ctx.lineTo(c0 + (lx + lw) * s0, y0);
+        ctx.lineTo(c1 + (lx + lw) * s1, y1);
+        ctx.lineTo(c1 + (lx - lw) * s1, y1);
+        ctx.closePath();
+      }
+    }
+    ctx.fill();
+  }
+
+  /** Escenario, obstáculos, monedas, personaje y partículas, de lejos a cerca. */
+  _drawWorld(ctx, W, H, run) {
+    const dist = this.quality.drawDistance;
+    const zMax = run.z + dist;
+    const zMin = run.z - BEHIND;
+    const slotEnd = Math.floor(zMax / SLOT);
+    const slotStart = Math.floor(zMin / SLOT);
+    const items = run.track.items;
+    let i = items.length - 1;
+    while (i >= 0 && items[i].z >= (slotEnd + 1) * SLOT) i--;
+
+    let playerDone = false;
+    let hazeDone = false;
+    const hazeZ = run.z + dist * 0.42;
+
+    for (let slot = slotEnd; slot >= slotStart; slot--) {
+      const zLo = slot * SLOT;
+      if (!hazeDone && zLo <= hazeZ) {
+        // Perspectiva atmosférica: lo lejano ya dibujado queda velado por la bruma.
+        ctx.fillStyle = this.hazeGrad;
+        ctx.fillRect(0, this._hazeTop, W, this._hazeH);
+        hazeDone = true;
+      }
+      this._drawScenery(ctx, W, slot, run, dist);
+      while (i >= 0 && items[i].z >= zLo) {
+        const it = items[i];
+        if (!playerDone && it.z < run.z) {
+          this._drawPlayer(ctx, run);
+          playerDone = true;
+        }
+        this._drawItem(ctx, it, run, dist, W);
+        i--;
+      }
+      if (!playerDone && run.z >= zLo) {
+        this._drawPlayer(ctx, run);
+        playerDone = true;
+      }
+    }
+    if (!playerDone) this._drawPlayer(ctx, run);
+    this._drawParticles(ctx);
+  }
+
+  _alphaFor(depth, dist) {
+    let a = 1;
+    const far = dist + 4;
+    if (depth > far - 18) a = Math.max(0, (far - depth) / 18);
+    if (depth < NEAR_FADE) a = Math.min(a, Math.max(0, (depth - 2.2) / (NEAR_FADE - 2.2)));
+    return a;
+  }
+
+  _drawScenery(ctx, W, slot, run, dist) {
+    const p = this.proj;
+    const tbl = this.sceneryTable;
+    const density = this.run.scenery.density * this.quality.scenery;
+    const edge = TRACK.halfWidth + TRACK.curbWidth;
+    for (let side = -1; side <= 1; side += 2) {
+      for (let k = 0; k < 2; k++) {
+        const base = hash3(slot, side, k, this._seed);
+        if (base > density * (k === 0 ? 0.8 : 0.55)) continue;
+        // tipo por peso
+        let roll = hash3(slot, side, k + 10, this._seed) * tbl.total;
+        let t = tbl.list[tbl.list.length - 1];
+        for (const e of tbl.list) {
+          if (roll <= e.acc) {
+            t = e;
+            break;
+          }
+        }
+        const hx = hash3(slot, side, k + 20, this._seed);
+        const hz = hash3(slot, side, k + 30, this._seed);
+        const hs = hash3(slot, side, k + 40, this._seed);
+        const hv = hash3(slot, side, k + 50, this._seed);
+        const wx = side * (edge + t.x[0] + hx * (t.x[1] - t.x[0]));
+        const wz = slot * SLOT + hz * SLOT;
+        if (!p.project(wx, 0, wz, out)) continue;
+        const alpha = this._alphaFor(out.depth, dist);
+        if (alpha <= 0.02) continue;
+        const variants = this._variantsOf(t.type);
+        const sprite = this.sprites.get(`${t.type}${Math.floor(hv * variants)}`);
+        if (!sprite) continue;
+        const scale = t.scale[0] + hs * (t.scale[1] - t.scale[0]);
+        const kk = (out.s * scale) / sprite.ppu;
+        const dw = sprite.canvas.width * kk;
+        const dh = sprite.canvas.height * kk;
+        const x = out.x - sprite.ax * kk;
+        if (x > W || x + dw < 0) continue;
+        if (alpha < 1) ctx.globalAlpha = alpha;
+        ctx.drawImage(sprite.canvas, x, out.y - sprite.ay * kk, dw, dh);
+        if (alpha < 1) ctx.globalAlpha = 1;
+      }
+    }
+  }
+
+  _variantsOf(type) {
+    return this.sprites.variants[type] || 1;
+  }
+
+  _drawItem(ctx, it, run, dist, W) {
+    const p = this.proj;
+    if (!p.project(it.x, 0, it.z, out)) return;
+    const alpha = this._alphaFor(out.depth, dist);
+    if (alpha <= 0.02) return;
+
+    if (it.kind === 'coin') {
+      this._drawCoin(ctx, it, run, alpha);
+      return;
+    }
+    const sprite = this.sprites.get(it.sprite);
+    const kk = out.s / sprite.ppu;
+    const x = out.x - sprite.ax * kk;
+    const dw = sprite.canvas.width * kk;
+    if (x > W || x + dw < 0) return;
+    if (alpha < 1) ctx.globalAlpha = alpha;
+    ctx.drawImage(sprite.canvas, x, out.y - sprite.ay * kk, dw, sprite.canvas.height * kk);
+    if (alpha < 1) ctx.globalAlpha = 1;
+  }
+
+  _drawCoin(ctx, it, run, alpha) {
+    const p = this.proj;
+    const coin = this.run.coin;
+    let age = 0;
+    if (it.taken) {
+      age = run.time - it.takenAt;
+      if (age > 0.28) return; // la moneda recogida desaparece con un destello
+    }
+    const bob = Math.sin(this.time * 3 + it.phase) * 0.05;
+    const gx = out.x;
+    const gy = out.y; // suelo
+    const s = out.s;
+    if (!p.project(it.x, it.y + bob, it.z, out)) return;
+    const pop = it.taken ? 1 + age * 4 : 1;
+    const r = 0.27 * out.s * pop;
+    ctx.globalAlpha = alpha * (it.taken ? 1 - age / 0.28 : 1);
+
+    // sombra en el suelo
+    if (!it.taken) {
+      ctx.fillStyle = 'rgba(45,14,76,0.25)';
+      ctx.beginPath();
+      ctx.ellipse(gx, gy, r * 0.8, r * 0.22, 0, 0, TAU);
+      ctx.fill();
+    }
+
+    const spin = Math.abs(Math.cos(this.time * 4.2 + it.phase));
+    const w = r * (0.22 + 0.78 * spin);
+    // halo
+    ctx.fillStyle = rgba(coin.light, 0.22);
+    ctx.beginPath();
+    ctx.arc(out.x, out.y, r * 1.5, 0, TAU);
+    ctx.fill();
+    ctx.fillStyle = coin.dark;
+    ctx.beginPath();
+    ctx.ellipse(out.x, out.y, w, r, 0, 0, TAU);
+    ctx.fill();
+    ctx.fillStyle = coin.base;
+    ctx.beginPath();
+    ctx.ellipse(out.x, out.y, w * 0.82, r * 0.86, 0, 0, TAU);
+    ctx.fill();
+    ctx.fillStyle = coin.light;
+    ctx.beginPath();
+    ctx.ellipse(out.x - w * 0.22, out.y - r * 0.28, w * 0.3, r * 0.3, -0.5, 0, TAU);
+    ctx.fill();
+    void s;
+    ctx.globalAlpha = 1;
+  }
+
+  _drawPlayer(ctx, run) {
+    const p = this.proj;
+    const pl = run.player;
+    if (!p.project(pl.x, 0, run.z, out)) return;
+    const gx = out.x;
+    const gy = out.y;
+    const s = out.s;
+
+    // Sombra en el suelo: más pequeña y tenue cuanto más alto está el personaje.
+    const h = Math.min(1, pl.y / 1.6);
+    ctx.fillStyle = `rgba(45,14,76,${0.34 * (1 - h * 0.55)})`;
+    ctx.beginPath();
+    ctx.ellipse(gx, gy + s * 0.02, s * 0.36 * (1 - h * 0.3), s * 0.085 * (1 - h * 0.3), 0, 0, TAU);
+    ctx.fill();
+
+    // Personaje: (x, y) es el centro del cuerpo en pie; la altura de salto sube los pies.
+    const size = s;
+    p.project(pl.x, pl.y, run.z, out);
+    this.character.render(ctx, out.x, out.y - size / 2, size);
+  }
+
+  _drawParticles(ctx) {
+    const p = this.proj;
+    const coin = this.run.coin;
+    for (const q of this._particles) {
+      if (!q.on) continue;
+      if (!p.project(q.x, q.y, q.z, out)) continue;
+      const k = q.life / q.max;
+      const r = q.size * out.s;
+      if (q.kind === 1) {
+        ctx.globalAlpha = Math.min(1, k * 1.6);
+        ctx.fillStyle = coin.light;
+        ctx.beginPath();
+        ctx.moveTo(out.x, out.y - r * 1.6);
+        ctx.lineTo(out.x + r * 0.5, out.y);
+        ctx.lineTo(out.x, out.y + r * 1.6);
+        ctx.lineTo(out.x - r * 0.5, out.y);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.globalAlpha = k * 0.55;
+        ctx.fillStyle = '#fff1e0';
+        ctx.beginPath();
+        ctx.arc(out.x, out.y, r * (1.4 - k * 0.5), 0, TAU);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+
+return { RunnerRenderer };
+})();
+__m["src/scenes/GameScene.js"] = (function () {
+'use strict';
+const { Scene } = __m["src/core/Scene.js"];
+const { Character } = __m["src/characters/Character.js"];
+const { Run } = __m["src/gameplay/Run.js"];
+const { SegmentRegistry } = __m["src/gameplay/segments/SegmentRegistry.js"];
+const { SEGMENT_DEFINITIONS } = __m["src/gameplay/segments/definitions/index.js"];
+const { HandmadeSegmentSource } = __m["src/gameplay/segments/SegmentSource.js"];
+const { RunnerRenderer } = __m["src/graphics/runner/RunnerRenderer.js"];
+const { mulberry32 } = __m["src/graphics/random.js"];
+
+/** Región jugable de la Etapa 01 (ver regions/definitions/duskMeadow.js). */
+const PLAY_REGION = 'dusk-meadow';
+/** Metros de pista que se generan por delante además de los que se dibujan. */
+const SPAWN_MARGIN = 14;
+
+let segmentRegistry = null;
+/** Registro de segmentos: se crea (y valida) una sola vez. */
+function getSegments() {
+  if (!segmentRegistry) {
+    segmentRegistry = new SegmentRegistry();
+    for (const def of SEGMENT_DEFINITIONS) segmentRegistry.register(def);
+  }
+  return segmentRegistry;
+}
+
+/**
+ * Escena de la partida. Es solo el "pegamento": traduce gestos en acciones,
+ * hace avanzar la lógica (`Run`), pide el dibujo (`RunnerRenderer`) y mantiene
+ * el HUD y las pantallas de pausa / fin de partida. Las reglas viven en
+ * gameplay/ y el dibujo en graphics/runner/.
+ */
+class GameScene extends Scene {
+  enter() {
+    const g = this.game;
+    const region = g.regions.get(PLAY_REGION);
+    if (!region || !region.run) throw new Error(`La región "${PLAY_REGION}" no es jugable`);
+
+    const selected = g.save.data.profile.selectedCharacter;
+    const definition = g.characters.get(selected) || g.characters.list()[0];
+    this.character = new Character(definition);
+    this.character.play('run');
+
+    const seed = (Math.random() * 0xffffffff) >>> 0;
+    this.run = new Run({ source: new HandmadeSegmentSource({ registry: getSegments(), rnd: mulberry32(seed) }) });
+    this.renderer = new RunnerRenderer({ region, quality: g.quality, character: this.character });
+
+    this.paused = false;
+    this._overShown = false;
+    this._firstSwipe = false;
+
+    this.run.onEvent = (name, data) => {
+      this.renderer.onRunEvent(name, data, this.run);
+      if (name === 'over') this._showGameOver();
+    };
+    this.run.track.update(0, this._ahead());
+
+    this._offSwipe = g.bus.on('gesture:swipe', (dir) => this._onSwipe(dir));
+    this._offHidden = g.bus.on('app:hidden', () => this.pause());
+    this._offKey = g.bus.on('input:keydown', (code, e) => {
+      if ((code === 'Escape' || code === 'KeyP') && !e.repeat) this.paused ? this.resume() : this.pause();
+    });
+    this._offQuality = g.bus.on('quality:changed', () => this.renderer.setQuality(g.quality));
+
+    g.gestures.setEnabled(true);
+    this._showHud();
+  }
+
+  exit() {
+    this._offSwipe();
+    this._offHidden();
+    this._offKey();
+    this._offQuality();
+    this.game.gestures.setEnabled(false);
+    this.game.ui.hide();
+  }
+
+  update(dt) {
+    if (this.paused) return;
+    this.run.update(dt, this._ahead());
+    this.renderer.update(dt, this.run);
+    if (this.hud) this.hud.setValues(this.run);
+  }
+
+  resize(viewport) {
+    this.renderer.resize(viewport);
+  }
+
+  render(ctx, viewport) {
+    this.renderer.render(ctx, viewport, this.run);
+  }
+
+  /** Datos para el panel de diagnóstico. */
+  debugInfo() {
+    const r = this.run;
+    return `Carrera  ${r.speed.toFixed(1)} m/s · ${r.track.items.length} elem. · ${r.state}${this.paused ? ' (pausa)' : ''}`;
+  }
+
+  _ahead() {
+    return this.game.quality.drawDistance + SPAWN_MARGIN;
+  }
+
+  _onSwipe(dir) {
+    if (this.paused || this.run.state !== 'running') return;
+    if (!this._firstSwipe) {
+      this._firstSwipe = true;
+      if (this.hud) this.hud.hideHint();
+    }
+    this.run.swipe(dir);
+  }
+
+  _showHud() {
+    this.game.ui.show('hud');
+    this.hud = this.game.ui.current;
+    this.hud.setValues(this.run);
+    if (this._firstSwipe) this.hud.hideHint();
+  }
+
+  pause() {
+    if (this.paused || this.run.state !== 'running') return;
+    this.paused = true;
+    this.hud = null;
+    this.game.ui.show('pause', {
+      summary: this.run,
+      onResume: () => this.resume(),
+      onHome: () => this.game.scenes.switchTo('title'),
+    });
+  }
+
+  resume() {
+    if (!this.paused) return;
+    this.paused = false;
+    this._showHud();
+  }
+
+  _showGameOver() {
+    if (this._overShown) return;
+    this._overShown = true;
+    this.hud = null;
+    const { score, distance, coins } = this.run;
+    this.game.ui.show('gameover', {
+      summary: { score, distance, coins },
+      onRetry: () => this.game.scenes.switchTo('game'),
+      onHome: () => this.game.scenes.switchTo('title'),
+    });
+  }
+}
+
+return { GameScene };
+})();
 __m["src/scenes/index.js"] = (function () {
 'use strict';
 const { BootScene } = __m["src/scenes/BootScene.js"];
 const { TitleScene } = __m["src/scenes/TitleScene.js"];
+const { GameScene } = __m["src/scenes/GameScene.js"];
 
 /** Escenas disponibles (nombre → clase). Añade aquí las nuevas. */
 const SCENES = {
   boot: BootScene,
   title: TitleScene,
+  game: GameScene,
 };
 
 return { SCENES };
@@ -2149,6 +5574,7 @@ const { EventBus } = __m["src/core/EventBus.js"];
 const { Loop } = __m["src/core/Loop.js"];
 const { Viewport } = __m["src/core/Viewport.js"];
 const { Input } = __m["src/core/Input.js"];
+const { Gestures } = __m["src/core/Gestures.js"];
 const { SceneManager } = __m["src/core/SceneManager.js"];
 const { AssetLoader } = __m["src/core/AssetLoader.js"];
 const { SaveManager } = __m["src/save/SaveManager.js"];
@@ -2169,6 +5595,7 @@ const { SCENES } = __m["src/scenes/index.js"];
 class Game {
   constructor({ canvas, appEl, uiEl }) {
     this.config = GAME;
+    this.renderMs = 0;
     this.canvas = canvas;
     this.appEl = appEl;
     this.bus = new EventBus();
@@ -2182,6 +5609,7 @@ class Game {
     this.ctx = canvas.getContext('2d', { alpha: false });
     this.viewport = new Viewport({ canvas, appEl, uiEl, bus: this.bus, maxDpr: this.quality.maxDpr });
     this.input = new Input({ target: appEl, viewport: this.viewport, bus: this.bus });
+    this.gestures = new Gestures({ bus: this.bus, target: appEl });
     this.audio = new AudioManager({ bus: this.bus });
     this.assets = new AssetLoader({ audio: this.audio });
 
@@ -2229,9 +5657,11 @@ class Game {
     this.ui.debug.init();
     this.bus.on('resize', (vp) => this.scenes.resize(vp));
     this.input.attach();
+    this.gestures.attach();
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
+        this.bus.emit('app:hidden'); // las escenas pueden pausarse
         this.loop.stop();
         this.audio.suspend();
         this.save.flush();
@@ -2253,9 +5683,12 @@ class Game {
   }
 
   _render() {
+    const t0 = performance.now();
     const ctx = this.ctx;
     this.viewport.applyTransform(ctx);
     this.scenes.render(ctx, this.viewport, 0);
+    // Coste medio del dibujado (ms), para el panel de diagnóstico.
+    this.renderMs += (performance.now() - t0 - this.renderMs) * 0.05;
   }
 }
 

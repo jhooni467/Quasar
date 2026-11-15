@@ -8,7 +8,14 @@ export default {
   name: 'Personaje provisional',
   render: { type: 'placeholder' },
   skins: [{ id: 'default', name: 'Base', palette: { body: '#ffc6e5' } }],
-  animations: { idle: { loop: true } },
+  // Animaciones que el sistema de movimiento solicita; todo personaje nuevo debe ofrecerlas.
+  animations: {
+    idle: { loop: true },
+    run: { loop: true },
+    jump: { loop: false },
+    slide: { loop: true },
+    hit: { loop: false },
+  },
   accessories: [],
   abilities: [],
 };

@@ -6,20 +6,33 @@ Videojuego original de tipo **Runner 2.5D** con estética colorida, llamativa y 
 
 Pensado para **teléfonos y tablets Android en vertical (Portrait)**. Se desarrolla primero en navegador y después se empaqueta como APK con [Capacitor](https://capacitorjs.com/).
 
-## Estado actual: v0.1.1 · Etapa 00 · Corrección 00.1
+## Estado actual: v0.2.0 · Etapa 01 · Primer núcleo jugable
 
-Esta versión es **solo la base técnica**. Aún **no hay mecánicas de juego**.
+Ya hay una **partida jugable**: un runner vertical de tres carriles con cámara detrás del personaje.
+
+**Cómo se juega** (pantalla de título → **Jugar**):
+
+| Gesto (móvil) | Tecla (ordenador) | Acción |
+| --- | --- | --- |
+| Deslizar ← / → | ← / → o A / D | Cambiar de carril |
+| Deslizar ↑ | ↑, W o Espacio | Saltar (vallas bajas) |
+| Deslizar ↓ | ↓ o S | Deslizarse (arcos altos); en el aire, caer más rápido |
+| — | Esc o P | Pausa (también se pausa sola al salir de la app) |
+
+Hay que esquivar los **bloques** (cambiando de carril), **saltar** las vallas y **deslizarse** bajo los arcos. Un golpe termina la partida; el HUD muestra distancia, monedas y puntos, y la pantalla final permite reintentar. La velocidad aumenta con la distancia.
 
 Lo que existe y funciona:
 
-- Aplicación ejecutable en el navegador (pantalla de arranque y pantalla de título).
-- Lienzo que se adapta a cualquier tamaño y relación de aspecto, sin deformar ni cortar la interfaz.
-- Composición vertical (Portrait): intenta bloquear la orientación y, si el navegador no lo permite, se centra en cualquier orientación.
-- Región de prueba con fondo en capas (cielo, estrellas, luz, siluetas con paralaje) y personaje provisional, para comprobar que los sistemas trabajan juntos.
-- Calidad gráfica seleccionable (Baja / Media / Alta) con guardado, y panel de diagnóstico (FPS, tamaño, escala).
-- Sistemas preparados pero vacíos de contenido: personajes modulares, regiones, audio, carga de recursos, guardado versionado.
+- Escena 2.5D con pista en perspectiva, tres carriles reconocibles, terreno, colinas, cielo y elementos ambientales (pinos, árboles, arbustos, rocas, setas, flores, farolas) a distintas escalas y profundidades, con bruma de horizonte.
+- Personaje provisional (fácilmente sustituible) con animaciones de correr, saltar, deslizarse y golpe.
+- Obstáculos básicos (valla, arco, bloque) y monedas provisionales.
+- Gestos táctiles con respuesta inmediata, sin desplazamiento ni zoom accidental de la página; teclado para probar en ordenador.
+- Tramos de pista **hechos a mano** (17 en 3 niveles de dificultad) como datos validados, con una interfaz (`SegmentSource`) preparada para añadir generación procedural más adelante.
+- Arte ilustrado con "colored lineart" (contornos de color, nunca negros), texturas pictóricas sutiles y sprites prerenderizados.
+- Adaptación a cualquier móvil o tablet en vertical; selector de calidad Baja / Media / Alta (distancia de dibujado, cantidad de decorado, resolución de sprites, grano y partículas).
+- Todo lo de la Etapa 00 (base técnica, guardado, regiones, personajes modulares, diagnóstico).
 
-Lo que **todavía no existe** (llegará en etapas futuras, con autorización): movimiento por carriles, saltos y deslizamientos, generación procedural, obstáculos, coleccionables, habilidades, potenciadores, misiones, progresión, personajes desbloqueables, música y efectos ambientales.
+**Pendiente (no incluido en esta etapa):** habilidades y potenciadores, tiendas, misiones, regiones desbloqueables, progresión permanente, generación procedural (solo está la interfaz), audio, personaje definitivo, botón de pausa en pantalla y guardado de la mejor puntuación.
 
 ## Cómo probarlo
 
@@ -39,9 +52,10 @@ Otras opciones:
 | `PORT=3000 npm start` | Usa otro puerto |
 | `HOST=0.0.0.0 npm start` | Lo hace accesible desde tu red: abre en el móvil la dirección «Red» que imprime la consola |
 | `npm run check` | Verifica sintaxis, imports y referencias de todos los archivos |
+| `npm test` | Prueba la lógica de juego sin navegador (validación de tramos, bot que juega 25 partidas, colisiones y física del salto) |
 | `npm run build:single` | Regenera `index.html` (raíz), la versión de un solo archivo |
 
-> Los módulos ES no se cargan al abrir `index.html` con doble clic (`file://`); hace falta el servidor local. Cualquier otro servidor estático que sirva la carpeta `www/` también funciona.
+> Los módulos ES de `www/` no se cargan al abrir `www/index.html` con doble clic (`file://`); hace falta el servidor local. Cualquier otro servidor estático que sirva la carpeta `www/` también funciona. El `index.html` de la raíz (un solo archivo) sí se abre con doble clic.
 
 ### Probar sin instalar nada (GitHub Pages)
 
@@ -58,7 +72,7 @@ También puedes abrir el `index.html` de la raíz directamente en un navegador.
 
 > **Importante:** `index.html` (raíz) se genera automáticamente. No lo edites a mano: cambia el código en `www/` y regéneralo con `npm run build:single` antes de subir los cambios.
 
-**Para probar en pantalla de móvil sin móvil:** en Chrome, `F12` → icono de dispositivo → elige un teléfono (en vertical). Con el botón **Diagnóstico** de la pantalla de título verás FPS, tamaño y escala.
+**Para probar en pantalla de móvil sin móvil:** en Chrome, `F12` → icono de dispositivo → elige un teléfono (en vertical). Con el botón **Diagnóstico** de la pantalla de título verás FPS, tiempo de dibujado, tamaño y escala (y, en partida, velocidad y elementos activos).
 
 ## Tecnología elegida
 
@@ -89,16 +103,19 @@ quasar/
 │   └── src/
 │       ├── main.js               Punto de entrada
 │       ├── config/               Configuración: nombre/versión, calidad gráfica
-│       ├── core/                 Sistema principal: Game, Loop, Viewport, escenas, input, carga
-│       ├── scenes/               Escenas (Boot, Title)
+│       ├── core/                 Sistema principal: Game, Loop, Viewport, escenas, input, gestos, carga
+│       ├── scenes/               Escenas (Boot, Title, Game)
+│       ├── gameplay/             Reglas de la carrera: Run, PlayerController, Track, items
+│       │   └── segments/         Tramos de pista: definiciones, validador, registro, SegmentSource
 │       ├── characters/           Personajes: definiciones, registro, renderers
 │       ├── regions/              Regiones: definiciones y registro
-│       ├── graphics/             Dibujo: fondo con capas de profundidad, color, azar determinista
+│       ├── graphics/             Dibujo: fondo con capas, color, azar determinista
+│       │   └── runner/           Dibujo de la carrera: proyección, sprites, escenario, obstáculos, cielo
 │       ├── ui/                   Interfaz: gestor, pantallas, componentes, diagnóstico
 │       ├── audio/                Audio (Web Audio): buses, volúmenes, desbloqueo
 │       └── save/                 Guardado versionado con migraciones
 ├── index.html                    Versión de un solo archivo para GitHub Pages (generada, no editar)
-├── tools/                        serve.mjs (servidor local), check.mjs (verificador), build-single.mjs
+├── tools/                        serve.mjs, check.mjs (verificador), build-single.mjs, test-gameplay.mjs
 ├── docs/                         ARCHITECTURE.md, ANDROID.md
 ├── capacitor.config.json         Preparado para la conversión a Android
 ├── package.json
@@ -121,9 +138,13 @@ Capacitor se añadirá cuando se aborde la conversión a Android (ver [docs/ANDR
 
 `id` en `game.config.js` es la clave técnica del guardado local; no hace falta cambiarla al renombrar.
 
-## Versión inicial
+## Versión
 
-**v0.1.1 · Etapa 00 · Corrección 00.1.** Consulta [CHANGELOG.md](CHANGELOG.md).
+**v0.2.0 · Etapa 01 · Primer núcleo jugable.** Consulta [CHANGELOG.md](CHANGELOG.md).
+
+### Ajustar la jugabilidad
+
+Todos los números (velocidad, salto, deslizamiento, carriles, cámara, dificultad, puntuación) están en `www/src/config/gameplay.config.js`. Los tramos de pista se editan como texto en `www/src/gameplay/segments/definitions/` (una fila de 3 caracteres por cada 3 m: `.` vacío, `c` moneda, `l` valla, `j` valla con moneda en el aire, `h` arco, `u` arco con moneda al ras, `x` bloque); el validador rechaza los tramos sin camino posible.
 
 ## Hoja de ruta
 

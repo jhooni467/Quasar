@@ -38,6 +38,8 @@ export class DebugOverlay {
       `Pantalla ${window.innerWidth}×${window.innerHeight} px`,
       `Lógica   ${vp.width.toFixed(0)}×${vp.height.toFixed(0)} u · segura ${vp.safe.w.toFixed(0)}×${vp.safe.h.toFixed(0)}`,
       `Escala   ${vp.scale.toFixed(3)} · DPR ${vp.dpr.toFixed(2)} · ${g.scenes.currentName}`,
+      `Dibujo   ${g.renderMs.toFixed(1)} ms/fotograma`,
+      ...(g.scenes.current && g.scenes.current.debugInfo ? [g.scenes.current.debugInfo()] : []),
     ].join('\n');
   }
 }

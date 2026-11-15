@@ -1,8 +1,7 @@
 /**
  * Entrada básica: posición del puntero (en unidades lógicas) y estado del
- * teclado. Emite eventos en el bus. NO interpreta gestos todavía: el
- * movimiento por carriles, saltos y deslizamientos (deslizar/tocar) se
- * construirán sobre esta capa en una etapa futura.
+ * teclado. Emite eventos en el bus. No interpreta gestos: de eso se encarga
+ * `Gestures.js`, construido sobre esta capa.
  */
 export class Input {
   constructor({ target, viewport, bus }) {

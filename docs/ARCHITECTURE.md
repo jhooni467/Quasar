@@ -9,7 +9,8 @@ main.js ─► Game (core/Game.js)
              ├─ bus        EventBus          comunicación sin acoplar módulos
              ├─ save       SaveManager       guardado versionado
              ├─ viewport   Viewport          tamaño, escala y área segura
-             ├─ input      Input             puntero y teclado (sin gestos aún)
+             ├─ input      Input             puntero y teclado
+             ├─ gestures   Gestures          deslizamientos → `gesture:swipe`
              ├─ audio      AudioManager      buses y desbloqueo (sin sonidos aún)
              ├─ assets     AssetLoader       carga desde assets/manifest.js
              ├─ characters CharacterRegistry definiciones de personajes
@@ -37,8 +38,10 @@ Las escenas y la interfaz reciben `game` y toman de él lo que necesitan. Los m�
 - **`Input`**: posición del puntero en unidades lógicas y teclas; emite `input:*`.
 - **`EventBus`**: `on / off / emit`.
 
+- **`Gestures`**: reconoce deslizamientos sobre `Input` y los emite como `gesture:swipe` (`left|right|up|down`); solo actúa con `enabled` (lo activa la escena de juego) y bloquea el scroll/zoom de la página.
+
 ### `scenes/`
-`BootScene` (precarga) y `TitleScene` (integra región, personaje, UI y ajustes). Se declaran en `scenes/index.js`.
+`BootScene` (precarga), `TitleScene` (integra región, personaje, UI y ajustes) y `GameScene` (partida: traduce gestos en acciones, avanza `Run`, pide el dibujo y gestiona HUD, pausa y fin de partida). Se declaran en `scenes/index.js`.
 
 ### `characters/`
 - `CharacterDefinition.js`: forma de una definición (`id`, `name`, `render`, `skins`, `animations`, `accessories`, `abilities`) y su validación.
@@ -48,12 +51,20 @@ Las escenas y la interfaz reciben `game` y toman de él lo que necesitan. Los m�
 - `renderers/placeholderRenderer.js` y `definitions/placeholder.js`: personaje provisional, sin diseño definitivo.
 
 ### `regions/`
-- `RegionDefinition.js`: forma de una región (paleta, luz, estrellas, capas de siluetas) y su validación.
-- `RegionRegistry.js` y `definitions/previewNebula.js` (región de prueba técnica, `status: 'preview'`).
+- `RegionDefinition.js`: forma de una región (paleta, luz, estrellas, capas de siluetas) y su validación; una región jugable añade `run` (suelo, pista, decorado, obstáculos, moneda), también validado.
+- `RegionRegistry.js`, `definitions/previewNebula.js` (fondo de título) y `definitions/duskMeadow.js` (región jugable de prueba, `status: 'preview'`).
+
+### `gameplay/` (reglas de la carrera, sin dibujo)
+- `Run.js`: estado de la partida (`running → crashed → over`), velocidad progresiva, colisiones, monedas, puntuación; emite eventos (`lane`, `jump`, `slide`, `land`, `coin`, `crash`, `over`) que usan el dibujo y los efectos.
+- `PlayerController.js`: carril, salto, deslizamiento, buffers de entrada. Unidades: 1 = ancho de carril; z en metros.
+- `Track.js` + `items.js`: elementos de pista activos (con pool) y catálogo de tipos (valla, arco, bloque, moneda).
+- `segments/`: `SegmentDefinition` (formato y validación con búsqueda de camino posible), `SegmentRegistry`, `definitions/` (tramos por dificultad) y `SegmentSource`: interfaz `next({difficulty, distance})`. `HandmadeSegmentSource` elige tramos hechos a mano; **una fuente procedural futura implementa la misma interfaz** sin tocar `Run` ni `Track`.
+- Parámetros en `config/gameplay.config.js`.
 
 ### `graphics/`
 - `ParallaxBackdrop.js`: dibuja una región en capas (cielo, estrellas, luz, siluetas con paralaje, perspectiva atmosférica, borde de luz y sombra).
-- `color.js`, `random.js` (azar determinista por semilla, base de la generación procedural futura).
+- `color.js`, `random.js` (azar determinista por semilla y `hash3` para el decorado infinito).
+- `runner/`: `RunnerRenderer` (cielo, colinas, suelo en franjas alineadas con el mundo, decorado, elementos, jugador, partículas, post-efectos), `Projection` (perspectiva), `SpriteSet` (sprites prerenderizados y cacheados por región y resolución), `scenery.js` / `obstacles.js` / `sky.js` (dibujo ilustrado) y `artKit.js` (utilidades de colored lineart y textura pictórica).
 
 ### `ui/`
 Interfaz en DOM sobre el canvas, alineada con el área segura. `UIManager` registra pantallas (`mount/unmount`); `components/` guarda piezas reutilizables; `DebugOverlay` muestra el diagnóstico. Los estilos usan unidades lógicas × `--u`, con mínimos táctiles.
@@ -67,6 +78,8 @@ Interfaz en DOM sobre el canvas, alineada con el área segura. `UIManager` regis
 ## Cómo ampliar
 
 **Añadir un personaje.** Crea `characters/definitions/<id>.js` con la forma de `CharacterDefinition` y añádelo a `definitions/index.js`. Si usa un estilo de dibujo nuevo (p. ej. sprites), implementa un renderer con `draw()` y regístralo en `Game._registerContent()` con `registerCharacterRenderer('sprite', …)`.
+
+**Añadir un tramo de pista.** Añade un objeto `{id, name, difficulty, rows}` en `gameplay/segments/definitions/` (cada fila = 3 caracteres, 3 m). El registro lo valida al arrancar y rechaza los que no tengan camino posible.
 
 **Añadir una región.** Crea `regions/definitions/<id>.js` y añádela a `definitions/index.js`. Una región nueva puede ampliar `RegionDefinition` con sus propios campos (obstáculos, música, criaturas) cuando llegue su etapa.
 
@@ -82,9 +95,9 @@ Interfaz en DOM sobre el canvas, alineada con el área segura. `UIManager` regis
 
 | Mecánica | Dónde |
 | --- | --- |
-| Carriles, saltos, deslizamientos | Nueva escena de juego; la lógica en `update(dt)` de paso fijo; gestos sobre `Input` |
-| Generación procedural | Módulo nuevo que use `graphics/random.js` (azar por semilla) y datos de región |
-| Obstáculos y coleccionables | Datos en las definiciones de región + módulo de entidades |
+| Carriles, saltos, deslizamientos | **Hecho (Etapa 01)**: `gameplay/` + `Gestures` |
+| Generación procedural | Nueva implementación de `SegmentSource` (con `graphics/random.js`); debe pasar el mismo validador |
+| Obstáculos y coleccionables | **Básicos hechos**; nuevos tipos en `gameplay/items.js` + su dibujo en `graphics/runner/` |
 | Habilidades y potenciadores | `abilities` de `CharacterDefinition` + módulo propio |
 | Misiones y progresión | `progress` del guardado (ya reservado) + módulo propio |
 | Personajes desbloqueables | `CharacterRegistry` + `progress` del guardado |

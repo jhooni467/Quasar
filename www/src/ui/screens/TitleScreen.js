@@ -3,9 +3,8 @@ import { SegmentedControl } from '../components/SegmentedControl.js';
 import { QUALITY_ORDER, QUALITY_PROFILES } from '../../config/quality.config.js';
 
 /**
- * Pantalla de título de la Etapa 00. Muestra la identidad del proyecto y los
- * ajustes técnicos disponibles hoy (calidad gráfica y diagnóstico).
- * No hay botón de jugar: todavía no existen mecánicas.
+ * Pantalla de título: identidad del proyecto, botón de jugar y los ajustes
+ * técnicos disponibles (calidad gráfica y diagnóstico).
  */
 export class TitleScreen {
   constructor(game, ui) {
@@ -50,11 +49,12 @@ export class TitleScreen {
         h('p', { class: 'eyebrow' }, config.tagline),
         h('h1', { class: 'logo' }, config.name),
         h('p', { class: 'subtitle' }, config.stage),
-        h('p', { class: 'note' }, 'Base técnica lista · las mecánicas llegan en próximas etapas')
+        h('p', { class: 'note' }, 'Desliza para moverte, saltar y deslizarte')
       ),
       h(
         'footer',
         { class: 'bottom-bar' },
+        h('button', { class: 'btn btn-primary btn-play', type: 'button', onclick: () => this.game.scenes.switchTo('game') }, 'Jugar'),
         h(
           'div',
           { class: 'controls' },

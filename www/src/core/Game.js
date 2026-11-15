@@ -4,6 +4,7 @@ import { EventBus } from './EventBus.js';
 import { Loop } from './Loop.js';
 import { Viewport } from './Viewport.js';
 import { Input } from './Input.js';
+import { Gestures } from './Gestures.js';
 import { SceneManager } from './SceneManager.js';
 import { AssetLoader } from './AssetLoader.js';
 import { SaveManager } from '../save/SaveManager.js';
@@ -24,6 +25,7 @@ import { SCENES } from '../scenes/index.js';
 export class Game {
   constructor({ canvas, appEl, uiEl }) {
     this.config = GAME;
+    this.renderMs = 0;
     this.canvas = canvas;
     this.appEl = appEl;
     this.bus = new EventBus();
@@ -37,6 +39,7 @@ export class Game {
     this.ctx = canvas.getContext('2d', { alpha: false });
     this.viewport = new Viewport({ canvas, appEl, uiEl, bus: this.bus, maxDpr: this.quality.maxDpr });
     this.input = new Input({ target: appEl, viewport: this.viewport, bus: this.bus });
+    this.gestures = new Gestures({ bus: this.bus, target: appEl });
     this.audio = new AudioManager({ bus: this.bus });
     this.assets = new AssetLoader({ audio: this.audio });
 
@@ -84,9 +87,11 @@ export class Game {
     this.ui.debug.init();
     this.bus.on('resize', (vp) => this.scenes.resize(vp));
     this.input.attach();
+    this.gestures.attach();
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
+        this.bus.emit('app:hidden'); // las escenas pueden pausarse
         this.loop.stop();
         this.audio.suspend();
         this.save.flush();
@@ -108,8 +113,11 @@ export class Game {
   }
 
   _render() {
+    const t0 = performance.now();
     const ctx = this.ctx;
     this.viewport.applyTransform(ctx);
     this.scenes.render(ctx, this.viewport, 0);
+    // Coste medio del dibujado (ms), para el panel de diagnóstico.
+    this.renderMs += (performance.now() - t0 - this.renderMs) * 0.05;
   }
 }

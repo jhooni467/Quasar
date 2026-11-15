@@ -10,8 +10,8 @@ export const GAME = Object.freeze({
   id: 'quasar',
   name: 'QUASAR',
   tagline: 'Runner 2.5D',
-  version: '0.1.1',
-  stage: 'Etapa 00 · Corrección 00.1',
+  version: '0.2.0',
+  stage: 'Etapa 01 · Primer núcleo jugable',
 });
 
 /**

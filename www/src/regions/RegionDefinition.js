@@ -13,9 +13,12 @@
  *                   harmonics:Array<[number,number]>, seed:number, color:string, fade:number}>} layers
  *           capas de siluetas de lejos a cerca (`parallax` mayor = más cercana y rápida)
  *
- * Campos futuros previstos (se añadirán en sus etapas): obstáculos y
- * coleccionables propios, reglas de generación procedural, música y efectos
- * ambientales, criaturas.
+ * @property {object} [run]   solo regiones JUGABLES: colores del suelo y la pista, elementos
+ *           ambientales y estilo de obstáculos (ver regions/definitions/duskMeadow.js).
+ *           En una región jugable, `layers[].base` es el desplazamiento bajo el horizonte.
+ *
+ * Campos futuros previstos (se añadirán en sus etapas): reglas de generación
+ * procedural por región, música y efectos ambientales, criaturas.
  */
 
 const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
@@ -61,5 +64,46 @@ export function validateRegionDefinition(def) {
       if (!ok) errors.push(`la capa #${i} está incompleta (armónicos: [[entero, peso], …])`);
     });
   }
+
+  if (def.run !== undefined) errors.push(...validateRun(def.run));
+  return errors;
+}
+
+const SCENERY_TYPES = ['pine', 'tree', 'bush', 'rock', 'mushroom', 'flower', 'lamp'];
+
+/** Valida la sección `run` de una región jugable. */
+function validateRun(run) {
+  const errors = [];
+  if (!run || typeof run !== 'object') return ['"run" debe ser un objeto'];
+  if (!isStr(run.fog)) errors.push('"run.fog" debe ser un color');
+  for (const [group, keys] of [
+    ['ground', ['grass', 'grassShade', 'grassFar']],
+    ['track', ['base', 'shade', 'line', 'curbA', 'curbB', 'edge']],
+  ]) {
+    const g = run[group];
+    if (!g || !keys.every((k) => isStr(g[k]))) errors.push(`"run.${group}" necesita: ${keys.join(', ')}`);
+  }
+  if (!run.palette || typeof run.palette !== 'object') errors.push('falta "run.palette"');
+  const sc = run.scenery;
+  if (!sc || !isNum(sc.density) || !Array.isArray(sc.types) || sc.types.length === 0) {
+    errors.push('"run.scenery" necesita density y una lista de types');
+  } else {
+    sc.types.forEach((t, i) => {
+      const ok =
+        t &&
+        SCENERY_TYPES.includes(t.type) &&
+        isNum(t.weight) &&
+        Array.isArray(t.x) &&
+        t.x.length === 2 &&
+        t.x.every(isNum) &&
+        Array.isArray(t.scale) &&
+        t.scale.length === 2 &&
+        t.scale.every(isNum);
+      if (!ok) errors.push(`el elemento ambiental #${i} está incompleto (tipos: ${SCENERY_TYPES.join(', ')})`);
+    });
+  }
+  const ob = run.obstacles;
+  if (!ob || !ob.hurdle || !ob.gate || !ob.block) errors.push('"run.obstacles" necesita hurdle, gate y block');
+  if (!run.coin) errors.push('falta "run.coin"');
   return errors;
 }

@@ -9,3 +9,14 @@ export function mulberry32(seed) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+
+/**
+ * Hash determinista de tres enteros → número en [0, 1). Permite generar el
+ * escenario "infinito" sin guardarlo: el mismo (a, b, c) da siempre el mismo valor.
+ */
+export function hash3(a, b, c, seed = 0) {
+  let h = Math.imul(a | 0, 374761393) ^ Math.imul(b | 0, 668265263) ^ Math.imul(c | 0, 2147483629) ^ Math.imul(seed | 0, 1274126177);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+}
